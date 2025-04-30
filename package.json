@@ -1,0 +1,40 @@
+{
+  "name": "aurea-eden-lib",
+  "type": "module",
+  "version": "1.25.1",
+  "description": "Library for 3D diagramming.",
+  "author": "Robert Waszkowski",
+  "license": "MIT",
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "",
+    "directory": ""
+  },
+  "keywords": [
+    "3D",
+    "diagramming",
+    "library"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "release": "standard-version",
+    "release:patch": "standard-version --release-as patch",
+    "release:minor": "standard-version --release-as minor",
+    "release:major": "standard-version --release-as major"
+  },
+  "devDependencies": {
+    "standard-version": "^9.5.0",
+    "vite": "^6.2.0",
+    "vite-plugin-css-injected-by-js": "^3.3.0"
+  },
+  "dependencies": {
+    "@tweenjs/tween.js": "^25.0.0",
+    "dat.gui": "^0.7.9",
+    "fs": "^0.0.1-security",
+    "three": "^0.172.0",
+    "troika-three-text": "^0.52.3",
+    "tween.js": "^16.6.0"
+  }
+}
