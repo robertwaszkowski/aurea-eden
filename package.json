@@ -20,7 +20,7 @@
     "dev": "vite",
     "build": "vite build",
     "predeploy": "npm run build",
-    "deploy": "git branch -D gh-pages || true && git checkout --orphan gh-pages && git rm -rf . && git clean -f && mkdir dist && npm run build && cp -r dist/* . && cp index.html . && cp index.js . && cp favicon.ico . && git add . && git commit -m 'Deploy to GitHub Pages' && git push -f origin gh-pages && git checkout main",
+    "deploy": "npm run build && mkdir -p temp-deploy && cp -r dist/* temp-deploy/ && cp index.html temp-deploy/ && cp index.js temp-deploy/ && cp favicon.ico temp-deploy/ && git branch -D gh-pages || true && git checkout --orphan gh-pages && git rm -rf . && git clean -fxd && mv temp-deploy/* . && rm -rf temp-deploy && git add . && git commit -m 'Deploy to GitHub Pages' && git push -f origin gh-pages && git checkout main",
     "release": "standard-version",
     "release:patch": "standard-version --release-as patch",
     "release:minor": "standard-version --release-as minor",
