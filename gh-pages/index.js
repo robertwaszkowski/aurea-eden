@@ -4,71 +4,71 @@ import { BpmnDiagram } from "bpmn-diagram.es.js";
 var diagram = new BpmnDiagram(document.body);
 
 // Set GUI
-const gui = new dat.GUI();
-const parameters = 
-{
-    mode: "VIEW",
-    toggleHelpers: function() { toggleHelpers() },
-    reset: function() { resetDiagram() },
-    export: function() { exportDiagram() },
-    import: function() { importDiagram() },
-    clear: function() { clearDiagram() }
-};
+// const gui = new dat.GUI();
+// const parameters = 
+// {
+//     mode: "VIEW",
+//     toggleHelpers: function() { toggleHelpers() },
+//     reset: function() { resetDiagram() },
+//     export: function() { exportDiagram() },
+//     import: function() { importDiagram() },
+//     clear: function() { clearDiagram() }
+// };
 
-var diagramMode = gui.add( parameters, 'mode', [ "VIEW", "ANALYZE" ] ).name('Diagram mode').listen();
-diagramMode.onChange(function(value) 
-{ setDiagramMode(); });
+// var diagramMode = gui.add( parameters, 'mode', [ "VIEW", "ANALYZE" ] ).name('Diagram mode').listen();
+// diagramMode.onChange(function(value) 
+// { setDiagramMode(); });
 
 
-gui.add( parameters, 'toggleHelpers' ).name("Toggle Helpers");
-gui.add( parameters, 'reset' ).name("Reset Diagram");
-gui.add( parameters, 'export' ).name("Export Diagram");
-gui.add( parameters, 'import' ).name("Import Diagram");
-gui.add( parameters, 'clear' ).name("Clear Diagram");
-gui.open();
+// gui.add( parameters, 'toggleHelpers' ).name("Toggle Helpers");
+// gui.add( parameters, 'reset' ).name("Reset Diagram");
+// gui.add( parameters, 'export' ).name("Export Diagram");
+// gui.add( parameters, 'import' ).name("Import Diagram");
+// gui.add( parameters, 'clear' ).name("Clear Diagram");
+// gui.open();
 
-function setDiagramMode() {
-    var value = parameters.mode;
-    diagram.setMode(value);
-    console.log(diagram);
-}
+// function setDiagramMode() {
+//     var value = parameters.mode;
+//     diagram.setMode(value);
+//     console.log(diagram);
+// }
 
-function toggleHelpers() {
-    if (diagram.helpers) {
-        diagram.hideHelpers();
-    } else {
-        diagram.showHelpers();
-    }
-}
+// function toggleHelpers() {
+//     if (diagram.helpers) {
+//         diagram.hideHelpers();
+//     } else {
+//         diagram.showHelpers();
+//     }
+// }
 
-function resetDiagram() {
-    parameters.mode = "VIEW";
-    diagram.reset();
-    console.log(diagram);
-}
+// function resetDiagram() {
+//     parameters.mode = "VIEW";
+//     diagram.reset();
+//     console.log(diagram);
+// }
 
-function importDiagram() {
-    console.log('Importing diagram');
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.bpmn';
-    input.onchange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            console.log(file);
-            diagram.import(file);
-        }
-    };
-    input.click();
-}
+// function importDiagram() {
+//     console.log('Importing diagram');
+//     const input = document.createElement('input');
+//     input.type = 'file';
+//     input.accept = '.bpmn';
+//     input.onchange = (event) => {
+//         const file = event.target.files[0];
+//         if (file) {
+//             console.log(file);
+//             diagram.import(file);
+//         }
+//     };
+//     input.click();
+// }
 
-function exportDiagram() {
-    diagram.export();
-}
+// function exportDiagram() {
+//     diagram.export();
+// }
 
-function clearDiagram() {
-    diagram.clear();
-}
+// function clearDiagram() {
+//     diagram.clear();
+// }
 
 
 // ////////////////////////////////////////////////////////////////////////////////////
