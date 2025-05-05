@@ -1,6 +1,6 @@
 import { BpmnDiagram } from "./bpmn-diagram.es.js";
 
-// import * as dat from './dat.gui.min.js';
+// import * as dat from './dat.gui.min.js'; // Import in the index.html file. The reason for this approach is that dat.gui.min.js is not written as an ES module.
 
 var diagram = new BpmnDiagram(document.body);
 
