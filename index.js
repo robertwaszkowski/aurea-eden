@@ -1,6 +1,6 @@
 import { BpmnDiagram } from "./lib/notations/BpmnDiagram.js";
 
-import * as dat from 'dat.gui';
+import * as dat from 'dat.gui.min.js';
 
 var diagram = new BpmnDiagram(document.body);
 
