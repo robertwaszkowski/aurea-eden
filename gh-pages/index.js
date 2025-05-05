@@ -1,9 +1,9 @@
-import { BpmnDiagram } from "./lib/notations/BpmnDiagram.js";
-import { DiagramDimensions } from "./lib/diagrams/DiagramConstants.js";
-import { BpmnIconDimensions } from './lib/notations/BpmnDiagramConstants.js';
+import { BpmnDiagram } from "../lib/notations/BpmnDiagram.js";
+import { DiagramDimensions } from "../lib/diagrams/DiagramConstants.js";
+import { BpmnIconDimensions } from '../lib/notations/BpmnDiagramConstants.js';
 
-import user from './lib/shapes/icon/bpmn/activities/user.svg?raw';
-import subProcessMarker from './lib/shapes/icon/bpmn/activities/sub-process-marker.svg?raw';
+import user from '../lib/shapes/icon/bpmn/activities/user.svg?raw';
+import subProcessMarker from '../lib/shapes/icon/bpmn/activities/sub-process-marker.svg?raw';
 
 import * as dat from 'dat.gui';
 
