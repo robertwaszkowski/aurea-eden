@@ -1,11 +1,5 @@
-import { BpmnDiagram } from "../lib/notations/BpmnDiagram.js";
-import { DiagramDimensions } from "../lib/diagrams/DiagramConstants.js";
-import { BpmnIconDimensions } from '../lib/notations/BpmnDiagramConstants.js';
-
-import user from '../lib/shapes/icon/bpmn/activities/user.svg?raw';
-import subProcessMarker from '../lib/shapes/icon/bpmn/activities/sub-process-marker.svg?raw';
-
-import * as dat from 'dat.gui';
+import { BpmnDiagram } from "bpmn-diagram.es.js";
+// import * as dat from 'dat.gui';
 
 var diagram = new BpmnDiagram(document.body);
 
@@ -134,11 +128,9 @@ diagram.addGateway('g2')
     .connectFrom('a3', 'E', 'N')
     .connectFrom('a6', 'E', 'S');
 
-diagram.addTask('a7')
+diagram.addUserTask('a7')
     .positionRightOf('g2')
     .addWrappedText('Close Order')
-    .addIcon(user, 'top-left', BpmnIconDimensions.SMALL)
-    .addIcon(subProcessMarker, 'bottom', BpmnIconDimensions.SMALL)
     .addValueBar(30)
     .connectFrom('g2', 'E', 'W');
 
@@ -150,9 +142,9 @@ diagram.addEndEvent('e2')
 const waypoints = [
     diagram.getElementById('g1').getNorthPoint(),
     {   x: diagram.getElementById('g1').getNorthPoint().x,
-        y: diagram.getElementById('a3').getNorthPoint().y + DiagramDimensions.DISTANCE_BETWEEN_ELEMENTS },
+        y: diagram.getElementById('a3').getNorthPoint().y + BpmnDiagram.Dimensions.DISTANCE_BETWEEN_ELEMENTS },
     {   x: diagram.getElementById('a7').getNorthPoint().x,
-        y: diagram.getElementById('a3').getNorthPoint().y + DiagramDimensions.DISTANCE_BETWEEN_ELEMENTS },    
+        y: diagram.getElementById('a3').getNorthPoint().y + BpmnDiagram.Dimensions.DISTANCE_BETWEEN_ELEMENTS },    
     diagram.getElementById('a7').getNorthPoint()
 ];
 diagram.addFlowConnector('f1', waypoints);

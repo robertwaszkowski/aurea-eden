@@ -7,9 +7,9 @@ export default defineConfig({
 
   build: {
     lib: {
-      entry: path.resolve(__dirname, "./lib/aurea-eden.js"),
+      entry: path.resolve(__dirname, "./lib/notations/BpmnDiagram.js"),
       name: "Aurea EDEN",
-      fileName: (format) => `aurea-eden.${format}.js`,
+      fileName: (format) => `bpmn-diagram.${format}.js`,
     },
   },
 });
