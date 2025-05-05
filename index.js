@@ -1,4 +1,4 @@
-import { BpmnDiagram } from "./lib/notations/BpmnDiagram.js";
+import { BpmnDiagram } from "./bpmn-diagram.es.js";
 
 // import * as dat from './dat.gui.min.js';
 
