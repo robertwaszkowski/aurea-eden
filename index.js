@@ -1,10 +1,13 @@
-import { BpmnDiagram } from "./lib/notations/BpmnDiagram.js";
+// Prepare a BPMN diagram
 
+import { BpmnDiagram } from "./lib/notations/BpmnDiagram.js";
 import * as dat from 'dat.gui';
 
 var diagram = new BpmnDiagram(document.body);
 
+
 // Set GUI
+
 const gui = new dat.GUI();
 const parameters = 
 {
@@ -72,9 +75,8 @@ function clearDiagram() {
 }
 
 
-// ////////////////////////////////////////////////////////////////////////////////////
-// 20250313 - BPMN example - source: https://www.omg.org/spec/BPMN/2.0.2/PDF page 268
-// ////////////////////////////////////////////////////////////////////////////////////
+
+// Add diagram elements
 
 diagram.addStartEvent('e1');
 
@@ -111,7 +113,7 @@ diagram.addTask('a5')
     .addWrappedText('Make Payment')
     .addValueBar(50)
     .connectFrom('a4', 'E', 'W');
-    
+
 diagram.addTask('a6')
     .positionRightOf('a5')
     .addWrappedText('Accept Payment')
@@ -143,7 +145,8 @@ const waypoints = [
     diagram.getElementById('a7').getNorthPoint()
 ];
 diagram.addFlowConnector('f1', waypoints);
-console.log(`waypoints: ${waypoints}`);
+
+// End of diagram preparation
 
 diagram.center();
 diagram.fitScreen();
