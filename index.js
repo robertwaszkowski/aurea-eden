@@ -147,4 +147,3 @@ console.log(`waypoints: ${waypoints}`);
 
 diagram.arrange();
 diagram.fitScreen();
-
