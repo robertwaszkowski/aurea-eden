@@ -145,6 +145,6 @@ const waypoints = [
 diagram.addFlowConnector('f1', waypoints);
 console.log(`waypoints: ${waypoints}`);
 
-diagram.center();
+diagram.arrange();
 diagram.fitScreen();
 
