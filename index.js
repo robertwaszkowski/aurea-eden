@@ -148,6 +148,6 @@ diagram.addFlowConnector('f1', waypoints);
 
 // End of diagram preparation
 
-diagram.center();
+diagram.arrange();
 diagram.fitScreen();
 
