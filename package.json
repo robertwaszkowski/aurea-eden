@@ -1,19 +1,21 @@
 {
-  "name": "aurea-eden-lib",
+  "name": "aurea-eden",
   "type": "module",
   "version": "1.25.1",
-  "description": "Library for 3D diagramming.",
+  "description": "A Three.js-based framework for creating custom 3D diagramming notations.",
+  "main": "dist/bpmn-diagram.es.js",
+  "module": "dist/bpmn-diagram.es.js",
   "author": "Robert Waszkowski",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "homepage": "",
   "repository": {
     "type": "git",
-    "url": "",
-    "directory": ""
+    "url": "git+https://github.com/robertwaszkowski/aurea-eden.git"
   },
   "keywords": [
     "3D",
     "diagramming",
+    "Three.js",
     "library"
   ],
   "scripts": {

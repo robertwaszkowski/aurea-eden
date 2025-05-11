@@ -28032,23 +28032,19 @@ class ax {
     return this.elements.push(t), this.scene.add(t), e && t.position.set(e.x, e.y, 0), t.setDiagram(this), t;
   }
   /**
-       * Removes an element from the diagram by its ID.
-       * @param {string} elementId - The ID of the element to remove.
-      removeElement(elementId) {
-          const element = this.elements.find(el => el.id === elementId);
-          if (element) {
-              this.scene.remove(element);
-              this.elements = this.elements.filter(el => el.id !== elementId);
-          }
-      }
-      }
-  
-      /**
-       * Retrieves an element from the `elements` array by its unique `elementId`.
-       *
-       * @param {string} elementId - The unique identifier of the element to find.
-       * @returns {Object|undefined} The element with the matching `elementId`, or `undefined` if not found.
-       */
+   * Removes an element from the diagram by its ID.
+   * @param {string} elementId - The ID of the element to remove.
+   */
+  removeElement(t) {
+    const e = this.elements.find((n) => n.id === t);
+    e && (this.scene.remove(e), this.elements = this.elements.filter((n) => n.id !== t));
+  }
+  /**
+   * Retrieves an element from the `elements` array by its unique `elementId`.
+   *
+   * @param {string} elementId - The unique identifier of the element to find.
+   * @returns {Object|undefined} The element with the matching `elementId`, or `undefined` if not found.
+   */
   getElementById(t) {
     return this.elements.find((e) => e.elementId === t);
   }

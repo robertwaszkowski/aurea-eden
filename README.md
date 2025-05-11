@@ -18,7 +18,7 @@ A flexible Three.js-based framework for creating custom diagramming notations in
 ## Installation
 
 ```bash
-npm install aurea-eden-lib
+npm install aurea-eden
 ```
 
 ## Quick Start

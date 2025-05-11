@@ -16,20 +16,43 @@ const parameters =
     reset: function() { resetDiagram() },
     export: function() { exportDiagram() },
     import: function() { importDiagram() },
-    clear: function() { clearDiagram() }
+    clear: function() { clearDiagram() },
+    camPosition: '...',
+    camLookAt: '...'
 };
 
 var diagramMode = gui.add( parameters, 'mode', [ "VIEW", "ANALYZE" ] ).name('Diagram mode').listen();
 diagramMode.onChange(function(value) 
 { setDiagramMode(); });
 
-
 gui.add( parameters, 'toggleHelpers' ).name("Toggle Helpers");
 gui.add( parameters, 'reset' ).name("Reset Diagram");
 gui.add( parameters, 'export' ).name("Export Diagram");
 gui.add( parameters, 'import' ).name("Import Diagram");
 gui.add( parameters, 'clear' ).name("Clear Diagram");
+gui.add( parameters, 'camPosition' ).name("Camera Position").listen();
+gui.add( parameters, 'camLookAt' ).name("Camera LookAt").listen();
 gui.open();
+
+function readCameraPosition() {
+    // Get camera vectors
+    const cameraPosition = diagram.camera.position.clone();
+    const cameraTarget = diagram.controls.target.clone();
+
+    // Update parameters object. Format as strings with fixed decimal places.
+    parameters.camPosition = `(${cameraPosition.x.toFixed(2)}, ${cameraPosition.y.toFixed(2)}, ${cameraPosition.z.toFixed(2)})`;
+    parameters.camLookAt = `(${cameraTarget.x.toFixed(2)}, ${cameraTarget.y.toFixed(2)}, ${cameraTarget.z.toFixed(2)})`;
+
+    // Force GUI update
+    for (let controller of gui.__controllers) {
+        controller.updateDisplay();
+    }
+}
+
+// Add event listener to update camera position
+diagram.controls.addEventListener('change', readCameraPosition);
+
+
 
 function setDiagramMode() {
     var value = parameters.mode;
