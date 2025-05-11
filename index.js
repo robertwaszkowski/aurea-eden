@@ -1,6 +1,6 @@
 // Prepare a BPMN diagram
 
-import { BpmnDiagram } from "bpmn-diagram.es.js";
+import { BpmnDiagram } from "./bpmn-diagram.es.js";
 // import * as dat from 'dat.gui';
 
 var diagram = new BpmnDiagram(document.body);
