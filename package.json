@@ -1,7 +1,7 @@
 {
   "name": "aurea-eden",
   "type": "module",
-  "version": "1.25.5",
+  "version": "1.25.6",
   "description": "A Three.js-based framework for creating custom 3D diagramming notations.",
   "main": "dist/bpmn-diagram.es.js",
   "module": "dist/bpmn-diagram.es.js",
@@ -23,7 +23,7 @@
     "build": "vite build",
     "predeploy": "npm run build",
     "deploy-gh-pages2": "npm run release && npm run build && git checkout gh-pages && rm -rf dist && git checkout main -- dist/bpmn-diagram.es.js dist/bpmn-diagram.umd.js && mv dist/bpmn-diagram.es.js ./ && mv dist/bpmn-diagram.umd.js ./ && rm -rf dist && git add bpmn-diagram.es.js bpmn-diagram.umd.js && git commit -m \"Update with latest build\" && git push origin gh-pages && git checkout -",
-    "deploy-gh-pages":  "npm run release && npm run build && git checkout gh-pages && rm -rf bpmn-diagram.es.js bpmn-diagram.umd.js dist && git checkout main -- dist/bpmn-diagram.es.js dist/bpmn-diagram.umd.js && mv dist/bpmn-diagram.es.js ./ && mv dist/bpmn-diagram.umd.js ./ && rm -rf dist && git add bpmn-diagram.es.js bpmn-diagram.umd.js && git commit -m \"Update with latest build\" && git push origin gh-pages && git checkout -",
+    "deploy-gh-pages": "npm run release && npm run build && git checkout gh-pages && rm -rf bpmn-diagram.es.js bpmn-diagram.umd.js dist && git checkout main -- dist/bpmn-diagram.es.js dist/bpmn-diagram.umd.js && mv dist/bpmn-diagram.es.js ./ && mv dist/bpmn-diagram.umd.js ./ && rm -rf dist && git add bpmn-diagram.es.js bpmn-diagram.umd.js && git commit -m \"Update with latest build\" && git push origin gh-pages && git checkout -",
     "release": "standard-version",
     "release:patch": "standard-version --release-as patch",
     "release:minor": "standard-version --release-as minor",
