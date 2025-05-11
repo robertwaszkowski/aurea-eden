@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.25.3](https://github.com/robertwaszkowski/aurea-eden/compare/v1.25.2...v1.25.3) (2025-05-11)
+
 ### 1.25.2 (2025-05-11)
 
 ### [1.25.1](https://gitlab.tecna.pl/waszkowski_r/three-diagram/compare/v1.25.0...v1.25.1) (2025-04-30)
