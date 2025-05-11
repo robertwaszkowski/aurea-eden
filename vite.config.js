@@ -28,14 +28,14 @@ export default defineConfig({
       fileName: (format) => `bpmn-diagram.${format}.js`,
       formats: ['es', 'umd']
     },
-    rollupOptions: {
-      external: ['three'],
-      output: {
-        globals: {
-          three: 'THREE'
-        }
-      }
-    },
+    // rollupOptions: {
+    //   external: ['three'],
+    //   output: {
+    //     globals: {
+    //       three: 'THREE'
+    //     }
+    //   }
+    // },
     sourcemap: true,
     minify: 'terser',
     terserOptions: {
