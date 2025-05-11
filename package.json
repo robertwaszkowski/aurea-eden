@@ -22,7 +22,7 @@
     "dev": "vite",
     "build": "vite build",
     "predeploy": "npm run build",
-    "deploy-gh-pages": "npm run release && npm run build && git checkout gh-pages && git checkout main -- dist/bpmn-diagram.es.js && cp -f dist/bpmn-diagram.es.js ./ && rm -rf dist && git checkout main -- dist/bpmn-diagram.umd.js && cp -f dist/bpmn-diagram.umd.js ./ && rm -rf dist && git add bpmn-diagram.es.js bpmn-diagram.umd.js && git commit -m \"Update with latest build\" && git push origin gh-pages && git checkout -",
+    "deploy-gh-pages": "npm run release && npm run build && git checkout gh-pages && git checkout main -- dist/bpmn-diagram.es.js && mv dist/bpmn-diagram.es.js ./ && git checkout main -- dist/bpmn-diagram.umd.js && mv dist/bpmn-diagram.umd.js ./ && rm -rf dist && git add bpmn-diagram.es.js bpmn-diagram.umd.js && git commit -m \"Update with latest build\" && git push origin gh-pages && git checkout -",
     "release": "standard-version",
     "release:patch": "standard-version --release-as patch",
     "release:minor": "standard-version --release-as minor",
