@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.25.5](https://github.com/robertwaszkowski/aurea-eden/compare/v1.25.4...v1.25.5) (2025-05-11)
+
+
+### Bug Fixes
+
+* correct order of commands in deploy-gh-pages script ([49a414a](https://github.com/robertwaszkowski/aurea-eden/commit/49a414aa7d079092eaefed2b7f408d201b68e8e6))
+
 ### [1.25.4](https://github.com/robertwaszkowski/aurea-eden/compare/v1.25.3...v1.25.4) (2025-05-11)
 
 ### [1.25.3](https://github.com/robertwaszkowski/aurea-eden/compare/v1.25.2...v1.25.3) (2025-05-11)
