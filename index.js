@@ -1,7 +1,7 @@
 // Prepare a BPMN diagram
 
 import { BpmnDiagram } from "./lib/notations/BpmnDiagram.js";
-import * as dat from 'dat.gui';
+// import * as dat from 'dat.gui';
 
 var diagram = new BpmnDiagram(document.body);
 
