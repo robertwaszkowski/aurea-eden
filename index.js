@@ -1,10 +1,13 @@
-import { BpmnDiagram } from "./bpmn-diagram.es.js";
+// Prepare a BPMN diagram
 
-// import * as dat from './dat.gui.min.js'; // Import in the index.html file. The reason for this approach is that dat.gui.min.js is not written as an ES module.
+import { BpmnDiagram } from "./lib/notations/BpmnDiagram.js";
+import * as dat from 'dat.gui';
 
 var diagram = new BpmnDiagram(document.body);
 
+
 // Set GUI
+
 const gui = new dat.GUI();
 const parameters = 
 {
@@ -13,20 +16,43 @@ const parameters =
     reset: function() { resetDiagram() },
     export: function() { exportDiagram() },
     import: function() { importDiagram() },
-    clear: function() { clearDiagram() }
+    clear: function() { clearDiagram() },
+    camPosition: '...',
+    camLookAt: '...'
 };
 
 var diagramMode = gui.add( parameters, 'mode', [ "VIEW", "ANALYZE" ] ).name('Diagram mode').listen();
 diagramMode.onChange(function(value) 
 { setDiagramMode(); });
 
-
 gui.add( parameters, 'toggleHelpers' ).name("Toggle Helpers");
 gui.add( parameters, 'reset' ).name("Reset Diagram");
 gui.add( parameters, 'export' ).name("Export Diagram");
 gui.add( parameters, 'import' ).name("Import Diagram");
 gui.add( parameters, 'clear' ).name("Clear Diagram");
+gui.add( parameters, 'camPosition' ).name("Camera Position").listen();
+gui.add( parameters, 'camLookAt' ).name("Camera LookAt").listen();
 gui.open();
+
+function readCameraPosition() {
+    // Get camera vectors
+    const cameraPosition = diagram.camera.position.clone();
+    const cameraTarget = diagram.controls.target.clone();
+
+    // Update parameters object. Format as strings with fixed decimal places.
+    parameters.camPosition = `(${cameraPosition.x.toFixed(2)}, ${cameraPosition.y.toFixed(2)}, ${cameraPosition.z.toFixed(2)})`;
+    parameters.camLookAt = `(${cameraTarget.x.toFixed(2)}, ${cameraTarget.y.toFixed(2)}, ${cameraTarget.z.toFixed(2)})`;
+
+    // Force GUI update
+    for (let controller of gui.__controllers) {
+        controller.updateDisplay();
+    }
+}
+
+// Add event listener to update camera position
+diagram.controls.addEventListener('change', readCameraPosition);
+
+
 
 function setDiagramMode() {
     var value = parameters.mode;
@@ -72,9 +98,8 @@ function clearDiagram() {
 }
 
 
-// ////////////////////////////////////////////////////////////////////////////////////
-// 20250313 - BPMN example - source: https://www.omg.org/spec/BPMN/2.0.2/PDF page 268
-// ////////////////////////////////////////////////////////////////////////////////////
+
+// Add diagram elements
 
 diagram.addStartEvent('e1');
 
@@ -111,7 +136,7 @@ diagram.addTask('a5')
     .addWrappedText('Make Payment')
     .addValueBar(50)
     .connectFrom('a4', 'E', 'W');
-    
+
 diagram.addTask('a6')
     .positionRightOf('a5')
     .addWrappedText('Accept Payment')
@@ -143,7 +168,8 @@ const waypoints = [
     diagram.getElementById('a7').getNorthPoint()
 ];
 diagram.addFlowConnector('f1', waypoints);
-console.log(`waypoints: ${waypoints}`);
+
+// End of diagram preparation
 
 diagram.arrange();
 diagram.fitScreen();
