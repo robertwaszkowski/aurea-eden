@@ -30,9 +30,9 @@ gui.add( parameters, 'reset' ).name("Reset Diagram");
 gui.add( parameters, 'export' ).name("Export Diagram");
 gui.add( parameters, 'import' ).name("Import Diagram");
 gui.add( parameters, 'clear' ).name("Clear Diagram");
-gui.add( parameters, 'camPosition' ).name("Camera Position").listen();
-gui.add( parameters, 'camLookAt' ).name("Camera LookAt").listen();
-gui.open();
+const cameraFolder = gui.addFolder('Camera');
+cameraFolder.add(parameters, 'camPosition').name("Position").listen();
+cameraFolder.add(parameters, 'camLookAt').name("LookAt").listen();
 
 function readCameraPosition() {
     // Get camera vectors
