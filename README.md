@@ -367,11 +367,6 @@ Aurea EDEN is also utilized in the Aurea Low-Code Development Platform (LCDP) fo
 
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
 
-## Dependencies
-
-- Three.js: 3D graphics library
-- Tween.js: Animation library
-
 ## Author / Contact
 
 Robert Waszkowski
