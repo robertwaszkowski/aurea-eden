@@ -40501,20 +40501,56 @@ class Diagram {
       }
     });
   }
-  fitScreen() {
+  /**
+   * Calculates the optimal zoom distance for the camera to ensure the entire scene is visible.
+   *
+   * @returns {number} The optimal distance for the camera to fit the scene within the viewport.
+   */
+  calculateOptimalZoom() {
     const box = new Box3().setFromObject(this.scene);
     const size = box.getSize(new Vector3$1());
-    console.log("fitScreen() -> size:", size);
-    const maxDim = Math.max(size.x, size.y, size.z);
-    const fov2 = this.camera.fov * (Math.PI / 180);
-    const cameraZ = Math.abs(maxDim / 2 / Math.tan(fov2 / 2));
+    const aspect2 = window.innerWidth / window.innerHeight;
+    const fovRad = MathUtils$1.degToRad(this.camera.fov);
+    const distanceForWidth = size.x / 2 / (Math.tan(fovRad / 2) * aspect2);
+    const distanceForHeight = size.y / 2 / Math.tan(fovRad / 2);
+    return Math.max(distanceForWidth, distanceForHeight);
+  }
+  /**
+   * Adjusts the camera to fit the entire scene within the screen.
+   * 
+   * This method calculates the optimal zoom level and positions the camera
+   * at a distance that ensures the entire scene is visible, with a small margin.
+   * It also updates the camera's orientation to look at the center of the scene
+   * and saves the current camera state for later restoration.
+   */
+  fitScreen() {
+    const minZDistance = this.calculateOptimalZoom();
+    const margin = 1.05;
+    const cameraZ = minZDistance * margin;
     this.camera.position.set(0, 0, cameraZ);
-    this.camera.lookAt(new Vector3$1(0, 0, 0));
+    this.camera.lookAt(0, 0, 0);
     this.camera.updateProjectionMatrix();
     this.controls.saveState();
     this.initialCameraPosition = this.camera.position.clone();
     this.initialTarget = this.controls.target.clone();
   }
+  /**
+   * Centers the diagram by moving the camera to its initial position and target.
+   * This method uses the Tween.js library to animate the camera movement.
+   * 
+   * Preconditions:
+   * - `this.initialCameraPosition` and `this.initialTarget` must be defined.
+   * 
+   * Behavior:
+   * - If the initial camera position or target is not defined, a warning is logged, and the method exits.
+   * - Animates the camera's position and the controls' target to their initial states over 1200 milliseconds.
+   * - Uses a Quartic easing function for smooth animation.
+   * 
+   * Dependencies:
+   * - Tween.js library for animation.
+   * 
+   * @returns {void}
+   */
   center() {
     if (!this.initialCameraPosition || !this.initialTarget) {
       console.warn("Initial camera position or target is not defined.");
@@ -40552,6 +40588,20 @@ class Diagram {
     }).onComplete(function() {
     }).start();
   }
+  /**
+   * Rotates the diagram around the Y axis by a specified angle in degrees.
+   * The method ensures the diagram is centered and calculates the new camera
+   * and target positions based on the provided angle.
+   *
+   * @param {number} targetAngle - The angle in degrees to rotate the diagram (e.g., 60).
+   * @returns {void} - Does not return a value.
+   * 
+   * @throws {Error} Logs a warning if the initial camera position or target is not defined.
+   *
+   * @example
+   * // Rotate the diagram by 60 degrees
+   * diagram.rotate(60);
+   */
   rotate(targetAngle) {
     if (!this.initialCameraPosition || !this.initialTarget) {
       console.warn("Initial camera position or target is not defined.");
