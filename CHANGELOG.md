@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.25.10](https://github.com/robertwaszkowski/aurea-eden/compare/v1.25.9...v1.25.10) (2025-05-19)
+
+
+### Bug Fixes
+
+* enhance camera zoom functionality ([be369b9](https://github.com/robertwaszkowski/aurea-eden/commit/be369b998ac83afa6424d7ace7205da33299cef0))
+
 ### [1.25.9](https://github.com/robertwaszkowski/aurea-eden/compare/v1.25.8...v1.25.9) (2025-05-11)
 
 ### [1.25.8](https://github.com/robertwaszkowski/aurea-eden/compare/v1.25.7...v1.25.8) (2025-05-11)
