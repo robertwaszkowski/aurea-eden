@@ -24,6 +24,55 @@ npx vite
 ```
 and open the local site [http://localhost:5173/use-lib.html](http://localhost:5173/use-lib.html)
 
+## Deploy to GitHub Pages
+
+GitHub Pages are configured to run deploy from the branch `gh-pages`.
+You may find the configuration here: https://github.com/robertwaszkowski/aurea-eden/settings/pages.
+
+To deploy to the `gh-pages` branch run the following command:
+```terminal
+npm run deploy-gh-pages
+```
+
+It runs the following commands:
+```json
+    "deploy-gh-pages": "npm run release && npm run build && git checkout gh-pages && rm -rf bpmn-diagram.es.js bpmn-diagram.umd.js dist && git checkout main -- dist/bpmn-diagram.es.js dist/bpmn-diagram.umd.js && mv dist/bpmn-diagram.es.js ./ && mv dist/bpmn-diagram.umd.js ./ && rm -rf dist && git add bpmn-diagram.es.js bpmn-diagram.umd.js && git commit -a -m \"Update with latest build\" && git push origin gh-pages && git checkout -",
+```
+
+This `deploy-gh-pages` script in the `package.json` is a series of commands executed sequentially to build the project and deploy the resulting build artifacts to the `gh-pages` branch of your Git repository, which is commonly used for hosting static websites on GitHub Pages.
+
+Here's a breakdown of each command:
+
+* `npm run release`: This command executes another npm script named `release`. It involves tasks of version bumping, creating Git tags, and generating changelogs. This step prepares the project for a new release before building.
+
+* `npm run build`: This command executes the npm script named `build`. This script is responsible for compiling and optimizing project's source code into production-ready assets (JavaScript files). These assets are placed in the output directory - `dist`.
+
+* `git checkout gh-pages`: This command switches your current Git branch to `gh-pages`. This is the branch that GitHub Pages serves as a website.
+
+* `rm -rf bpmn-diagram.es.js bpmn-diagram.umd.js dist`: This command removes existing build-related files and the `dist` directory from the `gh-pages` branch. This is done to ensure that the branch is clean before copying the new build artifacts.
+
+* `rm -rf`: This is a standard Unix/Linux command to remove files and directories recursively (-r) and forcefully (-f, without prompting).
+`bpmn-diagram.es.js`, `bpmn-diagram.umd.js`, `dist`: These are the specific files and directory being removed.
+
+* `git checkout main -- dist/bpmn-diagram.es.js dist/bpmn-diagram.umd.js`: This command checks out specific files (`bpmn-diagram.es.js` and `bpmn-diagram.umd.js`) from the `dist` directory of the `main` branch and places them into the current `gh-pages` branch. This selectively brings the newly built files from your primary development branch (`main`) into the `gh-pages` branch without merging the entire branch history.
+
+* `mv dist/bpmn-diagram.es.js ./ and mv dist/bpmn-diagram.umd.js ./`: These commands move the checked-out build files from the `dist` directory (which was created temporarily by the previous command within the `gh-pages` branch) to the root of the `gh-pages` branch directory.
+
+* `rm -rf dist`: This command removes the remaining `dist` directory from the `gh-pages` branch after the necessary files have been moved.
+
+* `git add bpmn-diagram.es.js bpmn-diagram.umd.js`: This command stages the moved build files (`bpmn-diagram.es.js` and `bpmn-diagram.umd.js`) for the next commit.
+
+* `git commit -a -m "Update with latest build"`: This command creates a new commit on the `gh-pages` branch.
+
+    * `-a`: This flag automatically stages all modified and deleted files. In this case, it would include the files moved and the removed `dist` directory, in addition to the newly added build files.
+    * `-m "Update with latest build"`: This sets the commit message to *"Update with latest build"*.
+
+* `git push origin gh-pages`: This command pushes the newly created commit on the `gh-pages` branch to the origin remote repository on GitHub. This action updates the GitHub Pages site with the latest build.
+
+* `git checkout -`: This command switches back to the previous branch you were on before checking out `gh-pages`. This is a convenient way to return to your working branch (`main`) after the deployment is complete.
+
+In summary, the `deploy-gh-pages` script automates the process of building your project, cleaning up the `gh-pages` branch, copying the latest build artifacts to the root of `gh-pages`, committing these changes, and pushing them to GitHub to update your hosted website.
+
 ## Configuration
 
 ### Avoid Repeated Credential Prompts
