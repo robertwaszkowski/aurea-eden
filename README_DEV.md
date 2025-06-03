@@ -24,6 +24,43 @@ npx vite
 ```
 and open the local site [http://localhost:5173/use-lib.html](http://localhost:5173/use-lib.html)
 
+## Deploy to npm
+
+To publish only the library files to npm, follow these steps:
+
+1. **Ensure your `package.json` is configured**  
+    Make sure the `"files"` field in your `package.json` includes only the files you want to publish (e.g., the built library files):
+
+    ```json
+    "files": [
+      "dist/bpmn-diagram.es.js",
+      "dist/bpmn-diagram.umd.js"
+    ]
+    ```
+
+2. **Build the library**  
+    Run the build script to generate the production files:
+
+    ```bash
+    npm run build
+    ```
+
+3. **Login to npm**  
+    If you haven't already, authenticate with npm:
+
+    ```bash
+    npm login
+    ```
+
+4. **Publish**  
+    Publish the package to npm:
+
+    ```bash
+    npm publish
+    ```
+
+This will upload only the specified files to npm. For more details, see the [npm docs on publishing](https://docs.npmjs.com/cli/v10/commands/npm-publish).
+
 ## Deploy to GitHub Pages
 
 GitHub Pages are configured to run deploy from the branch `gh-pages`.

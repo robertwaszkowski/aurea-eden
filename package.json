@@ -18,6 +18,10 @@
     "Three.js",
     "library"
   ],
+  "files": [
+    "dist/bpmn-diagram.es.js",
+    "dist/bpmn-diagram.umd.js"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
