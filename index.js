@@ -1,124 +1,104 @@
-// Draw a diagram using custom notation
+// Draw primitive shapes
 
-import { MyCustomNotationDiagram } from "./lib/notations/MyCustomNotationDiagram.js";
+import { Diagram } from "./lib/diagrams/Diagram.js";
+import { Element } from "./lib/elements/Element.js";
+// Import primitive shapes
+import { CircleShape } from "./lib/shapes/paths/CircleShape.js";
+import { DiamondShape } from "./lib/shapes/paths/DiamondShape.js";
+import { EllipseShape } from "./lib/shapes/paths/EllipseShape.js";
+import { RectangleShape } from "./lib/shapes/paths/RectangleShape.js";
+import { RoundedRectangleShape } from "./lib/shapes/paths/RoundedRectangleShape.js";
+import { FoldedCornerRectangleShape } from "./lib/shapes/paths/FoldedCornerRectangleShape.js";
+import { TabbedRectangleShape } from "./lib/shapes/paths/TabbedRectangleShape.js";
+// Import other shapes
+import { BlobShape } from "./lib/shapes/paths/BlobShape.js";
+import { StarShape } from "./lib/shapes/paths/StarShape.js";
+import { TriangleShape } from "./lib/shapes/paths/TriangleShape.js";
+import { BoxShape } from "./lib/shapes/solids/BoxShape.js";
 
-// Create an instance of the custom notation diagram
-// This will set up the diagram in the specified container (e.g., document.body)
-var diagram = new MyCustomNotationDiagram(document.body);
+// Create a new Diagram instance and attach it to the document body
+const diagram = new Diagram(document.body);
 
-// Use the custom methods to add elements of our new notation
-diagram.addCustomStarNode('node1', 'Star');
+// Add elements
 
-diagram.addMyCustomNode('node2', 'Blob')
-    .positionRightOf('node1') // Chained positioning relative to node1
-    .connectFrom('node1','E','W'); // Connects node1 (source) to node2 (target)
+// Primitive shapes
 
-diagram.addMyCustomNode('node3', 'Blob 2')
-    .positionDownOf('node1') // Position below node1
-    .connectFrom('node1', 'S', 'N'); // Connect South of node1 to North of node3
+diagram.addElement( new Element('circle', new CircleShape()) )
+    .addWrappedText('Circle');
+
+diagram.addElement( new Element('diamond', new DiamondShape()) )
+    .addWrappedText('Diam ond')
+    .positionRightOf('circle');
+
+diagram.addElement( new Element('ellipse', new EllipseShape()) )
+    .addWrappedText('Ellipse')
+    .positionRightOf('diamond');
+
+diagram.addElement( new Element('rectangle', new RectangleShape()) )
+    .addWrappedText('Rectangle')
+    .positionDownOf('circle');
+
+diagram.addElement( new Element('rounded-rectangle', new RoundedRectangleShape()) )
+    .addWrappedText('Rounded Rectangle')
+    .positionRightOf('rectangle');
+
+diagram.addElement( new Element('folded-corner-rectangle', new FoldedCornerRectangleShape()) )
+    .addWrappedText('Folded Corner Rectangle')
+    .positionRightOf('rounded-rectangle');
+
+diagram.addElement( new Element('ellipse-rectangle', new TabbedRectangleShape()) )
+    .addWrappedText('Tabbed Rectangle')
+    .positionRightOf('folded-corner-rectangle');
+
+diagram.addElement( new Element('star', new StarShape()) )
+    .addWrappedText('Star')
+    .positionDownOf('rectangle');
+
+diagram.addElement( new Element('triangle', new TriangleShape()) )
+    .addWrappedText('Triangle')
+    .positionRightOf('star');
+
+// Other shapes
+diagram.addElement( new Element('blob', new BlobShape()) )
+    .addWrappedText('Blob')
+    .positionDownOf('star');
+
+diagram.addElement( new Element('box', new BoxShape()) )
+    .addWrappedText('Box')
+    .positionRightOf('blob');
 
 // After adding elements, center the diagram and fit it to the screen
 diagram.arrange();
 diagram.fitScreen();
 
+// =================================================================================================
 
 
+// // Draw a diagram using custom notation
 
+// import { MyCustomNotationDiagram } from "./lib/notations/MyCustomNotationDiagram.js";
 
+// // Create an instance of the custom notation diagram
+// // This will set up the diagram in the specified container (e.g., document.body)
+// var diagram = new MyCustomNotationDiagram(document.body);
 
+// // Use the custom methods to add elements of our new notation
+// diagram.addCustomStarNode('node1', 'Star');
 
+// diagram.addMyCustomNode('node2', 'Blob')
+//     .positionRightOf('node1') // Chained positioning relative to node1
+//     .connectFrom('node1','E','W'); // Connects node1 (source) to node2 (target)
 
+// diagram.addMyCustomNode('node3', 'Blob 2')
+//     .positionDownOf('node1') // Position below node1
+//     .connectFrom('node1', 'S', 'N'); // Connect South of node1 to North of node3
 
+// // After adding elements, center the diagram and fit it to the screen
+// diagram.arrange();
+// diagram.fitScreen();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// =================================================================================================
 
 
 // // Prepare a BPMN diagram
