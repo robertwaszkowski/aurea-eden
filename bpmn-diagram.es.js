@@ -40879,7 +40879,7 @@ class DiagramEditMaterial extends MeshLambertMaterial {
 class BoxShape extends Shape2 {
   constructor() {
     const color2 = 255;
-    super(new BoxGeometry(1, 1, 1), new DiagramEditMaterial(color2));
+    super(new BoxGeometry(40, 40, 40), new DiagramEditMaterial(color2));
   }
 }
 class FontLoader extends Loader {
@@ -44079,8 +44079,10 @@ class Element extends Mesh {
         break;
       }
     }
-    this.diagram.addElement(wrappedTextElement).positionAt({ x: this.position.x, y: this.position.y, z: 3 });
-    this.texts.push({ element: wrappedTextElement, positionOffset: new Vector3$1(0, 0, 3) });
+    const elementHeightZ = this.getSize().z || 1;
+    const textElevation = elementHeightZ / 2 + 0.5;
+    this.diagram.addElement(wrappedTextElement).positionAt({ x: this.position.x, y: this.position.y, z: textElevation });
+    this.texts.push({ element: wrappedTextElement, positionOffset: new Vector3$1(0, 0, textElevation) });
     return this;
   }
   // ================================================================
@@ -44309,23 +44311,23 @@ class Element extends Mesh {
     return this;
   }
 }
-const RoundedRectangleDimensions = {
-  ACTIVITY_HORIZONTAL_SIZE: 100,
-  ACTIVITY_VERTICAL_SIZE: 80,
-  ACTIVITY_CORNER_RADIUS: 10,
-  ACTIVITY_LINE_WIDTH: 1
+const RectangleDimensions = {
+  HORIZONTAL_SIZE: 100,
+  VERTICAL_SIZE: 80,
+  CORNER_RADIUS: 10,
+  LINE_WIDTH: 1
 };
 const CircleDimensions = {
-  EVENT_RADIUS: 18,
-  START_EVENT_LINE_WIDTH: 1
+  RADIUS: 18,
+  LINE_WIDTH_NORMAL: 1
 };
 const DiamondDimensions = {
-  GATEWAY_DIAGONAL: 48,
-  GATEWAY_LINE_WIDTH: 1
+  DIAGONAL: 48,
+  LINE_WIDTH: 1
 };
 class CircleShape extends Shape2 {
-  constructor(lineWidth = CircleDimensions.START_EVENT_LINE_WIDTH) {
-    const eventRadius = CircleDimensions.EVENT_RADIUS;
+  constructor(lineWidth = CircleDimensions.LINE_WIDTH_NORMAL) {
+    const eventRadius = CircleDimensions.RADIUS;
     const color2 = Colors.ELEMENT_STROKE;
     const extrusionParameters = ExtrusionParameters$1;
     function circle(ctx, radius) {
@@ -44382,10 +44384,10 @@ class CircleShape extends Shape2 {
 }
 class RoundedRectangleShape extends Shape2 {
   constructor() {
-    const horizontalSize = RoundedRectangleDimensions.ACTIVITY_HORIZONTAL_SIZE;
-    const verticalSize = RoundedRectangleDimensions.ACTIVITY_VERTICAL_SIZE;
-    const lineWidth = RoundedRectangleDimensions.ACTIVITY_LINE_WIDTH;
-    const cornerRadius = RoundedRectangleDimensions.ACTIVITY_CORNER_RADIUS;
+    const horizontalSize = RectangleDimensions.HORIZONTAL_SIZE;
+    const verticalSize = RectangleDimensions.VERTICAL_SIZE;
+    const lineWidth = RectangleDimensions.LINE_WIDTH;
+    const cornerRadius = RectangleDimensions.CORNER_RADIUS;
     const outerRadius = cornerRadius;
     const innerRadius = cornerRadius - lineWidth;
     const color2 = Colors.ELEMENT_STROKE;
@@ -44421,8 +44423,8 @@ class RoundedRectangleShape extends Shape2 {
 }
 class DiamondShape extends Shape2 {
   constructor() {
-    const diagonal = DiamondDimensions.GATEWAY_DIAGONAL;
-    const lineWidth = DiamondDimensions.GATEWAY_LINE_WIDTH;
+    const diagonal = DiamondDimensions.DIAGONAL;
+    const lineWidth = DiamondDimensions.LINE_WIDTH;
     const color2 = Colors.ELEMENT_STROKE;
     const extrusionParameters = ExtrusionParameters$1;
     function diamond(ctx, verticalSize, horizontalSize) {
