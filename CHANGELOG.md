@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.26.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.25.11...v1.26.0) (2025-06-12)
+
+
+### Features
+
+* Add various shape classes for 3D modeling ([23185f4](https://github.com/robertwaszkowski/aurea-eden/commit/23185f4c58ceef9eb7983a4bfe3f38d5ffe4898a))
+
 ### [1.25.11](https://github.com/robertwaszkowski/aurea-eden/compare/v1.25.10...v1.25.11) (2025-05-19)
 
 ### [1.25.10](https://github.com/robertwaszkowski/aurea-eden/compare/v1.25.9...v1.25.10) (2025-05-19)
