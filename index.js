@@ -2,9 +2,10 @@
 
 import { BpmnDiagram } from "./lib/notations/BpmnDiagram.js";
 import * as dat from 'dat.gui';
+import * as THREE from 'three';
 
-var diagram = new BpmnDiagram(document.body);
-
+const container = document.getElementById('diagram-container');
+var diagram = new BpmnDiagram(container);
 
 // Set GUI
 
@@ -99,75 +100,112 @@ function clearDiagram() {
 
 
 
-// Add diagram elements
+// // Add diagram elements
 
-diagram.addStartEvent('e1');
+// diagram.addStartEvent('e1');
 
-diagram.addTask('a1')
-    .positionRightOf('e1')
-    .addWrappedText('Handle Quotations')
-    .connectFrom('e1', 'E', 'W')
-    .addValueBar(20);
+// diagram.addTask('a1')
+//     .positionRightOf('e1')
+//     .addWrappedText('Handle Quotations')
+//     .connectFrom('e1', 'E', 'W')
+//     .addValueBar(20);
 
-diagram.addGateway('g1')
-    .positionRightOf('a1')
-    .connectFrom('a1', 'E', 'W');
+// diagram.addGateway('g1')
+//     .positionRightOf('a1')
+//     .connectFrom('a1', 'E', 'W');
 
-diagram.addTask('a2')
-    .positionRightOf('g1')
-    .addWrappedText('Fill Order')
-    .addValueBar(35)
-    .connectFrom('g1', 'E', 'W');
+// diagram.addTask('a2')
+//     .positionRightOf('g1')
+//     .addWrappedText('Fill Order')
+//     .addValueBar(35)
+//     .connectFrom('g1', 'E', 'W');
 
-diagram.addTask('a3')
-    .positionUpRightOf('a2')
-    .addWrappedText('Ship Order')
-    .addValueBar(30)
-    .connectFrom('a2', 'N', 'W');
+// diagram.addTask('a3')
+//     .positionUpRightOf('a2')
+//     .addWrappedText('Ship Order')
+//     .addValueBar(30)
+//     .connectFrom('a2', 'N', 'W');
 
-diagram.addTask('a4')
-    .positionDownRightOf('a2')
-    .addWrappedText('Send Invoice')
-    .addValueBar(60)
-    .connectFrom('a2', 'S', 'W');
+// diagram.addTask('a4')
+//     .positionDownRightOf('a2')
+//     .addWrappedText('Send Invoice')
+//     .addValueBar(60)
+//     .connectFrom('a2', 'S', 'W');
 
-diagram.addTask('a5')
-    .positionRightOf('a4')
-    .addWrappedText('Make Payment')
-    .addValueBar(50)
-    .connectFrom('a4', 'E', 'W');
+// diagram.addTask('a5')
+//     .positionRightOf('a4')
+//     .addWrappedText('Make Payment')
+//     .addValueBar(50)
+//     .connectFrom('a4', 'E', 'W');
 
-diagram.addTask('a6')
-    .positionRightOf('a5')
-    .addWrappedText('Accept Payment')
-    .addValueBar(30)
-    .connectFrom('a5', 'E', 'W');
+// diagram.addTask('a6')
+//     .positionRightOf('a5')
+//     .addWrappedText('Accept Payment')
+//     .addValueBar(30)
+//     .connectFrom('a5', 'E', 'W');
 
-diagram.addGateway('g2')
-    .positionUpRightOf('a6')
-    .connectFrom('a3', 'E', 'N')
-    .connectFrom('a6', 'E', 'S');
+// diagram.addGateway('g2')
+//     .positionUpRightOf('a6')
+//     .connectFrom('a3', 'E', 'N')
+//     .connectFrom('a6', 'E', 'S');
 
-diagram.addUserTask('a7')
-    .positionRightOf('g2')
-    .addWrappedText('Close Order')
-    .addValueBar(30)
-    .connectFrom('g2', 'E', 'W');
+// diagram.addUserTask('a7')
+//     .positionRightOf('g2')
+//     .addWrappedText('Close Order')
+//     .addValueBar(30)
+//     .connectFrom('g2', 'E', 'W');
 
-diagram.addEndEvent('e2')
-    .positionRightOf('a7')
-    .connectFrom('a7', 'E', 'W');
+// diagram.addEndEvent('e2')
+//     .positionRightOf('a7')
+//     .connectFrom('a7', 'E', 'W');
 
-// Non-standard connector
-const waypoints = [
-    diagram.getElementById('g1').getNorthPoint(),
-    {   x: diagram.getElementById('g1').getNorthPoint().x,
-        y: diagram.getElementById('a3').getNorthPoint().y + BpmnDiagram.Dimensions.DISTANCE_BETWEEN_ELEMENTS },
-    {   x: diagram.getElementById('a7').getNorthPoint().x,
-        y: diagram.getElementById('a3').getNorthPoint().y + BpmnDiagram.Dimensions.DISTANCE_BETWEEN_ELEMENTS },    
-    diagram.getElementById('a7').getNorthPoint()
-];
-diagram.addFlowConnector('f1', waypoints);
+// // Non-standard connector
+// const waypoints = [
+//     diagram.getElementById('g1').getNorthPoint(),
+//     {   x: diagram.getElementById('g1').getNorthPoint().x,
+//         y: diagram.getElementById('a3').getNorthPoint().y + BpmnDiagram.Dimensions.DISTANCE_BETWEEN_ELEMENTS },
+//     {   x: diagram.getElementById('a7').getNorthPoint().x,
+//         y: diagram.getElementById('a3').getNorthPoint().y + BpmnDiagram.Dimensions.DISTANCE_BETWEEN_ELEMENTS },    
+//     diagram.getElementById('a7').getNorthPoint()
+// ];
+// diagram.addFlowConnector('f1', waypoints);
+
+// // End of diagram preparation
+
+// Add diagram elements for the e-commerce funnel
+
+// 1. Paid Ad (Start Event) - Circular node
+diagram.addStartEvent('paidAd')
+    .addWrappedText('Paid Ad', new THREE.Vector3(0, -35, 3)) // label below the node
+    .addValueBar(70); // 70% bar height for ANALYZE mode
+
+// 2. Product Page (Task) - Rectangular node
+diagram.addTask('productPage')
+    .positionRightOf('paidAd')
+    .addWrappedText('Product Page')
+    .connectFrom('paidAd', 'E', 'W')
+    .addValueBar(45); // 45% bar height for ANALYZE mode
+
+// 3. Add to Cart (Task) - Rectangular node
+diagram.addTask('addToCart')
+    .positionRightOf('productPage')
+    .addWrappedText('Add to Cart')
+    .connectFrom('productPage', 'E', 'W')
+    .addValueBar(55); // 55% bar height for ANALYZE mode
+
+// 4. Checkout (Task) - Rectangular node
+diagram.addTask('checkout')
+    .positionRightOf('addToCart')
+    .addWrappedText('Checkout')
+    .connectFrom('addToCart', 'E', 'W')
+    .addValueBar(80); // 80% bar height for ANALYZE mode
+
+// 5. Purchase Complete (End Event) - Circular node
+diagram.addEndEvent('purchaseComplete')
+    .positionRightOf('checkout')
+    .addWrappedText('Purchase Complete', new THREE.Vector3(0, -35, 3)) // label below the node
+    .connectFrom('checkout', 'E', 'W');
+
 
 // End of diagram preparation
 
