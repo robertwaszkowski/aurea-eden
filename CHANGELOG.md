@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.26.0 (2025-12-14)
+
+
+### Features
+
+* **diagram:** enhance BPMN diagram with dynamic value bars and color coding ([486447a](https://github.com/robertwaszkowski/aurea-eden/commit/486447a08015e4c243811245b723af0475b5fbef))
+
+
+### Bug Fixes
+
+* correct order of commands in deploy-gh-pages script ([49a414a](https://github.com/robertwaszkowski/aurea-eden/commit/49a414aa7d079092eaefed2b7f408d201b68e8e6))
+* enhance camera zoom functionality ([be369b9](https://github.com/robertwaszkowski/aurea-eden/commit/be369b998ac83afa6424d7ace7205da33299cef0))
+
 ### [1.25.11](https://github.com/robertwaszkowski/aurea-eden/compare/v1.25.10...v1.25.11) (2025-05-19)
 
 ### [1.25.10](https://github.com/robertwaszkowski/aurea-eden/compare/v1.25.9...v1.25.10) (2025-05-19)
