@@ -40288,569 +40288,6 @@ class RenderOutputNode extends TempNode {
 }
 const renderOutput = (color2, toneMapping2 = null, outputColorSpace = null) => nodeObject(new RenderOutputNode(nodeObject(color2), toneMapping2, outputColorSpace));
 addMethodChaining("renderOutput", renderOutput);
-class Diagram {
-  /**
-   * Creates a new Diagram instance.
-   * @param {HTMLElement} container - The HTML container element for the diagram.
-   */
-  constructor(container) {
-    this.elements = [];
-    this.connectors = [];
-    this.mode = "VIEW";
-    this.helpers = false;
-    this.container = container;
-    this.initScene();
-    this.initCamera();
-    this.setHelpers();
-    this.initRenderer();
-    this.initLighting();
-    this.initControls();
-    this.addEventListeners();
-    this.animate();
-    console.log("THREE", THREE);
-    console.log(this);
-  }
-  /**
-   * Initializes the THREE.js scene.
-   */
-  initScene() {
-    this.scene = new Scene();
-    this.scene.background = new Color$1(15790320);
-  }
-  /**
-   * Initializes the camera with a perspective projection.
-   */
-  initCamera() {
-    const aspectRatio = window.innerWidth / window.innerHeight;
-    this.camera = new PerspectiveCamera(75, aspectRatio, 0.1, 2e3);
-    this.camera.position.set(0, 0, 500);
-    this.camera.updateProjectionMatrix();
-  }
-  // initCamera() { // Orthographic
-  //     // const aspectRatio = this.container.clientWidth / window.innerHeight;
-  //     const aspectRatio = window.innerWidth / window.innerHeight;
-  //     const frustumSize = 100;
-  //     this.camera = new THREE.OrthographicCamera(
-  //         frustumSize * aspectRatio / -2, 
-  //         frustumSize * aspectRatio / 2, 
-  //         frustumSize / 2, 
-  //         frustumSize / -2, 
-  //         0.1, 
-  //         1000
-  //     );
-  //     this.camera.position.set(0, 0, 50);
-  // }
-  /**
-   * Sets up helpers (axes, grid, etc.) for the scene.
-   */
-  setHelpers() {
-    this.axesHelper = new AxesHelper(100);
-    this.cameraHelper = new CameraHelper(this.camera);
-    const size = 400;
-    const divisions = 50;
-    this.gridHelper = new GridHelper(size, divisions);
-    this.cameraDirection = new Vector3$1();
-    this.camPositionSpan = document.querySelector("#position");
-    this.camLookAtSpan = document.querySelector("#lookingAt");
-    this.helpers = false;
-  }
-  /**
-   * Shows the helpers in the scene.
-   */
-  showHelpers() {
-    if (!this.helpers) {
-      this.scene.add(this.axesHelper);
-      this.scene.add(this.cameraHelper);
-      this.scene.add(this.gridHelper);
-      this.helpers = true;
-    }
-  }
-  /**
-   * Hides the helpers in the scene.
-   */
-  hideHelpers() {
-    if (this.helpers) {
-      this.scene.remove(this.axesHelper);
-      this.scene.remove(this.cameraHelper);
-      this.scene.remove(this.gridHelper);
-      this.helpers = false;
-    }
-  }
-  /**
-   * Initializes the renderer and attaches it to the container.
-   */
-  initRenderer() {
-    this.renderer = new WebGLRenderer({ antialias: true });
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(this.renderer.domElement);
-    console.log("initRenderer", this.container, this.renderer.domElement);
-  }
-  /**
-   * Initializes the lighting for the scene.
-   */
-  initLighting() {
-    let mainLightColor = 16777215;
-    let mainLightIntensity = 4;
-    let mainLightDistance = 0;
-    let mainLightDecay = 0;
-    const mainLight = new PointLight(mainLightColor, mainLightIntensity, mainLightDistance, mainLightDecay);
-    let mainLightPosX = -1 * (580 / 2) + 1 / 3 * 580;
-    let mainLightPosY = -1 * 209 * 4;
-    let mainLightPosZ = Math.abs(mainLightPosY);
-    mainLight.position.set(mainLightPosX, mainLightPosY, mainLightPosZ);
-    this.scene.add(mainLight);
-    this.spotLight = new PointLight(16777215, 4, 0, 0);
-    this.spotLightPosX = 0;
-    this.spotLightPosY = -1 * 209 - 300;
-    this.spotLightPosZ = 70;
-    this.scene.add(this.spotLight);
-    this.spotLightDirection = 1;
-  }
-  /**
-   * Initializes the controls for the camera.
-   */
-  initControls() {
-    this.controls = new MapControls(this.camera, this.renderer.domElement);
-    this.controls.enableDamping = true;
-    this.controls.dampingFactor = 0.1;
-    this.controls.screenSpacePanning = true;
-    this.controls.zoomToCursor = true;
-    this.controls.saveState();
-  }
-  /**
-   * Adds event listeners for window resize and other interactions.
-   */
-  addEventListeners() {
-    window.addEventListener("resize", this.onWindowResize.bind(this), false);
-  }
-  // onDocumentMouseDown(event) {
-  //     this.isDragging = true;
-  //     this.previousMousePosition = { x: event.offsetX, y: event.offsetY };
-  // }
-  // onDocumentMouseMove(event) {
-  //    if (this.isDragging && this.mugGroup) {
-  //       const deltaMove = {
-  //          x: event.offsetX - this.previousMousePosition.x,
-  //          y: event.offsetY - this.previousMousePosition.y
-  //       };
-  //       let rotateAngleX = this.toRadians(deltaMove.y * 1);
-  //       let rotateAngleY = this.toRadians(deltaMove.x * 1);
-  //       this.currentRotation = this.currentRotation || { x: 0, y: 0 };
-  //       this.currentRotation.x += rotateAngleX;
-  //       this.currentRotation.y += rotateAngleY;
-  //       const maxRotation = Math.PI / 2;
-  //       this.currentRotation.x = Math.min(Math.max(this.currentRotation.x, -maxRotation), maxRotation);
-  //       this.pivotGroup.rotation.x = this.currentRotation.x;
-  //       this.pivotGroup.rotation.y = this.currentRotation.y;
-  //       this.previousMousePosition = { x: event.offsetX, y: event.offsetY };
-  //    }
-  // }
-  // onDocumentMouseUp() {
-  //    this.isDragging = false;
-  // }
-  // toRadians(angle) {
-  //    return angle * (Math.PI / 180);
-  // }
-  /**
-   * Handles window resize events to update the camera and renderer.
-   */
-  onWindowResize() {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-  }
-  /**
-   * Animates the scene and updates controls.
-   */
-  animate() {
-    if (this.tween) this.tween.update();
-    requestAnimationFrame(this.animate.bind(this));
-    this.controls.update();
-    this.renderer.render(this.scene, this.camera);
-    if (this.spotLightPosX > 500) {
-      this.spotLightDirection = -1;
-      this.spotLightPosX = 500;
-    }
-    if (this.spotLightPosX < -500) {
-      this.spotLightDirection = 1;
-      this.spotLightPosX = -500;
-    }
-    this.spotLightPosX += 10 * this.spotLightDirection;
-    this.spotLight.position.set(this.spotLightPosX, this.spotLightPosY, this.spotLightPosZ);
-  }
-  reset() {
-    this.hideHelpers();
-    this.controls.reset();
-    this.setMode("VIEW");
-    this.fitScreen();
-  }
-  // ================================================================
-  //   Diagram arrangement
-  // ================================================================
-  arrange() {
-    if (this.scene.children.length === 0) {
-      console.warn("Scene is empty. Cannot calculate center.");
-      return;
-    }
-    const box = new Box3().setFromObject(this.scene);
-    const center = box.getCenter(new Vector3$1());
-    const translation = new Vector3$1(-center.x, -center.y, -center.z);
-    this.scene.children.forEach((child) => {
-      if (child instanceof Object3D) {
-        child.position.add(translation);
-      }
-    });
-  }
-  /**
-   * Calculates the optimal zoom distance for the camera to ensure the entire scene is visible.
-   *
-   * @returns {number} The optimal distance for the camera to fit the scene within the viewport.
-   */
-  calculateOptimalZoom() {
-    const box = new Box3().setFromObject(this.scene);
-    const size = box.getSize(new Vector3$1());
-    const aspect2 = window.innerWidth / window.innerHeight;
-    const fovRad = MathUtils$1.degToRad(this.camera.fov);
-    const distanceForWidth = size.x / 2 / (Math.tan(fovRad / 2) * aspect2);
-    const distanceForHeight = size.y / 2 / Math.tan(fovRad / 2);
-    return Math.max(distanceForWidth, distanceForHeight);
-  }
-  /**
-   * Adjusts the camera to fit the entire scene within the screen.
-   * 
-   * This method calculates the optimal zoom level and positions the camera
-   * at a distance that ensures the entire scene is visible, with a small margin.
-   * It also updates the camera's orientation to look at the center of the scene
-   * and saves the current camera state for later restoration.
-   */
-  fitScreen() {
-    const minZDistance = this.calculateOptimalZoom();
-    const margin = 1.05;
-    const cameraZ = minZDistance * margin;
-    this.camera.position.set(0, 0, cameraZ);
-    this.camera.lookAt(0, 0, 0);
-    this.camera.updateProjectionMatrix();
-    this.controls.saveState();
-    this.initialCameraPosition = this.camera.position.clone();
-    this.initialTarget = this.controls.target.clone();
-  }
-  /**
-   * Centers the diagram by moving the camera to its initial position and target.
-   * This method uses the Tween.js library to animate the camera movement.
-   * 
-   * Preconditions:
-   * - `this.initialCameraPosition` and `this.initialTarget` must be defined.
-   * 
-   * Behavior:
-   * - If the initial camera position or target is not defined, a warning is logged, and the method exits.
-   * - Animates the camera's position and the controls' target to their initial states over 1200 milliseconds.
-   * - Uses a Quartic easing function for smooth animation.
-   * 
-   * Dependencies:
-   * - Tween.js library for animation.
-   * 
-   * @returns {void}
-   */
-  center() {
-    if (!this.initialCameraPosition || !this.initialTarget) {
-      console.warn("Initial camera position or target is not defined.");
-      return;
-    }
-    const from = {
-      cameraPositionX: this.camera.position.x,
-      cameraPositionY: this.camera.position.y,
-      cameraPositionZ: this.camera.position.z,
-      controlsTargetX: this.controls.target.x,
-      controlsTargetY: this.controls.target.y,
-      controlsTargetZ: this.controls.target.z
-    };
-    const to = {
-      cameraPositionX: this.initialCameraPosition.x,
-      cameraPositionY: this.initialCameraPosition.y,
-      cameraPositionZ: this.initialCameraPosition.z,
-      controlsTargetX: this.initialTarget.x,
-      controlsTargetY: this.initialTarget.y,
-      controlsTargetZ: this.initialTarget.z
-    };
-    const camera = this.camera;
-    const controls = this.controls;
-    this.tween = new Tween$1(from).to(to, 1200).easing(Easing.Quartic.Out).onUpdate(function() {
-      camera.position.set(
-        from.cameraPositionX,
-        from.cameraPositionY,
-        from.cameraPositionZ
-      );
-      controls.target.set(
-        from.controlsTargetX,
-        from.controlsTargetY,
-        from.controlsTargetZ
-      );
-    }).onComplete(function() {
-    }).start();
-  }
-  /**
-   * Rotates the diagram around the Y axis by a specified angle in degrees.
-   * The method ensures the diagram is centered and calculates the new camera
-   * and target positions based on the provided angle.
-   *
-   * @param {number} targetAngle - The angle in degrees to rotate the diagram (e.g., 60).
-   * @returns {void} - Does not return a value.
-   * 
-   * @throws {Error} Logs a warning if the initial camera position or target is not defined.
-   *
-   * @example
-   * // Rotate the diagram by 60 degrees
-   * diagram.rotate(60);
-   */
-  rotate(targetAngle) {
-    if (!this.initialCameraPosition || !this.initialTarget) {
-      console.warn("Initial camera position or target is not defined.");
-      return;
-    }
-    const radius = Math.sqrt(
-      this.initialCameraPosition.y * this.initialCameraPosition.y + this.initialCameraPosition.z * this.initialCameraPosition.z
-    );
-    const from = {
-      cameraPositionX: this.camera.position.x,
-      cameraPositionY: this.camera.position.y,
-      cameraPositionZ: this.camera.position.z,
-      controlsTargetX: this.controls.target.x,
-      controlsTargetY: this.controls.target.y,
-      controlsTargetZ: this.controls.target.z
-    };
-    const targetAngleRad = MathUtils$1.degToRad(targetAngle);
-    const to = {
-      cameraPositionX: this.initialCameraPosition.x,
-      cameraPositionY: radius * Math.sin(targetAngleRad),
-      cameraPositionZ: radius * Math.cos(targetAngleRad),
-      controlsTargetX: this.initialTarget.x,
-      controlsTargetY: this.initialTarget.y,
-      controlsTargetZ: this.initialTarget.z
-    };
-    console.log("rotate() -> from:", from);
-    console.log("rotate() -> to:", to);
-    const camera = this.camera;
-    const controls = this.controls;
-    this.tween = new Tween$1(from).to(to, 1200).easing(Easing.Quartic.Out).onUpdate(function() {
-      camera.position.set(
-        from.cameraPositionX,
-        from.cameraPositionY,
-        from.cameraPositionZ
-      );
-      controls.target.set(
-        from.controlsTargetX,
-        from.controlsTargetY,
-        from.controlsTargetZ
-      );
-    }).start();
-  }
-  // ================================================================
-  //   Diagram modes
-  // ================================================================
-  /**
-   * Removes all elements of type 'ValueBarShape' from the diagram.
-   * Iterates through the `elements` array in reverse order to safely remove
-   * elements without affecting the iteration process. For each matching element,
-   * it removes the element from its parent (and thus from the scene) and also 
-   * removes it from the `elements` array.
-   */
-  removeValueBars() {
-    for (let i = this.elements.length - 1; i >= 0; i--) {
-      const element2 = this.elements[i];
-      if (element2.type === "ValueBarShape") {
-        if (element2.parent) {
-          element2.parent.remove(element2);
-        }
-        this.scene.remove(element2);
-        this.elements.splice(i, 1);
-      }
-    }
-  }
-  /**
-   * Adds value bars to the diagram to visualize the elements' parameters.
-   * 
-   * This method processes the elements in the diagram, calculates the height
-   * of the bars based on their parameter values, and assigns a color to each
-   * bar based on a normalized value. The bars are then added to the scene.
-   * 
-   * @method
-   * @memberof Diagram
-   * @description
-   * - Filters elements to include only those with a defined `parameters.value`.
-   * - Calculates the range of parameter values to normalize them.
-   * - Assigns a color to each bar using an HSL color scale (green to red).
-   * - Calls the `valueBar` method on each element to set the bar's height and color.
-   * 
-   * @example
-   * // Assuming `diagram` is an instance of Diagram with elements having parameters:
-   * diagram.addValueBars();
-   * 
-   * @throws {Error} If no elements with `parameters.value` are found.
-   */
-  addValueBars() {
-    const elements = this.elements.filter((el) => el.parameters && el.parameters.value !== void 0);
-    if (elements.length === 0) {
-      throw new Error("No elements with `parameters.value` found.");
-    }
-    const max2 = Math.max(...elements.map((el) => el.parameters.value));
-    const min2 = 0;
-    const range = max2 - min2;
-    elements.forEach((element2, i) => {
-      const value = element2.parameters.value;
-      const normalizedValue = (value - min2) / range;
-      const color2 = new Color$1(`hsl(${(normalizedValue * 120).toString(10)}, 100%, 50%)`);
-      element2.addValueBar(normalizedValue * 100, color2);
-    });
-  }
-  /**
-   * Sets the mode of the diagram and adjusts its state accordingly.
-   *
-   * @param {string} mode - The mode to set. Possible values are:
-   *   - 'EDIT': Sets the diagram to edit mode and resets rotation.
-   *   - 'VIEW': Sets the diagram to view mode and resets rotation.
-   *   - 'ANALYZE': Sets the diagram to analyze mode, rotates it to -60 degrees, 
-   *                and adds value bars.
-   *   - Any other value will log a warning about an unknown mode.
-   */
-  setMode(mode) {
-    this.removeValueBars();
-    this.mode = mode;
-    switch (mode) {
-      case "EDIT":
-      case "VIEW":
-        this.rotate(0);
-        break;
-      case "ANALYZE":
-        this.rotate(-65);
-        this.addValueBars();
-        break;
-      default:
-        console.warn(`Unknown mode: ${mode}`);
-    }
-  }
-  // ================================================================
-  //   Diagram elements
-  // ================================================================
-  /**
-   * Adds an element to the diagram.
-   * @param {Object3D} element - The element to add.
-   * @param {Vector3} [position] - The position to place the element.
-   * @returns {Object3D} The added element.
-   */
-  addElement(element2, position) {
-    this.elements.push(element2);
-    this.scene.add(element2);
-    if (position) element2.position.set(position.x, position.y, 0);
-    element2.setDiagram(this);
-    return element2;
-  }
-  /**
-   * Removes an element from the diagram by its ID.
-   * @param {string} elementId - The ID of the element to remove.
-   */
-  removeElement(elementId) {
-    const element2 = this.elements.find((el) => el.id === elementId);
-    if (element2) {
-      this.scene.remove(element2);
-      this.elements = this.elements.filter((el) => el.id !== elementId);
-    }
-  }
-  /**
-   * Retrieves an element from the `elements` array by its unique `elementId`.
-   *
-   * @param {string} elementId - The unique identifier of the element to find.
-   * @returns {Object|undefined} The element with the matching `elementId`, or `undefined` if not found.
-   */
-  getElementById(elementId) {
-    return this.elements.find((el) => el.elementId === elementId);
-  }
-  /**
-   * Retrieves the elements of the diagram.
-   *
-   * @returns {Array} The array of elements in the diagram.
-   */
-  getElements() {
-    return this.elements;
-  }
-  // ================================================================
-  //   Diagram Connectors
-  // ================================================================
-  /**
-   * Adds a connector to the diagram, registers it with the diagram, 
-   * and adds it to the scene for rendering.
-   *
-   * @param {Object} connector - The connector object to be added to the diagram.
-   * @returns {Object} The connector that was added.
-   */
-  addConnector(connector) {
-    this.connectors.push(connector);
-    this.scene.add(connector);
-    connector.setDiagram(this);
-    return connector;
-  }
-  // ================================================================
-  //   Clear diagram
-  // ================================================================
-  /**
-   * Clears all elements and connectors from the diagram.
-   */
-  clear() {
-    this.elements = [];
-    this.connectors = [];
-    this.scene.children = this.scene.children.filter((child) => child instanceof AmbientLight);
-  }
-  // ================================================================
-  //   Diagram JSON
-  // ================================================================
-  toJSON() {
-    return JSON.stringify(this.elements);
-  }
-  fromJSON(json) {
-    this.elements = JSON.parse(json);
-  }
-  // ================================================================
-  //   Diagram export and import to/from file
-  // ================================================================
-  /**
-   * Exports the diagram to a JSON file.
-   */
-  export() {
-    const data = JSON.stringify(this.scene.toJSON());
-    const blob = new Blob([data], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "diagram.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-  /**
-   * Placeholder for importing a diagram from a file.
-   * This method should be implemented by subclasses.
-   * @param {File} file - The file to import.
-   * @throws {Error} If the method is not implemented.
-   * @returns {Promise<void>}
-   */
-  import(file) {
-    console.error("Import method should be implemented by subclasses.");
-  }
-}
-const DiagramDimensions = {
-  DISTANCE_BETWEEN_ELEMENTS: 48
-};
-const ExtrusionParameters$1 = {
-  steps: 2,
-  depth: 0.6,
-  bevelEnabled: true,
-  bevelThickness: 0.2,
-  bevelSize: 0.4,
-  bevelOffset: 0,
-  bevelSegments: 4
-};
-const Colors = {
-  ELEMENT_STROKE: 26265,
-  ELEMENT_TEXT: 26265
-};
 class Shape2 {
   constructor(geometry, material) {
     this.geometry = geometry;
@@ -40882,6 +40319,22 @@ class BoxShape extends Shape2 {
     super(new BoxGeometry(1, 1, 1), new DiagramEditMaterial(color2));
   }
 }
+const DiagramDimensions = {
+  DISTANCE_BETWEEN_ELEMENTS: 48
+};
+const ExtrusionParameters$1 = {
+  steps: 2,
+  depth: 0.6,
+  bevelEnabled: true,
+  bevelThickness: 0.2,
+  bevelSize: 0.4,
+  bevelOffset: 0,
+  bevelSegments: 4
+};
+const Colors = {
+  ELEMENT_STROKE: 26265,
+  ELEMENT_TEXT: 26265
+};
 class FontLoader extends Loader {
   constructor(manager) {
     super(manager);
@@ -43120,60 +42573,29 @@ const ExtrusionParameters = {
   bevelOffset: 0,
   bevelSegments: 1
 };
-const ColorPalette = [
-  new Color$1(16007990),
-  // red
-  new Color$1(15277667),
-  // pink
-  new Color$1(10233776),
-  // purple
-  new Color$1(6765239),
-  // deep purple
-  new Color$1(4149685),
-  // indigo
-  new Color$1(2201331),
-  // blue
-  new Color$1(240116),
-  // light blue
-  new Color$1(48340),
-  // cyan
-  new Color$1(38536),
-  // teal
-  new Color$1(5025616),
-  // green
-  new Color$1(9159498),
-  // light green
-  new Color$1(13491257),
-  // lime
-  new Color$1(16771899),
-  // yellow
-  new Color$1(16761095),
-  // amber
-  new Color$1(16750592),
-  // orange
-  new Color$1(16733986),
-  // deep orange
-  new Color$1(7951688),
-  // brown
-  new Color$1(10395294),
-  // grey
-  new Color$1(6323595)
-  // blue grey
-];
 class ValueBarShape extends Shape2 {
+  /**
+   * Creates a new ValueBarShape.
+   * This is a simple component that receives a pre-calculated height and color.
+   * @param {THREE.Shape} shape The 2D base shape of the bar.
+   * @param {number} height The final, normalized height of the bar.
+   * @param {THREE.Color} color The final, pre-calculated color for the bar.
+   */
   constructor(shape, height, color2) {
     if (!(shape instanceof Shape$1)) {
       throw new TypeError("shape must be an instance of THREE.Shape");
     }
-    const barColor = color2 !== void 0 ? color2 : ColorPalette[Math.floor(Math.random() * ColorPalette.length)];
-    const barHeight = height !== void 0 ? height : Math.floor(Math.random() * 10) + 1;
-    const extrusionParameters = { ...ExtrusionParameters, depth: barHeight };
-    var barGeometry = new ExtrudeGeometry(shape, extrusionParameters);
-    super(barGeometry, new BarMaterial(barColor));
+    if (typeof height !== "number") {
+      throw new TypeError("height must be a number.");
+    }
+    if (!(color2 instanceof Color$1)) {
+      throw new TypeError("color must be an instance of THREE.Color.");
+    }
+    const extrusionParameters = { ...ExtrusionParameters, depth: height };
+    const barGeometry = new ExtrudeGeometry(shape, extrusionParameters);
+    super(barGeometry, new BarMaterial(color2));
+    this.type = "ValueBarShape";
   }
-  // draw(ctx, x, y, width) {
-  //     ctx.fillRect(x, y - this.barHeight, width, this.barHeight);
-  // }
 }
 const ConnectorDimensions = {
   CONNECTOR_LINE_WIDTH: 1,
@@ -44047,9 +43469,10 @@ class Element extends Mesh {
   /**
    * Adds wrapped text that fits within the element's bounds.
    * @param {string} text - The text to add and wrap
+   * @param {THREE.Vector3} [offset=new THREE.Vector3(0, 0, 3)] - Optional offset for the text position
    * @returns {Element} This element for method chaining
    */
-  addWrappedText(text) {
+  addWrappedText(text, offset = new Vector3$1(0, 0, 3)) {
     if (!text) {
       console.warn("addWrappedText: text is null or undefined");
       return this;
@@ -44079,8 +43502,12 @@ class Element extends Mesh {
         break;
       }
     }
-    this.diagram.addElement(wrappedTextElement).positionAt({ x: this.position.x, y: this.position.y, z: 3 });
-    this.texts.push({ element: wrappedTextElement, positionOffset: new Vector3$1(0, 0, 3) });
+    this.diagram.addElement(wrappedTextElement).positionAt({
+      x: this.position.x + offset.x,
+      y: this.position.y + offset.y,
+      z: this.position.z + offset.z
+    });
+    this.texts.push({ element: wrappedTextElement, positionOffset: offset });
     return this;
   }
   // ================================================================
@@ -44264,19 +43691,7 @@ class Element extends Mesh {
    * @returns {Element} This element for method chaining
    */
   addValueBar(value) {
-    if (value < 0) {
-      console.warn("valueBar: Value must be positive");
-      return this;
-    }
     this.parameters["value"] = value;
-    console.log("valueBar added:", this);
-    if (this.diagram.mode !== "ANALYZE") {
-      console.warn("valueBar: Diagram mode is not ANALYZE");
-      return this;
-    }
-    const barElement = new Element(this.elementId + "_bar", new ValueBarShape(this.shape.getOuterShape(), value));
-    this.diagram.addElement(barElement).positionAt(this.position);
-    this.valueBars.push({ element: barElement, positionOffset: new Vector3$1(0, 0, 0) });
     return this;
   }
   // ================================================================
@@ -44307,6 +43722,585 @@ class Element extends Mesh {
       new RoundedCornerOrthogonalConnectorShape(points)
     ));
     return this;
+  }
+}
+function getColorForValue(value, min2, max2) {
+  console.log(`Calculating color for: value=${value}, min=${min2}, max=${max2}`);
+  const color2 = new Color$1();
+  if (min2 === max2) {
+    color2.setHSL(0.25, 1, 0.5);
+    return color2;
+  }
+  let ratio = (value - min2) / (max2 - min2);
+  ratio = Math.max(0, Math.min(ratio, 1));
+  console.log(`Calculated Ratio: ${ratio}`);
+  const hue = ratio * (120 / 360);
+  color2.setHSL(hue, 1, 0.5);
+  return color2;
+}
+class Diagram {
+  /**
+   * Creates a new Diagram instance.
+   * @param {HTMLElement} container - The HTML container element for the diagram.
+   */
+  constructor(container) {
+    this.elements = [];
+    this.connectors = [];
+    this.mode = "VIEW";
+    this.helpers = false;
+    this.container = container;
+    this.initScene();
+    this.initCamera();
+    this.setHelpers();
+    this.initRenderer();
+    this.initLighting();
+    this.initControls();
+    this.addEventListeners();
+    this.animate();
+    console.log("THREE", THREE);
+    console.log(this);
+  }
+  /**
+   * Initializes the THREE.js scene.
+   */
+  initScene() {
+    this.scene = new Scene();
+    this.scene.background = new Color$1(15790320);
+  }
+  /**
+   * Initializes the camera with a perspective projection.
+   */
+  initCamera() {
+    const aspectRatio = this.container.clientWidth / this.container.clientHeight;
+    this.camera = new PerspectiveCamera(75, aspectRatio, 0.1, 2e3);
+    this.camera.position.set(0, 0, 500);
+    this.camera.updateProjectionMatrix();
+  }
+  // initCamera() { // Orthographic
+  //     // const aspectRatio = this.container.clientWidth / window.innerHeight;
+  //     const aspectRatio = window.innerWidth / window.innerHeight;
+  //     const frustumSize = 100;
+  //     this.camera = new THREE.OrthographicCamera(
+  //         frustumSize * aspectRatio / -2, 
+  //         frustumSize * aspectRatio / 2, 
+  //         frustumSize / 2, 
+  //         frustumSize / -2, 
+  //         0.1, 
+  //         1000
+  //     );
+  //     this.camera.position.set(0, 0, 50);
+  // }
+  /**
+   * Sets up helpers (axes, grid, etc.) for the scene.
+   */
+  setHelpers() {
+    this.axesHelper = new AxesHelper(100);
+    this.cameraHelper = new CameraHelper(this.camera);
+    const size = 400;
+    const divisions = 50;
+    this.gridHelper = new GridHelper(size, divisions);
+    this.cameraDirection = new Vector3$1();
+    this.camPositionSpan = document.querySelector("#position");
+    this.camLookAtSpan = document.querySelector("#lookingAt");
+    this.helpers = false;
+  }
+  /**
+   * Shows the helpers in the scene.
+   */
+  showHelpers() {
+    if (!this.helpers) {
+      this.scene.add(this.axesHelper);
+      this.scene.add(this.cameraHelper);
+      this.scene.add(this.gridHelper);
+      this.helpers = true;
+    }
+  }
+  /**
+   * Hides the helpers in the scene.
+   */
+  hideHelpers() {
+    if (this.helpers) {
+      this.scene.remove(this.axesHelper);
+      this.scene.remove(this.cameraHelper);
+      this.scene.remove(this.gridHelper);
+      this.helpers = false;
+    }
+  }
+  /**
+   * Initializes the renderer and attaches it to the container.
+   */
+  initRenderer() {
+    this.renderer = new WebGLRenderer({ antialias: true });
+    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+    this.container.appendChild(this.renderer.domElement);
+    console.log("initRenderer", this.container, this.renderer.domElement);
+  }
+  /**
+   * Initializes the lighting for the scene.
+   */
+  initLighting() {
+    let mainLightColor = 16777215;
+    let mainLightIntensity = 4;
+    let mainLightDistance = 0;
+    let mainLightDecay = 0;
+    const mainLight = new PointLight(mainLightColor, mainLightIntensity, mainLightDistance, mainLightDecay);
+    let mainLightPosX = -1 * (580 / 2) + 1 / 3 * 580;
+    let mainLightPosY = -1 * 209 * 4;
+    let mainLightPosZ = Math.abs(mainLightPosY);
+    mainLight.position.set(mainLightPosX, mainLightPosY, mainLightPosZ);
+    this.scene.add(mainLight);
+    this.spotLight = new PointLight(16777215, 4, 0, 0);
+    this.spotLightPosX = 0;
+    this.spotLightPosY = -1 * 209 - 300;
+    this.spotLightPosZ = 70;
+    this.scene.add(this.spotLight);
+    this.spotLightDirection = 1;
+  }
+  /**
+   * Initializes the controls for the camera.
+   */
+  initControls() {
+    this.controls = new MapControls(this.camera, this.renderer.domElement);
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.1;
+    this.controls.screenSpacePanning = true;
+    this.controls.zoomToCursor = true;
+    this.controls.saveState();
+  }
+  /**
+   * Adds event listeners for window resize and other interactions.
+   */
+  addEventListeners() {
+    window.addEventListener("resize", this.onWindowResize.bind(this), false);
+  }
+  // onDocumentMouseDown(event) {
+  //     this.isDragging = true;
+  //     this.previousMousePosition = { x: event.offsetX, y: event.offsetY };
+  // }
+  // onDocumentMouseMove(event) {
+  //    if (this.isDragging && this.mugGroup) {
+  //       const deltaMove = {
+  //          x: event.offsetX - this.previousMousePosition.x,
+  //          y: event.offsetY - this.previousMousePosition.y
+  //       };
+  //       let rotateAngleX = this.toRadians(deltaMove.y * 1);
+  //       let rotateAngleY = this.toRadians(deltaMove.x * 1);
+  //       this.currentRotation = this.currentRotation || { x: 0, y: 0 };
+  //       this.currentRotation.x += rotateAngleX;
+  //       this.currentRotation.y += rotateAngleY;
+  //       const maxRotation = Math.PI / 2;
+  //       this.currentRotation.x = Math.min(Math.max(this.currentRotation.x, -maxRotation), maxRotation);
+  //       this.pivotGroup.rotation.x = this.currentRotation.x;
+  //       this.pivotGroup.rotation.y = this.currentRotation.y;
+  //       this.previousMousePosition = { x: event.offsetX, y: event.offsetY };
+  //    }
+  // }
+  // onDocumentMouseUp() {
+  //    this.isDragging = false;
+  // }
+  // toRadians(angle) {
+  //    return angle * (Math.PI / 180);
+  // }
+  /**
+   * Handles window resize events to update the camera and renderer.
+   */
+  onWindowResize() {
+    const width = this.container.clientWidth;
+    const height = this.container.clientHeight;
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(width, height);
+  }
+  /**
+   * Animates the scene and updates controls.
+   */
+  animate() {
+    if (this.tween) this.tween.update();
+    requestAnimationFrame(this.animate.bind(this));
+    this.controls.update();
+    this.renderer.render(this.scene, this.camera);
+    if (this.spotLightPosX > 500) {
+      this.spotLightDirection = -1;
+      this.spotLightPosX = 500;
+    }
+    if (this.spotLightPosX < -500) {
+      this.spotLightDirection = 1;
+      this.spotLightPosX = -500;
+    }
+    this.spotLightPosX += 10 * this.spotLightDirection;
+    this.spotLight.position.set(this.spotLightPosX, this.spotLightPosY, this.spotLightPosZ);
+  }
+  reset() {
+    this.hideHelpers();
+    this.controls.reset();
+    this.setMode("VIEW");
+    this.fitScreen();
+  }
+  // ================================================================
+  //   Diagram arrangement
+  // ================================================================
+  arrange() {
+    if (this.scene.children.length === 0) {
+      console.warn("Scene is empty. Cannot calculate center.");
+      return;
+    }
+    const box = new Box3().setFromObject(this.scene);
+    const center = box.getCenter(new Vector3$1());
+    const translation = new Vector3$1(-center.x, -center.y, -center.z);
+    this.scene.children.forEach((child) => {
+      if (child instanceof Object3D) {
+        child.position.add(translation);
+      }
+    });
+  }
+  /**
+   * Calculates the optimal zoom distance for the camera to ensure the entire scene is visible.
+   *
+   * @returns {number} The optimal distance for the camera to fit the scene within the viewport.
+   */
+  calculateOptimalZoom() {
+    const box = new Box3().setFromObject(this.scene);
+    const size = box.getSize(new Vector3$1());
+    const aspect2 = this.container.clientWidth / this.container.clientHeight;
+    const fovRad = MathUtils$1.degToRad(this.camera.fov);
+    const distanceForWidth = size.x / 2 / (Math.tan(fovRad / 2) * aspect2);
+    const distanceForHeight = size.y / 2 / Math.tan(fovRad / 2);
+    return Math.max(distanceForWidth, distanceForHeight);
+  }
+  /**
+   * Adjusts the camera to fit the entire scene within the screen.
+   * 
+   * This method calculates the optimal zoom level and positions the camera
+   * at a distance that ensures the entire scene is visible, with a small margin.
+   * It also updates the camera's orientation to look at the center of the scene
+   * and saves the current camera state for later restoration.
+   */
+  fitScreen() {
+    const minZDistance = this.calculateOptimalZoom();
+    const margin = 1.05;
+    const cameraZ = minZDistance * margin;
+    this.camera.position.set(0, 0, cameraZ);
+    this.camera.lookAt(0, 0, 0);
+    this.camera.updateProjectionMatrix();
+    this.controls.saveState();
+    this.initialCameraPosition = this.camera.position.clone();
+    this.initialTarget = this.controls.target.clone();
+  }
+  /**
+   * Centers the diagram by moving the camera to its initial position and target.
+   * This method uses the Tween.js library to animate the camera movement.
+   * 
+   * Preconditions:
+   * - `this.initialCameraPosition` and `this.initialTarget` must be defined.
+   * 
+   * Behavior:
+   * - If the initial camera position or target is not defined, a warning is logged, and the method exits.
+   * - Animates the camera's position and the controls' target to their initial states over 1200 milliseconds.
+   * - Uses a Quartic easing function for smooth animation.
+   * 
+   * Dependencies:
+   * - Tween.js library for animation.
+   * 
+   * @returns {void}
+   */
+  center() {
+    if (!this.initialCameraPosition || !this.initialTarget) {
+      console.warn("Initial camera position or target is not defined.");
+      return;
+    }
+    const from = {
+      cameraPositionX: this.camera.position.x,
+      cameraPositionY: this.camera.position.y,
+      cameraPositionZ: this.camera.position.z,
+      controlsTargetX: this.controls.target.x,
+      controlsTargetY: this.controls.target.y,
+      controlsTargetZ: this.controls.target.z
+    };
+    const to = {
+      cameraPositionX: this.initialCameraPosition.x,
+      cameraPositionY: this.initialCameraPosition.y,
+      cameraPositionZ: this.initialCameraPosition.z,
+      controlsTargetX: this.initialTarget.x,
+      controlsTargetY: this.initialTarget.y,
+      controlsTargetZ: this.initialTarget.z
+    };
+    const camera = this.camera;
+    const controls = this.controls;
+    this.tween = new Tween$1(from).to(to, 1200).easing(Easing.Quartic.Out).onUpdate(function() {
+      camera.position.set(
+        from.cameraPositionX,
+        from.cameraPositionY,
+        from.cameraPositionZ
+      );
+      controls.target.set(
+        from.controlsTargetX,
+        from.controlsTargetY,
+        from.controlsTargetZ
+      );
+    }).onComplete(function() {
+    }).start();
+  }
+  /**
+   * Rotates the diagram around the Y axis by a specified angle in degrees.
+   * The method ensures the diagram is centered and calculates the new camera
+   * and target positions based on the provided angle.
+   *
+   * @param {number} targetAngle - The angle in degrees to rotate the diagram (e.g., 60).
+   * @returns {void} - Does not return a value.
+   * 
+   * @throws {Error} Logs a warning if the initial camera position or target is not defined.
+   *
+   * @example
+   * // Rotate the diagram by 60 degrees
+   * diagram.rotate(60);
+   */
+  rotate(targetAngle) {
+    if (!this.initialCameraPosition || !this.initialTarget) {
+      console.warn("Initial camera position or target is not defined.");
+      return;
+    }
+    const radius = Math.sqrt(
+      this.initialCameraPosition.y * this.initialCameraPosition.y + this.initialCameraPosition.z * this.initialCameraPosition.z
+    );
+    const from = {
+      cameraPositionX: this.camera.position.x,
+      cameraPositionY: this.camera.position.y,
+      cameraPositionZ: this.camera.position.z,
+      controlsTargetX: this.controls.target.x,
+      controlsTargetY: this.controls.target.y,
+      controlsTargetZ: this.controls.target.z
+    };
+    const targetAngleRad = MathUtils$1.degToRad(targetAngle);
+    const to = {
+      cameraPositionX: this.initialCameraPosition.x,
+      cameraPositionY: radius * Math.sin(targetAngleRad),
+      cameraPositionZ: radius * Math.cos(targetAngleRad),
+      controlsTargetX: this.initialTarget.x,
+      controlsTargetY: this.initialTarget.y,
+      controlsTargetZ: this.initialTarget.z
+    };
+    console.log("rotate() -> from:", from);
+    console.log("rotate() -> to:", to);
+    const camera = this.camera;
+    const controls = this.controls;
+    this.tween = new Tween$1(from).to(to, 1200).easing(Easing.Quartic.Out).onUpdate(function() {
+      camera.position.set(
+        from.cameraPositionX,
+        from.cameraPositionY,
+        from.cameraPositionZ
+      );
+      controls.target.set(
+        from.controlsTargetX,
+        from.controlsTargetY,
+        from.controlsTargetZ
+      );
+    }).start();
+  }
+  // ================================================================
+  //   Diagram modes
+  // ================================================================
+  /**
+   * Removes all elements of type 'ValueBarShape' from the diagram.
+   * Iterates through the `elements` array in reverse order to safely remove
+   * elements without affecting the iteration process. For each matching element,
+   * it removes the element from its parent (and thus from the scene) and also 
+   * removes it from the `elements` array.
+   */
+  removeValueBars() {
+    for (let i = this.elements.length - 1; i >= 0; i--) {
+      const element2 = this.elements[i];
+      if (element2.type === "ValueBarShape") {
+        if (element2.parent) {
+          element2.parent.remove(element2);
+        }
+        this.scene.remove(element2);
+        this.elements.splice(i, 1);
+      }
+    }
+  }
+  /**
+   * Adds value bars to the diagram to visualize the elements' parameters.
+   * 
+   * This method processes the elements in the diagram, calculates the height
+   * of the bars based on their parameter values, and assigns a color to each
+   * bar based on a normalized value. The bars are then added to the scene.
+   * 
+   * @method
+   * @memberof Diagram
+   * @description
+   * - Filters elements to include only those with a defined `parameters.value`.
+   * - Calculates the range of parameter values to normalize them.
+   * - Assigns a color to each bar using an HSL color scale (green to red).
+   * - Calls the `valueBar` method on each element to set the bar's height and color.
+   * 
+   * @example
+   * // Assuming `diagram` is an instance of Diagram with elements having parameters:
+   * diagram.addValueBars();
+   * 
+   * @throws {Error} If no elements with `parameters.value` are found.
+   */
+  addValueBars() {
+    const elements = this.elements.filter((el) => el.parameters && el.parameters.value !== void 0);
+    if (elements.length === 0) {
+      throw new Error("No elements with `parameters.value` found.");
+    }
+    const max2 = Math.max(...elements.map((el) => el.parameters.value));
+    const min2 = 0;
+    const range = max2 - min2;
+    elements.forEach((element2, i) => {
+      const value = element2.parameters.value;
+      const normalizedValue = (value - min2) / range;
+      const color2 = new Color$1(`hsl(${(normalizedValue * 120).toString(10)}, 100%, 50%)`);
+      element2.addValueBar(normalizedValue * 100, color2);
+    });
+  }
+  /**
+   * Sets the mode of the diagram and adjusts its state accordingly.
+   *
+   * @param {string} mode - The mode to set. Possible values are:
+   *   - 'EDIT': Sets the diagram to edit mode and resets rotation.
+   *   - 'VIEW': Sets the diagram to view mode and resets rotation.
+   *   - 'ANALYZE': Sets the diagram to analyze mode, rotates it to -60 degrees, 
+   *                and adds value bars.
+   *   - Any other value will log a warning about an unknown mode.
+   */
+  setMode(mode) {
+    this.removeValueBars();
+    this.mode = mode;
+    switch (mode) {
+      case "EDIT":
+      case "VIEW":
+        this.rotate(0);
+        break;
+      case "ANALYZE":
+        this.rotate(-65);
+        const elementsWithValue = this.elements.filter((el) => el.parameters && el.parameters.value !== void 0);
+        if (elementsWithValue.length === 0) {
+          break;
+        }
+        const values = elementsWithValue.map((el) => el.parameters.value);
+        const dataMax = Math.max(...values);
+        const dataMin = Math.min(...values);
+        console.log(`[Diagram.js] Coloring Range | Min: ${dataMin}, Max: ${dataMax}`);
+        elementsWithValue.forEach((element2) => {
+          const originalValue = element2.parameters.value;
+          const normalizedHeight = dataMax === 0 ? 0 : originalValue / dataMax * 100;
+          const color2 = getColorForValue(originalValue, dataMin, dataMax);
+          const barShape = new ValueBarShape(element2.shape.getOuterShape(), normalizedHeight, color2);
+          const barElement = new Element(element2.elementId + "_bar", barShape);
+          this.addElement(barElement).positionAt(element2.getPosition());
+          element2.valueBars.push({ element: barElement, positionOffset: new Vector3$1(0, 0, 0) });
+        });
+        break;
+      default:
+        console.warn(`Unknown mode: ${mode}`);
+    }
+  }
+  // ================================================================
+  //   Diagram elements
+  // ================================================================
+  /**
+   * Adds an element to the diagram.
+   * @param {Object3D} element - The element to add.
+   * @param {Vector3} [position] - The position to place the element.
+   * @returns {Object3D} The added element.
+   */
+  addElement(element2, position) {
+    this.elements.push(element2);
+    this.scene.add(element2);
+    if (position) element2.position.set(position.x, position.y, 0);
+    element2.setDiagram(this);
+    return element2;
+  }
+  /**
+   * Removes an element from the diagram by its ID.
+   * @param {string} elementId - The ID of the element to remove.
+   */
+  removeElement(elementId) {
+    const element2 = this.elements.find((el) => el.id === elementId);
+    if (element2) {
+      this.scene.remove(element2);
+      this.elements = this.elements.filter((el) => el.id !== elementId);
+    }
+  }
+  /**
+   * Retrieves an element from the `elements` array by its unique `elementId`.
+   *
+   * @param {string} elementId - The unique identifier of the element to find.
+   * @returns {Object|undefined} The element with the matching `elementId`, or `undefined` if not found.
+   */
+  getElementById(elementId) {
+    return this.elements.find((el) => el.elementId === elementId);
+  }
+  /**
+   * Retrieves the elements of the diagram.
+   *
+   * @returns {Array} The array of elements in the diagram.
+   */
+  getElements() {
+    return this.elements;
+  }
+  // ================================================================
+  //   Diagram Connectors
+  // ================================================================
+  /**
+   * Adds a connector to the diagram, registers it with the diagram, 
+   * and adds it to the scene for rendering.
+   *
+   * @param {Object} connector - The connector object to be added to the diagram.
+   * @returns {Object} The connector that was added.
+   */
+  addConnector(connector) {
+    this.connectors.push(connector);
+    this.scene.add(connector);
+    connector.setDiagram(this);
+    return connector;
+  }
+  // ================================================================
+  //   Clear diagram
+  // ================================================================
+  /**
+   * Clears all elements and connectors from the diagram.
+   */
+  clear() {
+    this.elements = [];
+    this.connectors = [];
+    this.scene.children = this.scene.children.filter((child) => child instanceof AmbientLight);
+  }
+  // ================================================================
+  //   Diagram JSON
+  // ================================================================
+  toJSON() {
+    return JSON.stringify(this.elements);
+  }
+  fromJSON(json) {
+    this.elements = JSON.parse(json);
+  }
+  // ================================================================
+  //   Diagram export and import to/from file
+  // ================================================================
+  /**
+   * Exports the diagram to a JSON file.
+   */
+  export() {
+    const data = JSON.stringify(this.scene.toJSON());
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "diagram.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+  /**
+   * Placeholder for importing a diagram from a file.
+   * This method should be implemented by subclasses.
+   * @param {File} file - The file to import.
+   * @throws {Error} If the method is not implemented.
+   * @returns {Promise<void>}
+   */
+  import(file) {
+    console.error("Import method should be implemented by subclasses.");
   }
 }
 const RoundedRectangleDimensions = {
