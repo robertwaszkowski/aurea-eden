@@ -1,214 +1,246 @@
-// Prepare a BPMN diagram
 
-import { BpmnDiagram } from "./lib/notations/BpmnDiagram.js";
-import * as dat from 'dat.gui';
-import * as THREE from 'three';
+import { createApp, nextTick, shallowRef } from 'vue';
+import 'vuetify/styles';
+import { createVuetify } from 'vuetify';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+import '@mdi/font/css/materialdesignicons.css';
 
-const container = document.getElementById('diagram-container');
-var diagram = new BpmnDiagram(container);
+const vuetify = createVuetify({
+  components,
+  directives,
+});
 
-// Set GUI
+const DiagramControls = {
+  props: {
+    diagram: Object,
+  },
+  data() {
+    return {
+      mode: 'VIEW',
+      camPosition: '(... Loading ...)',
+      camLookAt: '(... Loading ...)',
+      helpersEnabled: false,
+      modes: ['VIEW', 'ANALYZE'],
+    };
+  },
+  watch: {
+    diagram: {
+      handler(newDiagram, oldDiagram) {
+        if (oldDiagram) {
+          oldDiagram.controls.removeEventListener('change', this.readCameraPosition);
+        }
+        if (newDiagram) {
+          newDiagram.controls.addEventListener('change', this.readCameraPosition);
+          this.readCameraPosition(); // Initial read
+          this.helpersEnabled = newDiagram.helpers;
+        }
+      },
+      immediate: true,
+    },
+    mode(newMode) {
+      if (this.diagram) {
+        this.diagram.setMode(newMode);
+      }
+    },
+    helpersEnabled() {
+        this.toggleHelpers();
+    }
+  },
+  methods: {
+    readCameraPosition() {
+      if (this.diagram && this.diagram.camera && this.diagram.controls) {
+        const cameraPosition = this.diagram.camera.position.clone();
+        const cameraTarget = this.diagram.controls.target.clone();
+        this.camPosition = `(${cameraPosition.x.toFixed(2)}, ${cameraPosition.y.toFixed(2)}, ${cameraPosition.z.toFixed(2)})`;
+        this.camLookAt = `(${cameraTarget.x.toFixed(2)}, ${cameraTarget.y.toFixed(2)}, ${cameraTarget.z.toFixed(2)})`;
+      }
+    },
+    toggleHelpers() {
+      if (this.diagram) {
+        if (this.diagram.helpers) {
+          this.diagram.hideHelpers();
+        } else {
+          this.diagram.showHelpers();
+        }
+        this.helpersEnabled = this.diagram.helpers;
+      }
+    },
+    resetDiagram() {
+      if (this.diagram) {
+        this.mode = 'VIEW';
+        this.diagram.reset();
+      }
+    },
+    importDiagram() {
+      if (this.diagram) {
+        console.log('Importing diagram');
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.bpmn';
+        input.onchange = (event) => {
+          const file = event.target.files[0];
+          if (file) {
+            console.log(file);
+            this.diagram.import(file);
+          }
+        };
+        input.click();
+      }
+    },
+    exportDiagram() {
+      if (this.diagram) {
+        this.diagram.export();
+      }
+    },
+    clearDiagram() {
+      if (this.diagram) {
+        this.diagram.clear();
+      }
+    },
+  },
+  template: `
+    <v-card class="pa-4">
+      <v-card-title>Diagram Controls</v-card-title>
+      <v-card-text>
+        <v-list>
+            <v-list-subheader>Mode</v-list-subheader>
+            <v-radio-group v-model="mode" inline>
+                <v-radio label="VIEW" value="VIEW"></v-radio>
+                <v-radio label="ANALYZE" value="ANALYZE"></v-radio>
+            </v-radio-group>
 
-const gui = new dat.GUI();
-const parameters = 
-{
-    mode: "VIEW",
-    toggleHelpers: function() { toggleHelpers() },
-    reset: function() { resetDiagram() },
-    export: function() { exportDiagram() },
-    import: function() { importDiagram() },
-    clear: function() { clearDiagram() },
-    camPosition: '...',
-    camLookAt: '...'
+            <v-divider></v-divider>
+
+            <v-list-item>
+                <v-switch v-model="helpersEnabled" label="Toggle Helpers"></v-switch>
+            </v-list-item>
+
+            <v-divider></v-divider>
+
+            <v-list-item @click="resetDiagram">
+                <template v-slot:prepend>
+                <v-icon>mdi-reload</v-icon>
+                </template>
+                <v-list-item-title>Reset Diagram</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="exportDiagram">
+                <template v-slot:prepend>
+                <v-icon>mdi-export</v-icon>
+                </template>
+                <v-list-item-title>Export Diagram</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="importDiagram">
+                <template v-slot:prepend>
+                <v-icon>mdi-import</v-icon>
+                </template>
+                <v-list-item-title>Import Diagram</v-list-item-title>
+            </v-list-item>
+            <v-list-item @click="clearDiagram">
+                <template v-slot:prepend>
+                <v-icon>mdi-delete</v-icon>
+                </template>
+                <v-list-item-title>Clear Diagram</v-list-item-title>
+            </v-list-item>
+        </v-list>
+
+        <v-divider class="my-4"></v-divider>
+
+        <v-list-item title="Camera Position" :subtitle="camPosition"></v-list-item>
+        <v-list-item title="Camera LookAt" :subtitle="camLookAt"></v-list-item>
+      </v-card-text>
+    </v-card>
+  `,
 };
 
-var diagramMode = gui.add( parameters, 'mode', [ "VIEW", "ANALYZE" ] ).name('Diagram mode').listen();
-diagramMode.onChange(function(value) 
-{ setDiagramMode(); });
-
-gui.add( parameters, 'toggleHelpers' ).name("Toggle Helpers");
-gui.add( parameters, 'reset' ).name("Reset Diagram");
-gui.add( parameters, 'export' ).name("Export Diagram");
-gui.add( parameters, 'import' ).name("Import Diagram");
-gui.add( parameters, 'clear' ).name("Clear Diagram");
-const cameraFolder = gui.addFolder('Camera');
-cameraFolder.add(parameters, 'camPosition').name("Position").listen();
-cameraFolder.add(parameters, 'camLookAt').name("LookAt").listen();
-
-function readCameraPosition() {
-    // Get camera vectors
-    const cameraPosition = diagram.camera.position.clone();
-    const cameraTarget = diagram.controls.target.clone();
-
-    // Update parameters object. Format as strings with fixed decimal places.
-    parameters.camPosition = `(${cameraPosition.x.toFixed(2)}, ${cameraPosition.y.toFixed(2)}, ${cameraPosition.z.toFixed(2)})`;
-    parameters.camLookAt = `(${cameraTarget.x.toFixed(2)}, ${cameraTarget.y.toFixed(2)}, ${cameraTarget.z.toFixed(2)})`;
-
-    // Force GUI update
-    for (let controller of gui.__controllers) {
-        controller.updateDisplay();
-    }
-}
-
-// Add event listener to update camera position
-diagram.controls.addEventListener('change', readCameraPosition);
-
-
-
-function setDiagramMode() {
-    var value = parameters.mode;
-    diagram.setMode(value);
-    console.log(diagram);
-}
-
-function toggleHelpers() {
-    if (diagram.helpers) {
-        diagram.hideHelpers();
-    } else {
-        diagram.showHelpers();
-    }
-}
-
-function resetDiagram() {
-    parameters.mode = "VIEW";
-    diagram.reset();
-    console.log(diagram);
-}
-
-function importDiagram() {
-    console.log('Importing diagram');
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.bpmn';
-    input.onchange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            console.log(file);
-            diagram.import(file);
-        }
+const App = {
+  components: {
+    DiagramControls,
+  },
+  data() {
+    return {
+      selectedDemo: 'SimpleBPMN',
+      demos: [{ title: 'Simple BPMN', value: 'SimpleBPMN' }],
+      diagramInstance: shallowRef(null), // Use shallowRef for non-reactive diagram object
+      drawer: true, // For v-navigation-drawer
     };
-    input.click();
-}
+  },
+  computed: {
+    selectedDemoTitle() {
+      const demo = this.demos.find(d => d.value === this.selectedDemo);
+      return demo ? demo.title : '';
+    }
+  },
+  methods: {
+    async loadDemo() {
+      await nextTick(async () => {
+        // Clear previous diagram if any
+        if (this.diagramInstance) {
+          this.diagramInstance.clear();
+          // Dispose of the diagram to free up resources
+          // if your diagram class has a dispose method
+          if (typeof this.diagramInstance.dispose === 'function') {
+            this.diagramInstance.dispose();
+          }
+          this.diagramInstance = null;
+        }
 
-function exportDiagram() {
-    diagram.export();
-}
+        const container = document.getElementById('diagram-container');
+        if (!container) {
+          console.error('Diagram container not found!');
+          return;
+        }
 
-function clearDiagram() {
-    diagram.clear();
-}
+        try {
+          // Dynamically import the demo module
+          const demoModule = await import(`./demo/${this.selectedDemo}/index.js`);
+          // Call the default export function to create the diagram
+          this.diagramInstance = demoModule.default(container);
+        } catch (error) {
+          console.error(`Error loading demo ${this.selectedDemo}:`, error);
+        }
+      });
+    },
+  },
+  mounted() {
+    this.loadDemo();
+  },
+  template: `
+    <v-app>
+      <v-navigation-drawer v-model="drawer" permanent location="left" width="300">
+        <v-toolbar color="primary">
+            <v-toolbar-title>Aurea EDEN Demos</v-toolbar-title>
+        </v-toolbar>
+        <v-list nav>
+          <v-list-item>
+            <v-select
+              class="mt-2"
+              label="Select a demo"
+              :items="demos"
+              item-title="title"
+              item-value="value"
+              v-model="selectedDemo"
+              @update:modelValue="loadDemo"
+              variant="outlined"
+              hide-details
+            ></v-select>
+          </v-list-item>
+        </v-list>
+        <template v-slot:append>
+            <DiagramControls :diagram="diagramInstance" v-if="diagramInstance"/>
+        </template>
+      </v-navigation-drawer>
 
+      <v-app-bar app>
+        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-app-bar-title>{{ selectedDemoTitle }}</v-app-bar-title>
+      </v-app-bar>
 
+      <v-main class="d-flex flex-column">
+        <div id="diagram-container" class="flex-grow-1"></div>
+      </v-main>
+    </v-app>
+  `,
+};
 
-// // Add diagram elements
-
-// diagram.addStartEvent('e1');
-
-// diagram.addTask('a1')
-//     .positionRightOf('e1')
-//     .addWrappedText('Handle Quotations')
-//     .connectFrom('e1', 'E', 'W')
-//     .addValueBar(20);
-
-// diagram.addGateway('g1')
-//     .positionRightOf('a1')
-//     .connectFrom('a1', 'E', 'W');
-
-// diagram.addTask('a2')
-//     .positionRightOf('g1')
-//     .addWrappedText('Fill Order')
-//     .addValueBar(35)
-//     .connectFrom('g1', 'E', 'W');
-
-// diagram.addTask('a3')
-//     .positionUpRightOf('a2')
-//     .addWrappedText('Ship Order')
-//     .addValueBar(30)
-//     .connectFrom('a2', 'N', 'W');
-
-// diagram.addTask('a4')
-//     .positionDownRightOf('a2')
-//     .addWrappedText('Send Invoice')
-//     .addValueBar(60)
-//     .connectFrom('a2', 'S', 'W');
-
-// diagram.addTask('a5')
-//     .positionRightOf('a4')
-//     .addWrappedText('Make Payment')
-//     .addValueBar(50)
-//     .connectFrom('a4', 'E', 'W');
-
-// diagram.addTask('a6')
-//     .positionRightOf('a5')
-//     .addWrappedText('Accept Payment')
-//     .addValueBar(30)
-//     .connectFrom('a5', 'E', 'W');
-
-// diagram.addGateway('g2')
-//     .positionUpRightOf('a6')
-//     .connectFrom('a3', 'E', 'N')
-//     .connectFrom('a6', 'E', 'S');
-
-// diagram.addUserTask('a7')
-//     .positionRightOf('g2')
-//     .addWrappedText('Close Order')
-//     .addValueBar(30)
-//     .connectFrom('g2', 'E', 'W');
-
-// diagram.addEndEvent('e2')
-//     .positionRightOf('a7')
-//     .connectFrom('a7', 'E', 'W');
-
-// // Non-standard connector
-// const waypoints = [
-//     diagram.getElementById('g1').getNorthPoint(),
-//     {   x: diagram.getElementById('g1').getNorthPoint().x,
-//         y: diagram.getElementById('a3').getNorthPoint().y + BpmnDiagram.Dimensions.DISTANCE_BETWEEN_ELEMENTS },
-//     {   x: diagram.getElementById('a7').getNorthPoint().x,
-//         y: diagram.getElementById('a3').getNorthPoint().y + BpmnDiagram.Dimensions.DISTANCE_BETWEEN_ELEMENTS },    
-//     diagram.getElementById('a7').getNorthPoint()
-// ];
-// diagram.addFlowConnector('f1', waypoints);
-
-// // End of diagram preparation
-
-// Add diagram elements for the e-commerce funnel
-
-// 1. Paid Ad (Start Event) - Circular node
-diagram.addStartEvent('paidAd')
-    .addWrappedText('Paid Ad', new THREE.Vector3(0, -35, 3)) // label below the node
-    .addValueBar(70); // 70% bar height for ANALYZE mode
-
-// 2. Product Page (Task) - Rectangular node
-diagram.addTask('productPage')
-    .positionRightOf('paidAd')
-    .addWrappedText('Product Page')
-    .connectFrom('paidAd', 'E', 'W')
-    .addValueBar(45); // 45% bar height for ANALYZE mode
-
-// 3. Add to Cart (Task) - Rectangular node
-diagram.addTask('addToCart')
-    .positionRightOf('productPage')
-    .addWrappedText('Add to Cart')
-    .connectFrom('productPage', 'E', 'W')
-    .addValueBar(55); // 55% bar height for ANALYZE mode
-
-// 4. Checkout (Task) - Rectangular node
-diagram.addTask('checkout')
-    .positionRightOf('addToCart')
-    .addWrappedText('Checkout')
-    .connectFrom('addToCart', 'E', 'W')
-    .addValueBar(80); // 80% bar height for ANALYZE mode
-
-// 5. Purchase Complete (End Event) - Circular node
-diagram.addEndEvent('purchaseComplete')
-    .positionRightOf('checkout')
-    .addWrappedText('Purchase Complete', new THREE.Vector3(0, -35, 3)) // label below the node
-    .connectFrom('checkout', 'E', 'W');
-
-
-// End of diagram preparation
-
-diagram.arrange();
-diagram.fitScreen();
-
+createApp(App).use(vuetify).mount('#app');

@@ -1,11 +1,27 @@
 import { defineConfig } from "vite";
 import path from "path";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
+import vue from "@vitejs/plugin-vue";
 
 export default defineConfig(({ mode }) => {
+  const commonConfig = {
+    plugins: [vue()],
+    resolve: {
+      alias: {
+        'vue': 'vue/dist/vue.esm-bundler.js'
+      }
+    },
+    define: {
+      __VUE_OPTIONS_API__: true,
+      __VUE_PROD_DEVTOOLS__: false,
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
+    }
+  };
+
   // 1. CONFIGURATION FOR GITHUB PAGES (Demo Site)
   if (mode === 'site') {
     return {
+      ...commonConfig,
       base: './', // Vital for GH Pages
       build: {
         outDir: 'dist-site', // Separate folder for the site
@@ -15,20 +31,30 @@ export default defineConfig(({ mode }) => {
   }
 
   // 2. CONFIGURATION FOR NPM (Library)
-  return {
-    plugins: [cssInjectedByJsPlugin()],
-    build: {
-      lib: {
-        entry: path.resolve(__dirname, "./lib/notations/BpmnDiagram.js"),
-        name: "AureaEDEN",
-        fileName: (format) => `bpmn-diagram.${format}.js`,
-        formats: ['es', 'umd']
-      },
-      sourcemap: true,
-      minify: 'terser',
-      terserOptions: {
-        compress: { drop_console: false }
+  if (mode === 'lib') {
+    return {
+      plugins: [cssInjectedByJsPlugin()],
+      build: {
+        lib: {
+          entry: path.resolve(__dirname, "./lib/notations/BpmnDiagram.js"),
+          name: "AureaEDEN",
+          fileName: (format) => `bpmn-diagram.${format}.js`,
+          formats: ['es', 'umd']
+        },
+        sourcemap: true,
+        minify: 'terser',
+        terserOptions: {
+          compress: { drop_console: false }
+        }
       }
-    }
-  };
+    };
+  }
+
+  return {
+    ...commonConfig,
+    // if you need to serve a specific html file for dev, you can do it here
+    // server: {
+    //   open: '/index.html'
+    // }
+  }
 });

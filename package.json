@@ -44,11 +44,15 @@
     "vite-plugin-css-injected-by-js": "^3.3.0"
   },
   "dependencies": {
+    "@mdi/font": "^7.4.47",
     "@tweenjs/tween.js": "^25.0.0",
+    "@vitejs/plugin-vue": "^6.0.3",
     "dat.gui": "^0.7.9",
     "fs": "^0.0.1-security",
     "three": "^0.172.0",
     "troika-three-text": "^0.52.3",
-    "tween.js": "^16.6.0"
+    "tween.js": "^16.6.0",
+    "vue": "^3.5.25",
+    "vuetify": "^3.11.3"
   }
 }

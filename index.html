@@ -6,18 +6,9 @@
 		<!-- Favicon hack - Add '?' to favicon.ico to be visible in dev mode on vite -->
 		<!-- https://stackoverflow.com/questions/7324456/favicon-not-showing-up -->
 		<link rel="icon" href="favicon.ico?" type="image/x-icon">
-		<style>
-			body { margin: 0; overflow: hidden; }
-            /* Create a style for the container that forces it to fill the viewport */
-            #diagram-container {
-                width: 100vw;
-                height: 100vh;
-                display: block;
-            }
-		</style>
 	</head>
 	<body>
-        <div id="diagram-container"></div>
+        <div id="app"></div>
 		<script type="module" src="index.js"></script>
 	</body>
 </html>
