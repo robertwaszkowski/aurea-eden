@@ -159,8 +159,8 @@ const App = {
   },
   data() {
     return {
-      selectedDemo: 'SimpleBPMN',
-      demos: [{ title: 'Simple BPMN', value: 'SimpleBPMN' }],
+      selectedDemo: 'CustomNotationDemo',
+      demos: [{ title: 'Simple BPMN', value: 'SimpleBPMN' }, { title: 'Shapes Demo', value: 'ShapesDemo' }, { title: 'Custom Notation Demo', value: 'CustomNotationDemo' }],
       diagramInstance: shallowRef(null), // Use shallowRef for non-reactive diagram object
       drawer: true, // For v-navigation-drawer
     };
@@ -189,6 +189,10 @@ const App = {
         if (!container) {
           console.error('Diagram container not found!');
           return;
+        }
+        // Clear the container before loading a new diagram
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
         }
 
         try {
