@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.27.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.26.0...v1.27.0) (2025-12-20)
+
+
+### Features
+
+* Add various shape classes for 3D rendering ([6ca4154](https://github.com/robertwaszkowski/aurea-eden/commit/6ca4154873971dc9b708e00afced2735d61bad24))
+* **demo:** add Order Processing demo with BPMN diagram elements ([d0cb373](https://github.com/robertwaszkowski/aurea-eden/commit/d0cb3731f788b179ddeae30f9742fef7694a357b))
+* update dependencies and configure Vite for Vue support ([93b4ff8](https://github.com/robertwaszkowski/aurea-eden/commit/93b4ff8494d9a0d34b330454980f03378022145b))
+
 ## 1.26.0 (2025-12-14)
 
 
