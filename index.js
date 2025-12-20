@@ -160,7 +160,7 @@ const App = {
   data() {
     return {
       selectedDemo: 'CustomNotationDemo',
-      demos: [{ title: 'Simple BPMN', value: 'SimpleBPMN' }, { title: 'Shapes Demo', value: 'ShapesDemo' }, { title: 'Custom Notation Demo', value: 'CustomNotationDemo' }],
+      demos: [{ title: 'Order Processing Demo', value: 'OrderProcessingDemo' }, { title: 'Simple BPMN', value: 'SimpleBPMN' }, { title: 'Shapes Demo', value: 'ShapesDemo' }, { title: 'Custom Notation Demo', value: 'CustomNotationDemo' }],
       diagramInstance: shallowRef(null), // Use shallowRef for non-reactive diagram object
       drawer: true, // For v-navigation-drawer
     };
@@ -211,38 +211,39 @@ const App = {
   },
   template: `
     <v-app>
-      <v-navigation-drawer v-model="drawer" permanent location="left" width="300">
-        <v-toolbar color="primary">
-            <v-toolbar-title>Aurea EDEN Demos</v-toolbar-title>
-        </v-toolbar>
-        <v-list nav>
-          <v-list-item>
-            <v-select
-              class="mt-2"
-              label="Select a demo"
-              :items="demos"
-              item-title="title"
-              item-value="value"
-              v-model="selectedDemo"
-              @update:modelValue="loadDemo"
-              variant="outlined"
-              hide-details
-            ></v-select>
-          </v-list-item>
-        </v-list>
-        <template v-slot:append>
-            <DiagramControls :diagram="diagramInstance" v-if="diagramInstance"/>
-        </template>
-      </v-navigation-drawer>
+        <v-navigation-drawer v-model="drawer" permanent location="left" width="300">
+            <v-toolbar color="primary">
+                <v-toolbar-title>Aurea EDEN Demos</v-toolbar-title>
+            </v-toolbar>
+            <v-list nav>
+            </v-list>
+            <template v-slot:append>
+                <DiagramControls :diagram="diagramInstance" v-if="diagramInstance"/>
+            </template>
+        </v-navigation-drawer>
 
-      <v-app-bar app>
-        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-app-bar-title>{{ selectedDemoTitle }}</v-app-bar-title>
-      </v-app-bar>
+        <v-app-bar app>
+            <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-row>
+                <v-col cols="4">
+                    <v-select
+                        label="Select a demo"
+                        :items="demos"
+                        item-title="title"
+                        item-value="value"
+                        v-model="selectedDemo"
+                        @update:modelValue="loadDemo"
+                        variant="outlined"
+                        hide-details
+                        density="compact"
+                    ></v-select>
+                </v-col>
+            </v-row>
+        </v-app-bar>
 
-      <v-main class="d-flex flex-column">
-        <div id="diagram-container" class="flex-grow-1"></div>
-      </v-main>
+        <v-main class="d-flex flex-column">
+            <div id="diagram-container" class="flex-grow-1"></div>
+        </v-main>
     </v-app>
   `,
 };
