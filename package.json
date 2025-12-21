@@ -1,7 +1,7 @@
 {
   "name": "aurea-eden",
   "type": "module",
-  "version": "1.27.12",
+  "version": "1.27.13",
   "description": "A Three.js-based framework for creating custom 3D diagramming notations.",
   "main": "dist/bpmn-diagram.es.js",
   "module": "dist/bpmn-diagram.es.js",
