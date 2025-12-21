@@ -1,7 +1,7 @@
 {
   "name": "aurea-eden",
   "type": "module",
-  "version": "1.27.11",
+  "version": "1.27.12",
   "description": "A Three.js-based framework for creating custom 3D diagramming notations.",
   "main": "dist/bpmn-diagram.es.js",
   "module": "dist/bpmn-diagram.es.js",
@@ -32,9 +32,10 @@
     "deploy:npm": "npm publish",
     "// --- RELEASE TASKS ---": "",
     "release": "standard-version",
+    "update-html-version": "node scripts/update-html-version.js",
     "push:git": "git push --follow-tags origin main",
     "// --- THE MASTER COMMAND ---": "",
-    "ship": "npm run release && npm run build:lib && npm run build:site && npm run deploy:npm && npm run deploy:pages && npm run push:git"
+    "ship": "npm run release && npm run update-html-version && npm run build:lib && npm run build:site && npm run deploy:npm && npm run deploy:pages && npm run push:git"
   },
   "devDependencies": {
     "gh-pages": "^6.3.0",
