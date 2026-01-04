@@ -61,6 +61,10 @@ export default {
             const xmlDoc = parser.parseFromString(xml, "text/xml");
             diagramInstance.value.clear();
             diagramInstance.value.buildDiagram(xmlDoc);
+            
+            // Ensure camera is fitted to the new content
+            diagramInstance.value.fitScreen();
+
             // Re-apply values after build
             applyValues(props.values);
         } catch (e) {
