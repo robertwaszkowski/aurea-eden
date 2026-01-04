@@ -1,10 +1,12 @@
 
-import { createApp, nextTick, shallowRef } from 'vue';
+import { createApp, nextTick, shallowRef, ref, computed } from 'vue';
 import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.css';
+import AureaEdenBpmnDiagram from './lib/components/AureaEdenBpmnDiagram.vue';
+import simpleBpmnTemplate from './demo/VueWrapperBpmnDemo/simple-process-template.bpmn?raw';
 
 const vuetify = createVuetify({
   components,
@@ -14,6 +16,7 @@ const vuetify = createVuetify({
 const DiagramControls = {
   props: {
     diagram: Object,
+    wrapperComponent: Object // Optional reference to the wrapper component for extra features
   },
   data() {
     return {
@@ -27,11 +30,13 @@ const DiagramControls = {
   watch: {
     diagram: {
       handler(newDiagram, oldDiagram) {
-        if (oldDiagram) {
+        if (oldDiagram && oldDiagram.controls) {
           oldDiagram.controls.removeEventListener('change', this.readCameraPosition);
         }
         if (newDiagram) {
-          newDiagram.controls.addEventListener('change', this.readCameraPosition);
+          if (newDiagram.controls) {
+            newDiagram.controls.addEventListener('change', this.readCameraPosition);
+          }
           this.readCameraPosition(); // Initial read
           this.helpersEnabled = newDiagram.helpers;
         }
@@ -39,12 +44,21 @@ const DiagramControls = {
       immediate: true,
     },
     mode(newMode) {
+      // If we have a wrapper component, prefer updating via props/model if linked
+      // But here we might be controlling either raw diagram or wrapper's internal diagram.
+      // Easiest is to emit an event or update parent data if we want strict props flow.
+      // For now, imperative calls still work on the diagram instance.
       if (this.diagram) {
         this.diagram.setMode(newMode);
       }
+      this.$emit('update:mode', newMode);
     },
-    helpersEnabled() {
-        this.toggleHelpers();
+    helpersEnabled(enabled) {
+        if (this.diagram) {
+             if (enabled) this.diagram.showHelpers();
+             else this.diagram.hideHelpers();
+        }
+        this.$emit('update:helpers', enabled);
     }
   },
   methods: {
@@ -56,24 +70,28 @@ const DiagramControls = {
         this.camLookAt = `(${cameraTarget.x.toFixed(2)}, ${cameraTarget.y.toFixed(2)}, ${cameraTarget.z.toFixed(2)})`;
       }
     },
-    toggleHelpers() {
-      if (this.diagram) {
-        if (this.diagram.helpers) {
-          this.diagram.hideHelpers();
-        } else {
-          this.diagram.showHelpers();
-        }
-        this.helpersEnabled = this.diagram.helpers;
-      }
-    },
     resetDiagram() {
-      if (this.diagram) {
-        this.mode = 'VIEW';
-        this.diagram.reset();
+      this.mode = 'VIEW';
+      if (this.wrapperComponent) {
+          this.wrapperComponent.reset();
+      } else if (this.diagram) {
+          this.diagram.reset();
       }
     },
     importDiagram() {
-      if (this.diagram) {
+      if (this.wrapperComponent) {
+           // Wrapper handles import
+           const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.bpmn';
+            input.onchange = (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                this.wrapperComponent.import(file);
+            }
+            };
+            input.click();
+      } else if (this.diagram) {
         console.log('Importing diagram');
         const input = document.createElement('input');
         input.type = 'file';
@@ -89,13 +107,17 @@ const DiagramControls = {
       }
     },
     exportDiagram() {
-      if (this.diagram) {
-        this.diagram.export();
+      if (this.wrapperComponent) {
+          this.wrapperComponent.export();
+      } else if (this.diagram) {
+          this.diagram.export();
       }
     },
     clearDiagram() {
-      if (this.diagram) {
-        this.diagram.clear();
+      if (this.wrapperComponent) {
+          this.wrapperComponent.clear();
+      } else if (this.diagram) {
+          this.diagram.clear();
       }
     },
   },
@@ -156,58 +178,100 @@ const DiagramControls = {
 const App = {
   components: {
     DiagramControls,
+    AureaEdenBpmnDiagram
   },
   data() {
     return {
       selectedDemo: 'CustomNotationDemo',
-      demos: [{ title: 'Order Processing Demo', value: 'OrderProcessingDemo' }, { title: 'Simple BPMN', value: 'SimpleBPMN' }, { title: 'Shapes Demo', value: 'ShapesDemo' }, { title: 'Custom Notation Demo', value: 'CustomNotationDemo' }],
+      demos: [
+        { title: 'Vue Wrapper BPMN Demo', value: 'VueWrapperBpmnDemo' },
+        { title: 'Order Processing Demo', value: 'OrderProcessingDemo' },
+        { title: 'Simple BPMN', value: 'SimpleBPMN' },
+        { title: 'Shapes Demo', value: 'ShapesDemo' },
+        { title: 'Custom Notation Demo', value: 'CustomNotationDemo' }
+      ],
       diagramInstance: shallowRef(null), // Use shallowRef for non-reactive diagram object
       drawer: true, // For v-navigation-drawer
+      
+      // Wrapper Props
+      wrapperMode: 'VIEW',
+      wrapperHelpers: false,
+      bpmnXml: '',
+      barValues: {},
+      
+      // Legacy support
+      isVueDemo: false
     };
-  },
-  computed: {
-    selectedDemoTitle() {
-      const demo = this.demos.find(d => d.value === this.selectedDemo);
-      return demo ? demo.title : '';
-    }
   },
   methods: {
     async loadDemo() {
-      await nextTick(async () => {
-        // Clear previous diagram if any
-        if (this.diagramInstance) {
-          this.diagramInstance.clear();
-          // Dispose of the diagram to free up resources
-          // if your diagram class has a dispose method
-          if (typeof this.diagramInstance.dispose === 'function') {
-            this.diagramInstance.dispose();
+      // Cleanup previous state
+      this.isVueDemo = false;
+      this.diagramInstance = null;
+      this.bpmnXml = '';
+      this.barValues = {};
+
+      const container = document.getElementById('diagram-container');
+      if (container) {
+          while (container.firstChild) {
+              container.removeChild(container.firstChild);
           }
-          this.diagramInstance = null;
-        }
+      }
 
-        const container = document.getElementById('diagram-container');
-        if (!container) {
-          console.error('Diagram container not found!');
-          return;
-        }
-        // Clear the container before loading a new diagram
-        while (container.firstChild) {
-            container.removeChild(container.firstChild);
-        }
-
-        try {
-          // Dynamically import the demo module
-          const demoModule = await import(`./demo/${this.selectedDemo}/index.js`);
-          // Call the default export function to create the diagram
-          this.diagramInstance = demoModule.default(container);
-        } catch (error) {
-          console.error(`Error loading demo ${this.selectedDemo}:`, error);
-        }
-      });
+      if (this.selectedDemo === 'VueWrapperBpmnDemo') {
+          this.isVueDemo = true;
+          // Defer logic until component is mounted via v-if
+          await nextTick();
+          // Set Props
+          this.bpmnXml = simpleBpmnTemplate;
+          this.barValues = {
+              'TaskQuotationHandling': 20,
+              'TaskApproveOrder': 80,
+              '_6-190': 50, // Order Handling
+              '_6-241': 40, // Shipping Handling
+              'TaskReviewOrder': 90
+          };
+          // Get instance from ref
+          if (this.$refs.diagramRef) {
+              this.diagramInstance = this.$refs.diagramRef.diagramInstance;
+          }
+      } else {
+        await nextTick(async () => {
+          try {
+            // Dynamically import the demo module
+            const demoModule = await import(`./demo/${this.selectedDemo}/index.js`);
+            // Call the default export function to create the diagram
+            // We need the container element again because v-if might have recreated it
+            const el = document.getElementById('diagram-container');
+            if (el) {
+                this.diagramInstance = demoModule.default(el);
+            }
+          } catch (error) {
+            console.error(`Error loading demo ${this.selectedDemo}:`, error);
+          }
+        });
+      }
     },
+    
+    // Handler to sync mode from controls back to wrapper props
+    updateMode(newMode) {
+        this.wrapperMode = newMode;
+    },
+    updateHelpers(enabled) {
+        this.wrapperHelpers = enabled;
+    }
   },
   mounted() {
     this.loadDemo();
+  },
+  watch: {
+    // When using wrapper, we need to sync diagramInstance ref if the component recreates it (though it shouldn't often)
+    // But mainly we need to ensure controls get the right object.
+    '$refs.diagramRef.diagramInstance': function(val) {
+        if (this.isVueDemo) {
+            this.diagramInstance = val;
+        }
+    }
   },
   template: `
     <v-app>
@@ -218,7 +282,13 @@ const App = {
             <v-list nav>
             </v-list>
             <template v-slot:append>
-                <DiagramControls :diagram="diagramInstance" v-if="diagramInstance"/>
+                <DiagramControls 
+                    :diagram="diagramInstance" 
+                    :wrapperComponent="$refs.diagramRef"
+                    v-if="diagramInstance"
+                    @update:mode="updateMode"
+                    @update:helpers="updateHelpers"
+                />
             </template>
         </v-navigation-drawer>
 
@@ -242,7 +312,19 @@ const App = {
         </v-app-bar>
 
         <v-main class="d-flex flex-column">
-            <div id="diagram-container" class="flex-grow-1"></div>
+            <!-- Vue Wrapper Demo -->
+            <div v-if="isVueDemo" class="flex-grow-1" style="position:relative">
+                <AureaEdenBpmnDiagram 
+                    ref="diagramRef"
+                    :bpmnXml="bpmnXml"
+                    :values="barValues"
+                    :mode="wrapperMode"
+                    :helpers="wrapperHelpers"
+                />
+            </div>
+            
+            <!-- Legacy JS Demos -->
+            <div v-else id="diagram-container" class="flex-grow-1"></div>
         </v-main>
     </v-app>
   `,
