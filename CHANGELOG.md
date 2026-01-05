@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.27.14](https://github.com/robertwaszkowski/aurea-eden/compare/v1.27.13...v1.27.14) (2026-01-05)
+
+
+### Features
+
+* Add AureaEdenBpmnDiagram Vue component and demo integration ([3a9a6aa](https://github.com/robertwaszkowski/aurea-eden/commit/3a9a6aa8fa4fe2413fc5e6a1c7cab1c67e22ae48))
+* Improve ANALYZE mode animation sequence and bar rising effect ([8307a82](https://github.com/robertwaszkowski/aurea-eden/commit/8307a82712b0c9caf03576f1c9dd6cb35f809d91))
+
+
+### Bug Fixes
+
+* Call fitScreen after parsing BPMN XML to initialize camera state ([c68ad54](https://github.com/robertwaszkowski/aurea-eden/commit/c68ad54812ee80d7c8eb10bc781e06eee5023bbf))
+* Resolve Vue module specifier error using import map ([1132a8c](https://github.com/robertwaszkowski/aurea-eden/commit/1132a8cbda81a586935faf255e011c11c3fbb694))
+* Update Element geometry when TextShape geometry changes ([aa4d2d6](https://github.com/robertwaszkowski/aurea-eden/commit/aa4d2d6267e106160ea3e0ab7ffca4462eaddcf4))
+
 ### [1.27.13](https://github.com/robertwaszkowski/aurea-eden/compare/v1.27.12...v1.27.13) (2025-12-21)
 
 ### [1.27.12](https://github.com/robertwaszkowski/aurea-eden/compare/v1.27.11...v1.27.12) (2025-12-21)
