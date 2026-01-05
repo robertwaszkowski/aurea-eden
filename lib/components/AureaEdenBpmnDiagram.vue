@@ -36,14 +36,16 @@ export default {
         const diagram = new BpmnDiagram(container.value);
         diagramInstance.value = diagram;
 
-        // Apply initial state
-        if (props.mode) diagram.setMode(props.mode);
+        // Apply helpers
         if (props.helpers) diagram.showHelpers();
         
         // Initial build if XML is provided
         if (props.bpmnXml) {
           parseAndBuild(props.bpmnXml);
         }
+
+        // Apply initial mode (after build so elements are present)
+        if (props.mode) diagram.setMode(props.mode);
       }
     });
 
