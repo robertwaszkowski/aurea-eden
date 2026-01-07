@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Lock files (HUGE token hogs)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+build/
+out/
+
+# Logs and misc
+*.log
+.git/
+
+# Binary files
+*.png
+*.jpg
+*.ico
+*.pdf
+*.exe
+.DS_Store
