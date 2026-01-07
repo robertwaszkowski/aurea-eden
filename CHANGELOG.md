@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.28.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.27.15...v1.28.0) (2026-01-07)
+
+
+### Features
+
+* add order processing flow with tasks and gateways in index-DiTg-aTM.js ([cfca281](https://github.com/robertwaszkowski/aurea-eden/commit/cfca28166bc4247c4702ab7b5e1c5e6fa701cba9))
+
 ### [1.27.15](https://github.com/robertwaszkowski/aurea-eden/compare/v1.27.14...v1.27.15) (2026-01-05)
 
 ### [1.27.14](https://github.com/robertwaszkowski/aurea-eden/compare/v1.27.13...v1.27.14) (2026-01-05)
