@@ -188,6 +188,7 @@ const App = {
         { title: 'Order Processing Demo', value: 'OrderProcessingDemo' },
         { title: 'Simple BPMN', value: 'SimpleBPMN' },
         { title: 'Shapes Demo', value: 'ShapesDemo' },
+        { title: 'Badges Demo', value: 'BadgesDemo' },
         { title: 'Custom Notation Demo', value: 'CustomNotationDemo' }
       ],
       diagramInstance: shallowRef(null), // Use shallowRef for non-reactive diagram object
