@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.29.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.28.5...v1.29.0) (2026-01-09)
+
+
+### Features
+
+* add badge demo and GIF support ([79d3673](https://github.com/robertwaszkowski/aurea-eden/commit/79d36734a50a24b8827e95b5edbddb45c35fa73b))
+
 ### [1.28.5](https://github.com/robertwaszkowski/aurea-eden/compare/v1.28.4...v1.28.5) (2026-01-07)
 
 ### [1.28.4](https://github.com/robertwaszkowski/aurea-eden/compare/v1.28.3...v1.28.4) (2026-01-07)
