@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.30.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.29.4...v1.30.0) (2026-01-10)
+
+
+### Features
+
+* add active task badges to BPMN diagram and update demo defaults ([b8de77b](https://github.com/robertwaszkowski/aurea-eden/commit/b8de77be5d53f44d264d6505ad21ff22ede314e4))
+
 ### [1.29.4](https://github.com/robertwaszkowski/aurea-eden/compare/v1.29.3...v1.29.4) (2026-01-10)
 
 ### [1.29.3](https://github.com/robertwaszkowski/aurea-eden/compare/v1.29.2...v1.29.3) (2026-01-10)
