@@ -3,7 +3,7 @@ import { Element } from "../../lib/elements/Element.js";
 import { RectangleShape } from "../../lib/shapes/paths/RectangleShape.js";
 import { RoundedRectangleShape } from "../../lib/shapes/paths/RoundedRectangleShape.js";
 import { CircleShape } from "../../lib/shapes/paths/CircleShape.js";
-import logoUrl from "../../assets/aurea-eden-logo.jpeg";
+import badgeUrl from "../../assets/badge.png";
 import starUrl from "../../assets/star.gif";
 import starSilverUrl from "../../assets/star_silver.gif";
 
@@ -23,7 +23,7 @@ export default (container) => {
     diagram.addElement(new Element('el2', new RoundedRectangleShape(80, 50)))
         .addWrappedText('Image Badge\nBottom-Left')
         .positionRightOf('el1')
-        .addBadge(logoUrl, 'bottom-left');
+        .addBadge(badgeUrl, 'bottom-left', 15);
 
     // 3. Element with Multiple Badges
     diagram.addElement(new Element('el3', new RectangleShape(80, 50)))
@@ -49,7 +49,7 @@ export default (container) => {
     diagram.addElement(new Element('el6', new RectangleShape(80, 50)))
         .addWrappedText('Image Badge\nTop-Left')
         .positionRightOf('el5')
-        .addBadge(logoUrl, 'top-left');
+        .addBadge(badgeUrl, 'top-left', 15);
 
     // 7. Animated GIF Badge
     diagram.addElement(new Element('el7', new RoundedRectangleShape(80, 50)))
