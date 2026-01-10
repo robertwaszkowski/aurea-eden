@@ -3,6 +3,8 @@ import { Element } from "../../lib/elements/Element.js";
 import { RectangleShape } from "../../lib/shapes/paths/RectangleShape.js";
 import { RoundedRectangleShape } from "../../lib/shapes/paths/RoundedRectangleShape.js";
 import { CircleShape } from "../../lib/shapes/paths/CircleShape.js";
+import logoUrl from "../../assets/aurea-eden-logo.jpeg";
+import starUrl from "../../assets/star.gif";
 
 const checkIcon = '<svg viewBox="0 0 24 24"><path fill="#4CAF50" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>';
 const alertIcon = '<svg viewBox="0 0 24 24"><path fill="#F44336" d="M11,15H13V17H11V15M11,7H13V13H11V7M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2Z"/></svg>';
@@ -20,7 +22,7 @@ export default (container) => {
     diagram.addElement(new Element('el2', new RoundedRectangleShape(80, 50)))
         .addWrappedText('Image Badge\nBottom-Left')
         .positionRightOf('el1')
-        .addBadge('/assets/aurea-eden-logo.jpeg', 'bottom-left');
+        .addBadge(logoUrl, 'bottom-left');
 
     // 3. Element with Multiple Badges
     diagram.addElement(new Element('el3', new RectangleShape(80, 50)))
@@ -46,13 +48,13 @@ export default (container) => {
     diagram.addElement(new Element('el6', new RectangleShape(80, 50)))
         .addWrappedText('Image Badge\nTop-Left')
         .positionRightOf('el5')
-        .addBadge('/assets/aurea-eden-logo.jpeg', 'top-left');
+        .addBadge(logoUrl, 'top-left');
 
     // 7. Animated GIF Badge
     diagram.addElement(new Element('el7', new RoundedRectangleShape(80, 50)))
         .addWrappedText('Animated GIF\nBadge')
         .positionDownOf('el4')
-        .addBadge('/assets/star.gif', 'top-right', 30);
+        .addBadge(starUrl, 'top-right', 30);
 
     diagram.arrange();
     diagram.fitScreen();
