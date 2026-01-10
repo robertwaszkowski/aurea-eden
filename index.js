@@ -182,7 +182,7 @@ const App = {
   },
   data() {
     return {
-      selectedDemo: 'CustomNotationDemo',
+      selectedDemo: 'VueWrapperBpmnDemo',
       demos: [
         { title: 'Vue Wrapper BPMN Demo', value: 'VueWrapperBpmnDemo' },
         { title: 'Order Processing Demo', value: 'OrderProcessingDemo' },
@@ -199,6 +199,8 @@ const App = {
       wrapperHelpers: false,
       bpmnXml: '',
       barValues: {},
+      myActiveTasks: [],
+      otherActiveTasks: [],
       
       // Legacy support
       isVueDemo: false
@@ -211,6 +213,8 @@ const App = {
       this.diagramInstance = null;
       this.bpmnXml = '';
       this.barValues = {};
+      this.myActiveTasks = [];
+      this.otherActiveTasks = [];
 
       const container = document.getElementById('diagram-container');
       if (container) {
@@ -232,6 +236,8 @@ const App = {
               '_6-241': 40, // Shipping Handling
               'TaskReviewOrder': 90
           };
+          this.myActiveTasks = ['_6-190']; // Order Handling
+          this.otherActiveTasks = ['_6-241']; // Shipping Handling as silver
           // Get instance from ref
           if (this.$refs.diagramRef) {
               this.diagramInstance = this.$refs.diagramRef.diagramInstance;
@@ -321,6 +327,8 @@ const App = {
                     :values="barValues"
                     :mode="wrapperMode"
                     :helpers="wrapperHelpers"
+                    :myActiveTasks="myActiveTasks"
+                    :otherActiveTasks="otherActiveTasks"
                 />
             </div>
             

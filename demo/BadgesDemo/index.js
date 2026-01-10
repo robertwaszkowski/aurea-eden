@@ -45,23 +45,23 @@ export default (container) => {
         .positionRightOf('el4')
         .addBadge(infoIcon, 'top-right', 25); // size 25
 
-    // 6. Image badge on Top-Left
+    // 6. Image badge on Top-Right
     diagram.addElement(new Element('el6', new RectangleShape(80, 50)))
-        .addWrappedText('Image Badge\nTop-Left')
+        .addWrappedText('Image Badge\nTop-Right')
         .positionRightOf('el5')
-        .addBadge(badgeUrl, 'top-left', 15);
+        .addBadge(badgeUrl, 'top-right', 15);
 
     // 7. Animated GIF Badge
     diagram.addElement(new Element('el7', new RoundedRectangleShape(80, 50)))
         .addWrappedText('Animated GIF\nBadge')
         .positionDownOf('el4')
-        .addBadge(starUrl, 'top-right', 30);
+        .addBadge(starUrl, 'top-left', 30);
 
     // 8. Silver Star GIF Badge
     diagram.addElement(new Element('el8', new RoundedRectangleShape(80, 50)))
         .addWrappedText('Silver Star\nGIF Badge')
         .positionRightOf('el7')
-        .addBadge(starSilverUrl, 'top-right', 30);
+        .addBadge(starSilverUrl, 'top-left', 30);
 
     diagram.arrange();
     diagram.fitScreen();

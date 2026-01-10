@@ -5,6 +5,8 @@
 <script>
 import { BpmnDiagram } from '../notations/BpmnDiagram.js';
 import { shallowRef, onMounted, onUnmounted, watch } from 'vue';
+import starUrl from '../../assets/star.gif';
+import starSilverUrl from '../../assets/star_silver.gif';
 
 export default {
   name: 'AureaEdenBpmnDiagram',
@@ -24,6 +26,14 @@ export default {
     helpers: {
       type: Boolean,
       default: false
+    },
+    myActiveTasks: {
+      type: Array,
+      default: () => []
+    },
+    otherActiveTasks: {
+      type: Array,
+      default: () => []
     }
   },
   setup(props, { expose, emit }) {
@@ -69,6 +79,9 @@ export default {
 
             // Re-apply values after build
             applyValues(props.values);
+            
+            // Re-apply badges after build
+            updateBadges();
         } catch (e) {
             console.error("Error parsing BPMN XML:", e);
         }
@@ -95,6 +108,45 @@ export default {
         }
     };
 
+    // --- Badges ---
+    const badgedElementIds = new Set();
+
+    const updateBadges = () => {
+        if (!diagramInstance.value) return;
+
+        // 1. Clear existing badges
+        badgedElementIds.forEach(id => {
+            const el = diagramInstance.value.getElementById(id);
+            if (el) el.clearBadges();
+        });
+        badgedElementIds.clear();
+
+        // 2. Add badges for my active tasks (Gold Star)
+        if (props.myActiveTasks) {
+            props.myActiveTasks.forEach(id => {
+                const el = diagramInstance.value.getElementById(id);
+                if (el) {
+                    el.addBadge(starUrl, 'top-right', 30);
+                    badgedElementIds.add(id);
+                }
+            });
+        }
+
+        // 3. Add badges for other active tasks (Silver Star)
+        if (props.otherActiveTasks) {
+            props.otherActiveTasks.forEach(id => {
+                const el = diagramInstance.value.getElementById(id);
+                if (el) {
+                    // Avoid double badging if same ID is in both lists (prioritize myActiveTasks)
+                    if (!badgedElementIds.has(id)) {
+                        el.addBadge(starSilverUrl, 'top-right', 30);
+                        badgedElementIds.add(id);
+                    }
+                }
+            });
+        }
+    };
+
     // --- Watchers ---
     watch(() => props.mode, (newMode) => {
         if (diagramInstance.value) diagramInstance.value.setMode(newMode);
@@ -112,6 +164,10 @@ export default {
 
     watch(() => props.values, (newValues) => {
         applyValues(newValues);
+    }, { deep: true });
+
+    watch([() => props.myActiveTasks, () => props.otherActiveTasks], () => {
+        updateBadges();
     }, { deep: true });
 
 
