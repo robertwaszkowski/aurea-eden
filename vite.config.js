@@ -28,6 +28,14 @@ export default defineConfig(({ mode }) => {
       build: {
         outDir: 'dist-site', // Separate folder for the site
         minify: 'terser',
+        rollupOptions: {
+          external: ['vue'],
+          output: {
+            paths: {
+              vue: 'https://unpkg.com/vue@3.5.25/dist/vue.esm-browser.js'
+            }
+          }
+        }
       }
     };
   }
