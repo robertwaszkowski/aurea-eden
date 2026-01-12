@@ -45,6 +45,9 @@ jspm_packages/
 # sample diagrams directory
 sample-diagrams
 
+# local data directory
+_local/
+
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 
