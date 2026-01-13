@@ -3,7 +3,7 @@ import path from "path";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 import vue from "@vitejs/plugin-vue";
 import pkg from './package.json';
-
+ 
 export default defineConfig(({ mode }) => {
   const commonConfig = {
     plugins: [vue()],
@@ -19,27 +19,24 @@ export default defineConfig(({ mode }) => {
       __APP_VERSION__: JSON.stringify(pkg.version),
     }
   };
-
+ 
   // 1. CONFIGURATION FOR GITHUB PAGES (Demo Site)
   if (mode === 'site') {
     return {
       ...commonConfig,
-      base: './', // Vital for GH Pages
+      base: './',
       build: {
-        outDir: 'dist-site', // Separate folder for the site
+        outDir: 'dist-site',
         minify: 'terser',
+        // FIX: Do NOT externalize Vue here.
+        // We want the demo site to bundle Vue so it works in the browser.
         rollupOptions: {
-          external: ['vue'],
-          output: {
-            paths: {
-              vue: 'https://unpkg.com/vue@3.5.25/dist/vue.esm-browser.js'
-            }
-          }
+           // No external settings needed here
         }
       }
     };
   }
-
+ 
   // 2. CONFIGURATION FOR NPM (Library)
   if (mode === 'lib') {
     return {
@@ -56,16 +53,22 @@ export default defineConfig(({ mode }) => {
         minify: 'terser',
         terserOptions: {
           compress: { drop_console: false }
+        },
+        // FIX: Externalize Vue here!
+        // This ensures your library package does not include Vue source code.
+        rollupOptions: {
+          external: ['vue'],
+          output: {
+            globals: {
+              vue: 'Vue' // Required for UMD builds
+            }
+          }
         }
       }
     };
   }
-
+ 
   return {
     ...commonConfig,
-    // if you need to serve a specific html file for dev, you can do it here
-    // server: {
-    //   open: '/index.html'
-    // }
   }
 });
