@@ -3,5 +3,6 @@
         "Aurea",
         "vuetify",
         "Waszkowski"
-    ]
+    ],
+    "terminal.integrated.fontFamily": "MesloLGS NF"
 }
