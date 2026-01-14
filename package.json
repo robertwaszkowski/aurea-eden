@@ -33,10 +33,10 @@
     "// --- RELEASE TASKS ---": "",
     "release": "standard-version",
     "update-html-version": "node scripts/update-html-version.js",
-    "commit:version-update": "git add index.html && git commit -m 'chore: update index.html version'",
+    "commit:version-update": "git add . && git commit -m 'chore: update release artifacts'",
     "push:git": "git push --follow-tags origin main",
     "// --- THE MASTER COMMAND ---": "",
-    "ship": "npm run release && npm run update-html-version && npm run commit:version-update && npm run build:lib && npm run build:site && npm run deploy:npm && npm run deploy:pages && npm run push:git"
+    "ship": "npm run release && npm run update-html-version && npm run build:lib && npm run build:site && npm run commit:version-update && npm run deploy:npm && npm run deploy:pages && npm run push:git"
   },
   "devDependencies": {
     "gh-pages": "^6.3.0",
