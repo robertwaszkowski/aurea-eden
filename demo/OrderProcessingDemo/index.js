@@ -15,6 +15,10 @@ export default function createDiagram(container) {
         .connectFrom('e1', 'E', 'W')
         .addValueBar(20);
 
+    diagram.addTextAnnotation('ta1', 'Note: Quotations must be reviewed within 24h')
+        .positionUpOf('a1')
+        .connectFrom('a1', 'N', 'S');
+
     diagram.addGateway('g1')
         .positionRightOf('a1')
         .connectFrom('a1', 'E', 'W');
@@ -43,6 +47,10 @@ export default function createDiagram(container) {
         .addValueBar(50)
         .connectFrom('a4', 'E', 'W');
 
+    diagram.addTextAnnotation('ta2', 'Note: Payment must be received within 30 days')
+        .positionDownOf('a4')
+        .connectFrom('a5', 'S', 'E');
+
     diagram.addTask('a6')
         .positionRightOf('a5')
         .addWrappedText('Accept Payment')
@@ -67,10 +75,14 @@ export default function createDiagram(container) {
     // Non-standard connector
     const waypoints = [
         diagram.getElementById('g1').getNorthPoint(),
-        {   x: diagram.getElementById('g1').getNorthPoint().x,
-            y: diagram.getElementById('a3').getNorthPoint().y + BpmnDiagram.Dimensions.DISTANCE_BETWEEN_ELEMENTS },
-        {   x: diagram.getElementById('a7').getNorthPoint().x,
-            y: diagram.getElementById('a3').getNorthPoint().y + BpmnDiagram.Dimensions.DISTANCE_BETWEEN_ELEMENTS },
+        {
+            x: diagram.getElementById('g1').getNorthPoint().x,
+            y: diagram.getElementById('a3').getNorthPoint().y + BpmnDiagram.Dimensions.DISTANCE_BETWEEN_ELEMENTS
+        },
+        {
+            x: diagram.getElementById('a7').getNorthPoint().x,
+            y: diagram.getElementById('a3').getNorthPoint().y + BpmnDiagram.Dimensions.DISTANCE_BETWEEN_ELEMENTS
+        },
         diagram.getElementById('a7').getNorthPoint()
     ];
     diagram.addFlowConnector('f1', waypoints);
