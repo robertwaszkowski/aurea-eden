@@ -17,7 +17,7 @@ export default function createDiagram(container) {
 
     diagram.addTextAnnotation('ta1', 'Note: Quotations must be reviewed within 24h')
         .positionUpOf('a1')
-        .connectFrom('a1', 'N', 'S');
+        .connectFrom('a1', 'N', 'S', 'association');
 
     diagram.addGateway('g1')
         .positionRightOf('a1')
@@ -49,7 +49,7 @@ export default function createDiagram(container) {
 
     diagram.addTextAnnotation('ta2', 'Note: Payment must be received within 30 days')
         .positionDownOf('a4')
-        .connectFrom('a5', 'S', 'E');
+        .connectFrom('a5', 'S', 'E', 'association');
 
     diagram.addTask('a6')
         .positionRightOf('a5')
