@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.31.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.30.19...v1.31.0) (2026-01-20)
+
+
+### Features
+
+* add new BPMN diagram, custom shapes, and custom diagram notation. ([0f7da54](https://github.com/robertwaszkowski/aurea-eden/commit/0f7da54b91a58617705b9e4ed46939c386e2c726))
+* Add new shapes and a process flow demo, including a StraightDottedConnectorShape. ([a51de7c](https://github.com/robertwaszkowski/aurea-eden/commit/a51de7c922710a34468ef93964eea59d68bac5ef))
+* **bpmn:** add text annotations, associations, and text wrapping ([5978e55](https://github.com/robertwaszkowski/aurea-eden/commit/5978e55ef90edc1f9ac66f5c729a3e75fac184fb))
+* Implement initial demo showcasing various shapes and core element components with build output. ([04a2a10](https://github.com/robertwaszkowski/aurea-eden/commit/04a2a10d6fdbb648a40fde257d161ba3c307fcb5))
+* introduce BPMN diagram notation and update build artifacts. ([011eaad](https://github.com/robertwaszkowski/aurea-eden/commit/011eaadd0f9835e55fe3090a14d96416f69c6848))
+* Introduce custom shapes, badge functionality for elements, and a new BPMN order processing demo. ([2025711](https://github.com/robertwaszkowski/aurea-eden/commit/2025711b6406b41d15a7f501f22ae6b8e5bb4f6a))
+* introduce Element class with badge support and StraightDottedConnectorShape, demonstrated in a new demo. ([195177e](https://github.com/robertwaszkowski/aurea-eden/commit/195177ebe710ea5f5196dbd5bec354dbab45b8ed))
+
 ### [1.30.19](https://github.com/robertwaszkowski/aurea-eden/compare/v1.30.18...v1.30.19) (2026-01-20)
 
 ### [1.30.18](https://github.com/robertwaszkowski/aurea-eden/compare/v1.30.17...v1.30.18) (2026-01-20)
