@@ -1,10 +1,17 @@
 {
   "name": "aurea-eden",
   "type": "module",
-  "version": "1.30.15",
+  "version": "1.30.16",
   "description": "A Three.js-based framework for creating custom 3D diagramming notations.",
-  "main": "dist/bpmn-diagram.es.js",
+  "main": "dist/bpmn-diagram.umd.js",
   "module": "dist/bpmn-diagram.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/bpmn-diagram.es.js",
+      "require": "./dist/bpmn-diagram.umd.js"
+    },
+    "./vue": "./lib/components/AureaEdenBpmnDiagram.vue"
+  },
   "author": "Robert Waszkowski",
   "license": "GPL-3.0",
   "homepage": "",
@@ -20,7 +27,8 @@
   ],
   "files": [
     "dist/bpmn-diagram.es.js",
-    "dist/bpmn-diagram.umd.js"
+    "dist/bpmn-diagram.umd.js",
+    "lib"
   ],
   "scripts": {
     "dev": "vite",
