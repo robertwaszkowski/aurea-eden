@@ -122,6 +122,41 @@ window.addEventListener('keydown', (event) => {
 
 Open `index.html` in your browser to see the diagram rendered.
 
+## Vue Component Usage
+
+For Vue.js applications, Aurea EDEN provides a dedicated component `AureaEdenBpmnDiagram`.
+
+### Import
+
+```javascript
+import AureaEdenBpmnDiagram from 'aurea-eden/lib/components/AureaEdenBpmnDiagram.vue';
+```
+
+### Component Props
+
+- **`bpmnXml`** (String): The BPMN XML content to render.
+- **`values`** (Object): Key-value pairs matching element IDs to their values (used in `ANALYZE` mode).
+- **`mode`** (String): Diagram mode (`VIEW`, `ANALYZE`, or `EDIT`). Default is `VIEW`.
+- **`helpers`** (Boolean): If `true`, shows helper elements like grid and axes. Default is `false`.
+- **`myActiveTasks`** (Array): List of element IDs to be marked with a Gold Star (indicating user's active tasks).
+- **`otherActiveTasks`** (Array): List of element IDs to be marked with a Silver Star (indicating active tasks of others).
+
+### Example Usage
+
+```html
+<template>
+  <div style="height: 600px;">
+    <AureaEdenBpmnDiagram
+      :bpmnXml="xmlString"
+      :values="{ 'Task_1': 42, 'Task_2': 15 }"
+      mode="ANALYZE"
+      :myActiveTasks="['Task_1']"
+      :otherActiveTasks="['Task_3']"
+      :helpers="true"
+    />
+  </div>
+</template>
+```
 
 # Core Concepts / Architecture Overview
 
