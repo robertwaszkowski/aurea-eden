@@ -129,7 +129,7 @@ For Vue.js applications, Aurea EDEN provides a dedicated component `AureaEdenBpm
 ### Import
 
 ```javascript
-import AureaEdenBpmnDiagram from 'aurea-eden/lib/components/AureaEdenBpmnDiagram.vue';
+import AureaEdenBpmnDiagram from 'aurea-eden/vue';
 ```
 
 ### Component Props
