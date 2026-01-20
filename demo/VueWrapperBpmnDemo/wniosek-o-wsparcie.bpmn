@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:aurea="http://aurea.software/schema/2024/bpmn" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_1" name="FPZ_P2-Wniosek_o_wsparcie" isExecutable="false">
+    <bpmn2:extensionElements>
+      <aurea:role id="Role_3mn4g2s" code="Kierownik" assignmentMode="predefined" />
+      <aurea:role id="Role_l154xba" code="PD" assignmentMode="predefined">
+        <aurea:displayName>{"pl":"Pracownik_departamentu"}</aurea:displayName>
+      </aurea:role>
+      <aurea:displayName>{"pl":"Wniosek o wsparcie"}</aurea:displayName>
+      <aurea:description>{"pl":"Wniosek o wsparcie"}</aurea:description>
+      <aurea:defaultSubject>{"pl":"Wniosek o wsparcie"}</aurea:defaultSubject>
+      <aurea:defaultProceduresPackage>fpz_p2</aurea:defaultProceduresPackage>
+    </bpmn2:extensionElements>
+    <bpmn2:startEvent id="Event_18ee5ju" name="Start procesu z EZD">
+      <bpmn2:extensionElements>
+        <aurea:form>/FPZ_Wsparcie/00. Uruchom proces.form</aurea:form>
+      </bpmn2:extensionElements>
+      <bpmn2:outgoing>Flow_0vxr103</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:task id="Activity_0otz49q" name="Dekretuj wniosek" aurea:responsibleRef="Role_3mn4g2s" aurea:cancelable="false">
+      <bpmn2:extensionElements>
+        <aurea:accountable>Role_3mn4g2s</aurea:accountable>
+        <aurea:realization duration="P2D" onlyWorkingDays="true" countStartPoint="TASK" effortHours="8" />
+        <aurea:form>/FPZ_Wsparcie/01. Dekretuj wniosek.form</aurea:form>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0vxr103</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0in7amu</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_0vxr103" sourceRef="Event_18ee5ju" targetRef="Activity_0otz49q" />
+    <bpmn2:task id="Activity_0emz3c3" name="Zarejestruj i zweryfikuj wniosek" aurea:responsibleRef="Role_l154xba" aurea:cancelable="false">
+      <bpmn2:extensionElements>
+        <aurea:accountable>Role_l154xba</aurea:accountable>
+        <aurea:realization duration="P2D" onlyWorkingDays="true" countStartPoint="TASK" effortHours="8" />
+        <aurea:form>/FPZ_Wsparcie/02. Zarejestruj i zweryfikuj wniosek.form</aurea:form>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0g2j1t6</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0c4tgny</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_0in7amu" sourceRef="Activity_0otz49q" targetRef="Gateway_16ae9r3" />
+    <bpmn2:task id="Activity_0mcyc3a" name="Zweryfikuj merytorycznie" aurea:responsibleRef="Role_l154xba" aurea:cancelable="false">
+      <bpmn2:extensionElements>
+        <aurea:accountable>Role_l154xba</aurea:accountable>
+        <aurea:realization duration="P2D" onlyWorkingDays="true" countStartPoint="TASK" effortHours="8" />
+        <aurea:form>/FPZ_Wsparcie/03. Zweryfikuj merytorycznie wniosek.form</aurea:form>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0k05vda</bpmn2:incoming>
+      <bpmn2:incoming>Flow_12e7d9a</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0mrxe5h</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_0c4tgny" sourceRef="Activity_0emz3c3" targetRef="Gateway_1nmmk20" />
+    <bpmn2:exclusiveGateway id="Gateway_04z0nw7" name="Czy wniosek poprawny?" default="Flow_089xyqv">
+      <bpmn2:incoming>Flow_0mrxe5h</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_089xyqv</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0cyistc</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_0mrxe5h" sourceRef="Activity_0mcyc3a" targetRef="Gateway_04z0nw7" />
+    <bpmn2:task id="Activity_0czbr6c" name="Akceptuj wniosek" aurea:responsibleRef="Role_3mn4g2s" aurea:cancelable="false">
+      <bpmn2:extensionElements>
+        <aurea:accountable>Role_3mn4g2s</aurea:accountable>
+        <aurea:realization duration="P2D" onlyWorkingDays="true" countStartPoint="TASK" effortHours="8" />
+        <aurea:form>/FPZ_Wsparcie/05. Akceptuj wniosek.form</aurea:form>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_089xyqv</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1q76r3d</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_089xyqv" name="Tak" sourceRef="Gateway_04z0nw7" targetRef="Activity_0czbr6c" />
+    <bpmn2:sequenceFlow id="Flow_0cyistc" name="Nie" sourceRef="Gateway_04z0nw7" targetRef="Activity_1lmjwqo">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">:selDecyzjaWeryf = popraw</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:task id="Activity_0ewg4b2" name="Przygotuj pismo oraz wydaj decyzję" aurea:responsibleRef="Role_l154xba" aurea:cancelable="false">
+      <bpmn2:extensionElements>
+        <aurea:accountable>Role_l154xba</aurea:accountable>
+        <aurea:realization duration="P2D" onlyWorkingDays="false" countStartPoint="TASK" effortHours="8" />
+        <aurea:form>/FPZ_Wsparcie/06. Przygotuj pismo oraz wydaj decyzję.form</aurea:form>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_1fvayzb</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1sz6huv</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_1q76r3d" sourceRef="Activity_0czbr6c" targetRef="Gateway_0v8ldzr" />
+    <bpmn2:exclusiveGateway id="Gateway_0v8ldzr" name="Czy wniosek zaakceptowany?" default="Flow_1fvayzb">
+      <bpmn2:incoming>Flow_1q76r3d</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1fvayzb</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0zuiquz</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0pwxb14</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_1fvayzb" name="Tak" sourceRef="Gateway_0v8ldzr" targetRef="Activity_0ewg4b2" />
+    <bpmn2:endEvent id="Event_0ojtc8r" name="Wniosek zakończony">
+      <bpmn2:incoming>Flow_05nogw7</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_1sz6huv" sourceRef="Activity_0ewg4b2" targetRef="Gateway_1bp34yo" />
+    <bpmn2:sequenceFlow id="Flow_0zuiquz" name="Nie" sourceRef="Gateway_0v8ldzr" targetRef="Activity_1lmjwqo">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">:selDecyzjaKierownik = popraw</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:endEvent id="Event_1to3vzi" name="Wniosek anulowany przez kierownika">
+      <bpmn2:incoming>Flow_0pwxb14</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_0pwxb14" name="Wniosek anulowany" sourceRef="Gateway_0v8ldzr" targetRef="Event_1to3vzi">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">:selDecyzjaKierownik = anuluj</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:exclusiveGateway id="Gateway_16ae9r3" name="Czy anulowany?" default="Flow_0g2j1t6">
+      <bpmn2:incoming>Flow_0in7amu</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0g2j1t6</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_1d0v3y6</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_0g2j1t6" name="Nie" sourceRef="Gateway_16ae9r3" targetRef="Activity_0emz3c3" />
+    <bpmn2:endEvent id="Event_1safowe" name="Rejestracja anulowana">
+      <bpmn2:incoming>Flow_1d0v3y6</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_1d0v3y6" name="Tak" sourceRef="Gateway_16ae9r3" targetRef="Event_1safowe">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">:switchAnulowanieDekret = true</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:task id="Activity_1lmjwqo" name="Popraw dane" aurea:responsibleRef="Role_l154xba" aurea:cancelable="false">
+      <bpmn2:extensionElements>
+        <aurea:accountable>Role_l154xba</aurea:accountable>
+        <aurea:realization duration="P2D" onlyWorkingDays="true" countStartPoint="TASK" effortHours="8" />
+        <aurea:form>/FPZ_Wsparcie/02. Zarejestruj i zweryfikuj wniosek.form</aurea:form>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0zuiquz</bpmn2:incoming>
+      <bpmn2:incoming>Flow_0cyistc</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_1upxktw</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_1upxktw" sourceRef="Activity_1lmjwqo" targetRef="Gateway_1nmmk20" />
+    <bpmn2:exclusiveGateway id="Gateway_1nmmk20" name="Bramka">
+      <bpmn2:incoming>Flow_0c4tgny</bpmn2:incoming>
+      <bpmn2:incoming>Flow_1upxktw</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0c4wv0b</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_0c4wv0b" sourceRef="Gateway_1nmmk20" targetRef="Gateway_18733in" />
+    <bpmn2:exclusiveGateway id="Gateway_18733in" name="Czy wezwanie do uzupełnienia?" default="Flow_0k05vda">
+      <bpmn2:incoming>Flow_0c4wv0b</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_0k05vda</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0dl97f0</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_0k05vda" name="Nie" sourceRef="Gateway_18733in" targetRef="Activity_0mcyc3a" />
+    <bpmn2:task id="Activity_0m9o5lr" name="Czekaj na korektę" aurea:responsibleRef="Role_l154xba" aurea:cancelable="false">
+      <bpmn2:extensionElements>
+        <aurea:accountable>Role_l154xba</aurea:accountable>
+        <aurea:realization duration="P2D" onlyWorkingDays="true" countStartPoint="TASK" effortHours="8" />
+        <aurea:form>/FPZ_Wsparcie/04. Czekaj na korektę.form</aurea:form>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0dl97f0</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_02jcbcb</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_0dl97f0" name="Tak" sourceRef="Gateway_18733in" targetRef="Activity_0m9o5lr">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">:selectDecyzjaOperatora.value = uzup</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:exclusiveGateway id="Gateway_1eafwle" name="Czy korekta wpłynęła?" default="Flow_1tutk1b">
+      <bpmn2:incoming>Flow_02jcbcb</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_12e7d9a</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_1tutk1b</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_02jcbcb" sourceRef="Activity_0m9o5lr" targetRef="Gateway_1eafwle" />
+    <bpmn2:sequenceFlow id="Flow_12e7d9a" name="Nie" sourceRef="Gateway_1eafwle" targetRef="Activity_0mcyc3a">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">:selectCzyKorekta = nie</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:endEvent id="Event_1je728x" name="Korekta wpłynęła">
+      <bpmn2:incoming>Flow_1tutk1b</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_1tutk1b" name="Tak" sourceRef="Gateway_1eafwle" targetRef="Event_1je728x" />
+    <bpmn2:exclusiveGateway id="Gateway_1bp34yo" name="Czy zaliczka?" default="Flow_05nogw7">
+      <bpmn2:incoming>Flow_1sz6huv</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_05nogw7</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0w3kccb</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="Flow_05nogw7" name="Nie" sourceRef="Gateway_1bp34yo" targetRef="Event_0ojtc8r" />
+    <bpmn2:task id="Activity_107zong" name="Przygotuj polecenie wypłaty zaliczki" aurea:responsibleRef="Role_l154xba" aurea:cancelable="false">
+      <bpmn2:extensionElements>
+        <aurea:accountable>Role_l154xba</aurea:accountable>
+        <aurea:form>/FPZ_Wsparcie/07. Przygotuj polecenie dokonania zaliczki.form</aurea:form>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_0w3kccb</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_106hpin</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="Flow_0w3kccb" name="Tak" sourceRef="Gateway_1bp34yo" targetRef="Activity_107zong">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">:switchCzyZaliczka = true</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:endEvent id="Event_0rzlqh1" name="Wniosek zakończony po zaliczce">
+      <bpmn2:incoming>Flow_106hpin</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_106hpin" sourceRef="Activity_107zong" targetRef="Event_0rzlqh1" />
+    <bpmn2:textAnnotation id="TextAnnotation_14sryix">
+      <bpmn2:text>Wybór typu decyzji</bpmn2:text>
+    </bpmn2:textAnnotation>
+    <bpmn2:association id="Association_0eo15kg" associationDirection="None" sourceRef="Activity_0emz3c3" targetRef="TextAnnotation_14sryix" />
+    <bpmn2:textAnnotation id="TextAnnotation_13jted0">
+      <bpmn2:text>Akceptacja typu decyzji</bpmn2:text>
+    </bpmn2:textAnnotation>
+    <bpmn2:association id="Association_1mxbglv" associationDirection="None" sourceRef="Activity_0czbr6c" targetRef="TextAnnotation_13jted0" />
+    <bpmn2:textAnnotation id="TextAnnotation_0bs0gul">
+      <bpmn2:text>Oczekiwanie na podpis i podłączenie skanu</bpmn2:text>
+    </bpmn2:textAnnotation>
+    <bpmn2:association id="Association_0ffflgd" associationDirection="None" sourceRef="Activity_0ewg4b2" targetRef="TextAnnotation_0bs0gul" />
+    <bpmn2:textAnnotation id="TextAnnotation_10i72s6">
+      <bpmn2:text>Jeśli korekta wpłynie w terminie to proces jest kończony a jeśli korekta nie wpłynie z poziomu zadania można zmienić typ decyzji</bpmn2:text>
+    </bpmn2:textAnnotation>
+    <bpmn2:association id="Association_1wj0c3f" associationDirection="None" sourceRef="Activity_0m9o5lr" targetRef="TextAnnotation_10i72s6" />
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="Event_18ee5ju_di" bpmnElement="Event_18ee5ju">
+        <dc:Bounds x="-488" y="12" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-499" y="55" width="74" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0otz49q_di" bpmnElement="Activity_0otz49q">
+        <dc:Bounds x="-400" y="-10" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0emz3c3_di" bpmnElement="Activity_0emz3c3">
+        <dc:Bounds x="-150" y="-10" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0mcyc3a_di" bpmnElement="Activity_0mcyc3a">
+        <dc:Bounds x="318" y="-10" width="167" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_04z0nw7_di" bpmnElement="Gateway_04z0nw7" isMarkerVisible="true">
+        <dc:Bounds x="555" y="5" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="508" y="55" width="63" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0czbr6c_di" bpmnElement="Activity_0czbr6c">
+        <dc:Bounds x="670" y="-10" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ewg4b2_di" bpmnElement="Activity_0ewg4b2">
+        <dc:Bounds x="950" y="-10" width="173" height="92" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0v8ldzr_di" bpmnElement="Gateway_0v8ldzr" isMarkerVisible="true">
+        <dc:Bounds x="845" y="5" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="785" y="55" width="82" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ojtc8r_di" bpmnElement="Event_0ojtc8r">
+        <dc:Bounds x="1492" y="12" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1488" y="55" width="59" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1to3vzi_di" bpmnElement="Event_1to3vzi">
+        <dc:Bounds x="852" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="834" y="255" width="83" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_16ae9r3_di" bpmnElement="Gateway_16ae9r3" isMarkerVisible="true">
+        <dc:Bounds x="-255" y="5" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-265" y="-19" width="82" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1safowe_di" bpmnElement="Event_1safowe">
+        <dc:Bounds x="-248" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-256" y="255" width="56" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lmjwqo_di" bpmnElement="Activity_1lmjwqo">
+        <dc:Bounds x="-14" y="-175" width="167" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1nmmk20_di" bpmnElement="Gateway_1nmmk20" isMarkerVisible="true">
+        <dc:Bounds x="45" y="5" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="55" y="62" width="39" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_18733in_di" bpmnElement="Gateway_18733in" isMarkerVisible="true">
+        <dc:Bounds x="155" y="5" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="142" y="-19" width="87" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0m9o5lr_di" bpmnElement="Activity_0m9o5lr">
+        <dc:Bounds x="130" y="100" width="167" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1eafwle_di" bpmnElement="Gateway_1eafwle" isMarkerVisible="true">
+        <dc:Bounds x="377" y="115" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="438" y="133" width="59" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1je728x_di" bpmnElement="Event_1je728x">
+        <dc:Bounds x="384" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="365" y="255" width="85" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1bp34yo_di" bpmnElement="Gateway_1bp34yo" isMarkerVisible="true">
+        <dc:Bounds x="1175" y="5" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1166" y="-19" width="68" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_107zong_di" bpmnElement="Activity_107zong">
+        <dc:Bounds x="1258" y="80" width="172" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0rzlqh1_di" bpmnElement="Event_0rzlqh1">
+        <dc:Bounds x="1492" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1480" y="145" width="73" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_14sryix_di" bpmnElement="TextAnnotation_14sryix">
+        <dc:Bounds x="-118" y="170" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_13jted0_di" bpmnElement="TextAnnotation_13jted0">
+        <dc:Bounds x="670" y="170" width="100" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0bs0gul_di" bpmnElement="TextAnnotation_0bs0gul">
+        <dc:Bounds x="1010" y="-170" width="100" height="70" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_10i72s6_di" bpmnElement="TextAnnotation_10i72s6">
+        <dc:Bounds x="196" y="270" width="100" height="170" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0vxr103_di" bpmnElement="Flow_0vxr103">
+        <di:waypoint x="-452" y="30" />
+        <di:waypoint x="-400" y="30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0in7amu_di" bpmnElement="Flow_0in7amu">
+        <di:waypoint x="-300" y="30" />
+        <di:waypoint x="-255" y="30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0c4tgny_di" bpmnElement="Flow_0c4tgny">
+        <di:waypoint x="17" y="30" />
+        <di:waypoint x="45" y="30" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-97" y="116" width="57" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mrxe5h_di" bpmnElement="Flow_0mrxe5h">
+        <di:waypoint x="485" y="30" />
+        <di:waypoint x="555" y="30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_089xyqv_di" bpmnElement="Flow_089xyqv">
+        <di:waypoint x="605" y="30" />
+        <di:waypoint x="670" y="30" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="635" y="12" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cyistc_di" bpmnElement="Flow_0cyistc">
+        <di:waypoint x="580" y="5" />
+        <di:waypoint x="580" y="-120" />
+        <di:waypoint x="153" y="-120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="418" y="-138" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1q76r3d_di" bpmnElement="Flow_1q76r3d">
+        <di:waypoint x="770" y="30" />
+        <di:waypoint x="845" y="30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fvayzb_di" bpmnElement="Flow_1fvayzb">
+        <di:waypoint x="895" y="30" />
+        <di:waypoint x="950" y="30" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="920" y="12" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1sz6huv_di" bpmnElement="Flow_1sz6huv">
+        <di:waypoint x="1123" y="30" />
+        <di:waypoint x="1175" y="30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zuiquz_di" bpmnElement="Flow_0zuiquz">
+        <di:waypoint x="870" y="5" />
+        <di:waypoint x="870" y="-150" />
+        <di:waypoint x="153" y="-150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="846" y="-87" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pwxb14_di" bpmnElement="Flow_0pwxb14">
+        <di:waypoint x="870" y="55" />
+        <di:waypoint x="870" y="212" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="887" y="118" width="54" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0g2j1t6_di" bpmnElement="Flow_0g2j1t6">
+        <di:waypoint x="-205" y="30" />
+        <di:waypoint x="-150" y="30" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-179" y="12" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1d0v3y6_di" bpmnElement="Flow_1d0v3y6">
+        <di:waypoint x="-230" y="55" />
+        <di:waypoint x="-230" y="212" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-218" y="135" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1upxktw_di" bpmnElement="Flow_1upxktw">
+        <di:waypoint x="70" y="-95" />
+        <di:waypoint x="70" y="5" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0c4wv0b_di" bpmnElement="Flow_0c4wv0b">
+        <di:waypoint x="95" y="30" />
+        <di:waypoint x="155" y="30" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0k05vda_di" bpmnElement="Flow_0k05vda">
+        <di:waypoint x="205" y="30" />
+        <di:waypoint x="318" y="30" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="258" y="12" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dl97f0_di" bpmnElement="Flow_0dl97f0">
+        <di:waypoint x="180" y="55" />
+        <di:waypoint x="180" y="100" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="191" y="75" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02jcbcb_di" bpmnElement="Flow_02jcbcb">
+        <di:waypoint x="297" y="140" />
+        <di:waypoint x="377" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12e7d9a_di" bpmnElement="Flow_12e7d9a">
+        <di:waypoint x="402" y="115" />
+        <di:waypoint x="402" y="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="414" y="90" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tutk1b_di" bpmnElement="Flow_1tutk1b">
+        <di:waypoint x="402" y="165" />
+        <di:waypoint x="402" y="212" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="413" y="186" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05nogw7_di" bpmnElement="Flow_05nogw7">
+        <di:waypoint x="1225" y="30" />
+        <di:waypoint x="1492" y="30" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1354" y="12" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0w3kccb_di" bpmnElement="Flow_0w3kccb">
+        <di:waypoint x="1200" y="55" />
+        <di:waypoint x="1200" y="120" />
+        <di:waypoint x="1258" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1210" y="85" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_106hpin_di" bpmnElement="Flow_106hpin">
+        <di:waypoint x="1430" y="120" />
+        <di:waypoint x="1492" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0eo15kg_di" bpmnElement="Association_0eo15kg">
+        <di:waypoint x="-69" y="81" />
+        <di:waypoint x="-68" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1mxbglv_di" bpmnElement="Association_1mxbglv">
+        <di:waypoint x="721" y="70" />
+        <di:waypoint x="720" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0ffflgd_di" bpmnElement="Association_0ffflgd">
+        <di:waypoint x="1040" y="-10" />
+        <di:waypoint x="1046" y="-100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_1wj0c3f_di" bpmnElement="Association_1wj0c3f">
+        <di:waypoint x="226" y="180" />
+        <di:waypoint x="226" y="270" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

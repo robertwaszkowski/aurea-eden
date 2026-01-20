@@ -7,6 +7,7 @@ import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.css';
 import AureaEdenBpmnDiagram from './lib/components/AureaEdenBpmnDiagram.vue';
 import simpleBpmnTemplate from './demo/VueWrapperBpmnDemo/simple-process-template.bpmn?raw';
+import wniosekOWsparcieBpmn from './demo/VueWrapperBpmnDemo/wniosek-o-wsparcie.bpmn?raw';
 
 const vuetify = createVuetify({
   components,
@@ -54,11 +55,11 @@ const DiagramControls = {
       this.$emit('update:mode', newMode);
     },
     helpersEnabled(enabled) {
-        if (this.diagram) {
-             if (enabled) this.diagram.showHelpers();
-             else this.diagram.hideHelpers();
-        }
-        this.$emit('update:helpers', enabled);
+      if (this.diagram) {
+        if (enabled) this.diagram.showHelpers();
+        else this.diagram.hideHelpers();
+      }
+      this.$emit('update:helpers', enabled);
     }
   },
   methods: {
@@ -73,24 +74,24 @@ const DiagramControls = {
     resetDiagram() {
       this.mode = 'VIEW';
       if (this.wrapperComponent) {
-          this.wrapperComponent.reset();
+        this.wrapperComponent.reset();
       } else if (this.diagram) {
-          this.diagram.reset();
+        this.diagram.reset();
       }
     },
     importDiagram() {
       if (this.wrapperComponent) {
-           // Wrapper handles import
-           const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.bpmn';
-            input.onchange = (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                this.wrapperComponent.import(file);
-            }
-            };
-            input.click();
+        // Wrapper handles import
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.bpmn';
+        input.onchange = (event) => {
+          const file = event.target.files[0];
+          if (file) {
+            this.wrapperComponent.import(file);
+          }
+        };
+        input.click();
       } else if (this.diagram) {
         console.log('Importing diagram');
         const input = document.createElement('input');
@@ -108,16 +109,16 @@ const DiagramControls = {
     },
     exportDiagram() {
       if (this.wrapperComponent) {
-          this.wrapperComponent.export();
+        this.wrapperComponent.export();
       } else if (this.diagram) {
-          this.diagram.export();
+        this.diagram.export();
       }
     },
     clearDiagram() {
       if (this.wrapperComponent) {
-          this.wrapperComponent.clear();
+        this.wrapperComponent.clear();
       } else if (this.diagram) {
-          this.diagram.clear();
+        this.diagram.clear();
       }
     },
   },
@@ -185,6 +186,7 @@ const App = {
       selectedDemo: 'VueWrapperBpmnDemo',
       demos: [
         { title: 'Vue Wrapper BPMN Demo', value: 'VueWrapperBpmnDemo' },
+        { title: 'Text Annotation Demo', value: 'TextAnnotationDemo' },
         { title: 'Order Processing Demo', value: 'OrderProcessingDemo' },
         { title: 'Simple BPMN', value: 'SimpleBPMN' },
         { title: 'Shapes Demo', value: 'ShapesDemo' },
@@ -193,7 +195,7 @@ const App = {
       ],
       diagramInstance: shallowRef(null), // Use shallowRef for non-reactive diagram object
       drawer: true, // For v-navigation-drawer
-      
+
       // Wrapper Props
       wrapperMode: 'VIEW',
       wrapperHelpers: false,
@@ -201,7 +203,7 @@ const App = {
       barValues: {},
       myActiveTasks: [],
       otherActiveTasks: [],
-      
+
       // Legacy support
       isVueDemo: false
     };
@@ -218,30 +220,45 @@ const App = {
 
       const container = document.getElementById('diagram-container');
       if (container) {
-          while (container.firstChild) {
-              container.removeChild(container.firstChild);
-          }
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
+        }
       }
 
       if (this.selectedDemo === 'VueWrapperBpmnDemo') {
-          this.isVueDemo = true;
-          // Defer logic until component is mounted via v-if
-          await nextTick();
-          // Set Props
-          this.bpmnXml = simpleBpmnTemplate;
-          this.barValues = {
-              'TaskQuotationHandling': 20,
-              'TaskApproveOrder': 80,
-              '_6-190': 50, // Order Handling
-              '_6-241': 40, // Shipping Handling
-              'TaskReviewOrder': 90
-          };
-          this.myActiveTasks = ['_6-190']; // Order Handling
-          this.otherActiveTasks = ['_6-241']; // Shipping Handling as silver
-          // Get instance from ref
-          if (this.$refs.diagramRef) {
-              this.diagramInstance = this.$refs.diagramRef.diagramInstance;
-          }
+        this.isVueDemo = true;
+        // Defer logic until component is mounted via v-if
+        await nextTick();
+        // Set Props
+        this.bpmnXml = simpleBpmnTemplate;
+        this.barValues = {
+          'TaskQuotationHandling': 20,
+          'TaskApproveOrder': 80,
+          '_6-190': 50, // Order Handling
+          '_6-241': 40, // Shipping Handling
+          'TaskReviewOrder': 90
+        };
+        this.myActiveTasks = ['_6-190']; // Order Handling
+        this.otherActiveTasks = ['_6-241']; // Shipping Handling as silver
+        // Get instance from ref
+        if (this.$refs.diagramRef) {
+          this.diagramInstance = this.$refs.diagramRef.diagramInstance;
+        }
+      } else if (this.selectedDemo === 'TextAnnotationDemo') {
+        this.isVueDemo = true;
+        await nextTick();
+        this.bpmnXml = wniosekOWsparcieBpmn;
+        this.barValues = {
+          'Activity_0otz49q': 15,
+          'Activity_0emz3c3': 60,
+          'Activity_0mcyc3a': 30,
+          'Activity_0czbr6c': 85
+        };
+        this.myActiveTasks = ['Activity_0emz3c3']; // Zarejestruj i zweryfikuj wniosek
+        this.otherActiveTasks = ['Activity_0otz49q']; // Dekretuj wniosek
+        if (this.$refs.diagramRef) {
+          this.diagramInstance = this.$refs.diagramRef.diagramInstance;
+        }
       } else {
         await nextTick(async () => {
           try {
@@ -251,7 +268,7 @@ const App = {
             // We need the container element again because v-if might have recreated it
             const el = document.getElementById('diagram-container');
             if (el) {
-                this.diagramInstance = demoModule.default(el);
+              this.diagramInstance = demoModule.default(el);
             }
           } catch (error) {
             console.error(`Error loading demo ${this.selectedDemo}:`, error);
@@ -259,13 +276,13 @@ const App = {
         });
       }
     },
-    
+
     // Handler to sync mode from controls back to wrapper props
     updateMode(newMode) {
-        this.wrapperMode = newMode;
+      this.wrapperMode = newMode;
     },
     updateHelpers(enabled) {
-        this.wrapperHelpers = enabled;
+      this.wrapperHelpers = enabled;
     }
   },
   mounted() {
@@ -274,10 +291,10 @@ const App = {
   watch: {
     // When using wrapper, we need to sync diagramInstance ref if the component recreates it (though it shouldn't often)
     // But mainly we need to ensure controls get the right object.
-    '$refs.diagramRef.diagramInstance': function(val) {
-        if (this.isVueDemo) {
-            this.diagramInstance = val;
-        }
+    '$refs.diagramRef.diagramInstance': function (val) {
+      if (this.isVueDemo) {
+        this.diagramInstance = val;
+      }
     }
   },
   template: `
