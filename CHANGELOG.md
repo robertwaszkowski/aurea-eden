@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.32.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.31.0...v1.32.0) (2026-01-21)
+
+
+### Features
+
+* improve BPMN label positioning ([448014a](https://github.com/robertwaszkowski/aurea-eden/commit/448014afeafa27c4d539c9ed4944f449d0bb4f47))
+
 ## [1.31.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.30.19...v1.31.0) (2026-01-20)
 
 
