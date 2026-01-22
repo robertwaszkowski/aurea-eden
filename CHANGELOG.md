@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.33.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.32.1...v1.33.0) (2026-01-22)
+
+
+### Features
+
+* Add 3D Faceted StarShape and dynamic lighting support ([1c9ea22](https://github.com/robertwaszkowski/aurea-eden/commit/1c9ea2258366649461120fd58c7d19a78bdc32fa))
+* Add 3D Faceted StarShape and dynamic lighting support ([a8793a4](https://github.com/robertwaszkowski/aurea-eden/commit/a8793a45545a010ba78f2e5c2a7cd7e99912e526))
+* enhance ANALYZE mode with animated value bars and smart labels ([083ccc5](https://github.com/robertwaszkowski/aurea-eden/commit/083ccc5ee29a3ea388e14ad0886bd18e3e130227))
+* implement explicit control for badge animation ([3ebfad6](https://github.com/robertwaszkowski/aurea-eden/commit/3ebfad6e4b4022ae33aa67bf946d7022096e12d9))
+
 ### [1.32.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.32.0...v1.32.1) (2026-01-21)
 
 ## [1.32.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.31.0...v1.32.0) (2026-01-21)
