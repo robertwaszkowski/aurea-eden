@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="28.674372mm"
+   height="28.668304mm"
+   viewBox="0 0 101.6021 101.58061"
+   id="svg2"
+   version="1.1"
+   sodipodi:docname="five_pointed_star_spin.svg">
+  
+  <title>Gold Five-Pointed Star Spinning</title>
+  
+
+
+  <metadata id="metadata7">
+    <rdf:RDF>
+      <cc:Work rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Gold Five-Pointed Star</dc:title>
+        <dc:creator>
+          <cc:Agent><dc:title>mazeo</dc:title></cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+
+  <!-- 
+    Applied the class 'star-spinner' to the main group to trigger the CSS animation 
+  -->
+  <g id="g3411">
+    <path
+       inkscape:connector-curvature="0"
+       d="m 49.4319,79.001906 l 1.1197,-23.1239 L 18.5018,100.58791 Z M 81.2953,101.58061 L 50.5516,55.878006 l -1.1197,23.1239 z m 0,0 L 71.2285,64.137706 l -20.6769,-8.2597 z m -62.7935,-0.9927 L 50.5516,55.878006 l -21.3689,6.0316 z M 50.5516,55.878006 L -3.0422191e-6,37.807606 L 29.1827,61.909606 Z m 0,0 l 20.6769,8.2597 l 30.3736,-24.7238 z m 0,0 L 38.4647,36.481906 L -3.0422192e-6,37.807606 Z m 0,0 l 51.0505,-16.4641 l -37.1517,-1.555 z m 0,0 l 13.8988,-18.0191 L 51.3588,5.7556778e-6 Z m 0,0 L 51.3588,5.7556778e-6 L 38.4647,36.481906 Z"
+       style="fill:#ffff7f;fill-opacity:1;stroke:none;stroke-width:0;stroke-linejoin:round;stroke-opacity:1"
+       id="path3829-7" />
+    <g
+       inkscape:label="Star"
+       transform="translate(50.551603,55.877997)"
+       id="g3809">
+      <path id="path3811" style="fill:#ad8d1c;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:round;stroke-opacity:1"         d="m 0,0 l 0.8072,-55.878 l -12.8941,36.4819 z"/>
+      <path id="path3813" style="fill:#c5a521;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:round;stroke-opacity:1"         d="M 0,0 L 13.8988,-18.0191 L 0.8072,-55.878 Z"/>
+      <path id="path3815" style="fill:#b1911d;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:round;stroke-opacity:1"         d="m 0,0 l 51.0505,-16.4641 l -37.1517,-1.555 z"/>
+      <path id="path3817" style="fill:#b1911d;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:round;stroke-opacity:1"         d="m 0,0 l -12.0869,-19.3961 l -38.4647,1.3257 z"/>
+      <path id="path3819" style="fill:#d4b424;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:round;stroke-opacity:1"         d="M 0,0 L 20.6769,8.2597 L 51.0505,-16.4641 Z"/>
+      <path id="path3821" style="fill:#be9e1f;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:round;stroke-opacity:1"         d="m 0,0 l -50.5516,-18.0704 l 29.1827,24.102 z"/>
+      <path id="path3823" style="fill:#ae8e1c;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:round;stroke-opacity:1"         d="M -32.0498,44.7099 L 0,0 l -21.3689,6.0316 z"/>
+      <path id="path3825" style="fill:#d6a621;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:round;stroke-opacity:1"         d="M 30.7437,45.7026 L 20.6769,8.2597 L 0,0 Z"/>
+      <path id="path3827" style="fill:#bf9f1f;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:round;stroke-opacity:1"         d="M 30.7437,45.7026 L 0,0 l -1.1197,23.1239 z"/>
+      <path id="path3829" style="fill:#d4b424;fill-opacity:1;stroke:#000000;stroke-width:0;stroke-linejoin:round;stroke-opacity:1"         d="M -1.1197,23.1239 L 0,0 l -32.0498,44.7099 z"/>
+    </g>
+  </g>
+</svg>

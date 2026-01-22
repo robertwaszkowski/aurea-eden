@@ -4,8 +4,10 @@ import { RectangleShape } from "../../lib/shapes/paths/RectangleShape.js";
 import { RoundedRectangleShape } from "../../lib/shapes/paths/RoundedRectangleShape.js";
 import { CircleShape } from "../../lib/shapes/paths/CircleShape.js";
 import badgeUrl from "../../assets/badge.png";
-import starUrl from "../../assets/star.gif";
+import starUrl from "../../assets/star_gold.gif";
 import starSilverUrl from "../../assets/star_silver.gif";
+import starGoldSvgUrl from "../../assets/star_gold.svg?url";
+import starSilverSvgUrl from "../../assets/star_silver.svg?url";
 
 const checkIcon = '<svg viewBox="0 0 24 24"><path fill="#4CAF50" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>';
 const alertIcon = '<svg viewBox="0 0 24 24"><path fill="#F44336" d="M11,15H13V17H11V15M11,7H13V13H11V7M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2Z"/></svg>';
@@ -62,6 +64,18 @@ export default (container) => {
         .addWrappedText('Silver Star\nGIF Badge')
         .positionRightOf('el7')
         .addBadge(starSilverUrl, 'top-left', 30);
+
+    // 9. Rotating Gold Star SVG
+    diagram.addElement(new Element('el9', new RoundedRectangleShape(80, 50)))
+        .addWrappedText('Rotating Gold\nSVG Star')
+        .positionDownOf('el7')
+        .addBadge(starGoldSvgUrl, 'top-right', 30, true);
+
+    // 10. Rotating Silver Star SVG
+    diagram.addElement(new Element('el10', new RoundedRectangleShape(80, 50)))
+        .addWrappedText('Rotating Silver\nSVG Star')
+        .positionRightOf('el9')
+        .addBadge(starSilverSvgUrl, 'top-right', 30, true);
 
     diagram.arrange();
     diagram.fitScreen();

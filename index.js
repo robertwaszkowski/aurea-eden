@@ -17,7 +17,8 @@ const vuetify = createVuetify({
 const DiagramControls = {
   props: {
     diagram: Object,
-    wrapperComponent: Object // Optional reference to the wrapper component for extra features
+    wrapperComponent: Object,
+    badgeType: String
   },
   data() {
     return {
@@ -60,6 +61,12 @@ const DiagramControls = {
         else this.diagram.hideHelpers();
       }
       this.$emit('update:helpers', enabled);
+    }
+  },
+  computed: {
+    badgeTypeModel: {
+      get() { return this.badgeType; },
+      set(val) { this.$emit('update:badgeType', val); }
     }
   },
   methods: {
@@ -126,7 +133,7 @@ const DiagramControls = {
     <v-card class="pa-4">
       <v-card-title>Diagram Controls</v-card-title>
       <v-card-text>
-        <v-list>
+            <v-list density="compact">
             <v-list-subheader>Mode</v-list-subheader>
             <v-radio-group v-model="mode" inline>
                 <v-radio label="VIEW" value="VIEW"></v-radio>
@@ -136,7 +143,26 @@ const DiagramControls = {
             <v-divider></v-divider>
 
             <v-list-item>
-                <v-switch v-model="helpersEnabled" label="Toggle Helpers"></v-switch>
+                <v-switch 
+                    v-model="helpersEnabled" 
+                    label="Toggle Helpers" 
+                    density="compact" 
+                    hide-details
+                    color="primary"
+                    class="ml-2"
+                ></v-switch>
+            </v-list-item>
+            <v-list-item>
+                <v-switch 
+                    v-model="badgeTypeModel" 
+                    true-value="svg" 
+                    false-value="gif" 
+                    label="Use SVG Stars"
+                    density="compact" 
+                    hide-details
+                    color="primary"
+                    class="ml-2"
+                ></v-switch>
             </v-list-item>
 
             <v-divider></v-divider>
@@ -202,7 +228,9 @@ const App = {
       bpmnXml: '',
       barValues: {},
       myActiveTasks: [],
+      myActiveTasks: [],
       otherActiveTasks: [],
+      badgeType: 'gif',
 
       // Legacy support
       isVueDemo: false
@@ -306,19 +334,21 @@ const App = {
             <v-list nav>
             </v-list>
             <template v-slot:append>
-                <DiagramControls 
+                <DiagramControls
                     :diagram="diagramInstance" 
                     :wrapperComponent="$refs.diagramRef"
+                    :badgeType="badgeType"
                     v-if="diagramInstance"
                     @update:mode="updateMode"
                     @update:helpers="updateHelpers"
+                    @update:badgeType="(val) => badgeType = val"
                 />
             </template>
         </v-navigation-drawer>
 
         <v-app-bar app>
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-            <v-row>
+            <v-row align="center">
                 <v-col cols="4">
                     <v-select
                         label="Select a demo"
@@ -346,6 +376,7 @@ const App = {
                     :helpers="wrapperHelpers"
                     :myActiveTasks="myActiveTasks"
                     :otherActiveTasks="otherActiveTasks"
+                    :badgeType="badgeType"
                 />
             </div>
             

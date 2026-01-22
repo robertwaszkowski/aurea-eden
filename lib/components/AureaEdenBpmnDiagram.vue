@@ -5,8 +5,10 @@
 <script>
 import { BpmnDiagram } from '../notations/BpmnDiagram.js';
 import { shallowRef, onMounted, onUnmounted, watch } from 'vue';
-import starUrl from '../../assets/star.gif';
+import starUrl from '../../assets/star_gold.gif';
 import starSilverUrl from '../../assets/star_silver.gif';
+import starSvgUrl from '../../assets/star_gold.svg';
+import starSilverSvgUrl from '../../assets/star_silver.svg';
 
 export default {
   name: 'AureaEdenBpmnDiagram',
@@ -34,6 +36,11 @@ export default {
     otherActiveTasks: {
       type: Array,
       default: () => []
+    },
+    badgeType: {
+      type: String,
+      default: 'gif', // 'gif' or 'svg'
+      validator: (value) => ['gif', 'svg'].includes(value)
     }
   },
   setup(props, { expose, emit }) {
@@ -114,6 +121,14 @@ export default {
     const updateBadges = () => {
         if (!diagramInstance.value) return;
 
+        // Helper to get correct URL
+        const getUrl = (type) => {
+            if (props.badgeType === 'svg') {
+                return type === 'gold' ? starSvgUrl : starSilverSvgUrl;
+            }
+            return type === 'gold' ? starUrl : starSilverUrl;
+        };
+
         // 1. Clear existing badges
         badgedElementIds.forEach(id => {
             const el = diagramInstance.value.getElementById(id);
@@ -126,7 +141,7 @@ export default {
             props.myActiveTasks.forEach(id => {
                 const el = diagramInstance.value.getElementById(id);
                 if (el) {
-                    el.addBadge(starUrl, 'top-right', 30);
+                    el.addBadge(getUrl('gold'), 'top-right', 30, true);
                     badgedElementIds.add(id);
                 }
             });
@@ -139,7 +154,7 @@ export default {
                 if (el) {
                     // Avoid double badging if same ID is in both lists (prioritize myActiveTasks)
                     if (!badgedElementIds.has(id)) {
-                        el.addBadge(starSilverUrl, 'top-right', 30);
+                        el.addBadge(getUrl('silver'), 'top-right', 30, true);
                         badgedElementIds.add(id);
                     }
                 }
@@ -166,7 +181,7 @@ export default {
         applyValues(newValues);
     }, { deep: true });
 
-    watch([() => props.myActiveTasks, () => props.otherActiveTasks], () => {
+    watch([() => props.myActiveTasks, () => props.otherActiveTasks, () => props.badgeType], () => {
         updateBadges();
     }, { deep: true });
 
