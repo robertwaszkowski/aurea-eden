@@ -4,6 +4,7 @@
 
 <script>
 import { BpmnDiagram } from '../notations/BpmnDiagram.js';
+import { StarShape } from '../shapes/solids/StarShape.js';
 import { shallowRef, onMounted, onUnmounted, watch } from 'vue';
 import starUrl from '../../assets/star_gold.gif';
 import starSilverUrl from '../../assets/star_silver.gif';
@@ -121,14 +122,6 @@ export default {
     const updateBadges = () => {
         if (!diagramInstance.value) return;
 
-        // Helper to get correct URL
-        const getUrl = (type) => {
-            if (props.badgeType === 'svg') {
-                return type === 'gold' ? starSvgUrl : starSilverSvgUrl;
-            }
-            return type === 'gold' ? starUrl : starSilverUrl;
-        };
-
         // 1. Clear existing badges
         badgedElementIds.forEach(id => {
             const el = diagramInstance.value.getElementById(id);
@@ -141,7 +134,8 @@ export default {
             props.myActiveTasks.forEach(id => {
                 const el = diagramInstance.value.getElementById(id);
                 if (el) {
-                    el.addBadge(getUrl('gold'), 'top-right', 30, true);
+                    // Gold Star with explicit animation
+                    el.addBadge(new StarShape(15, 5, 0xffd700), 'top-right', null, true);
                     badgedElementIds.add(id);
                 }
             });
@@ -154,7 +148,8 @@ export default {
                 if (el) {
                     // Avoid double badging if same ID is in both lists (prioritize myActiveTasks)
                     if (!badgedElementIds.has(id)) {
-                        el.addBadge(getUrl('silver'), 'top-right', 30, true);
+                        // Silver Star with explicit animation
+                        el.addBadge(new StarShape(15, 5, 0xc0c0c0), 'top-right', null, true);
                         badgedElementIds.add(id);
                     }
                 }
