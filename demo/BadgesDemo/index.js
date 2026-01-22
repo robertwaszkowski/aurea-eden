@@ -3,6 +3,8 @@ import { Element } from "../../lib/elements/Element.js";
 import { RectangleShape } from "../../lib/shapes/paths/RectangleShape.js";
 import { RoundedRectangleShape } from "../../lib/shapes/paths/RoundedRectangleShape.js";
 import { CircleShape } from "../../lib/shapes/paths/CircleShape.js";
+import { BoxShape } from "../../lib/shapes/solids/BoxShape.js";
+import { StarShape } from "../../lib/shapes/solids/StarShape.js";
 import badgeUrl from "../../assets/badge.png";
 import starUrl from "../../assets/star_gold.gif";
 import starSilverUrl from "../../assets/star_silver.gif";
@@ -77,8 +79,27 @@ export default (container) => {
         .positionRightOf('el9')
         .addBadge(starSilverSvgUrl, 'top-right', 30, true);
 
+    // 11. BoxShape Badge
+    diagram.addElement(new Element('el11', new RectangleShape(80, 50)))
+        .addWrappedText('3D BoxShape\nBadge')
+        .positionDownOf('el9')
+        .addBadge(new BoxShape(15, 15, 15), 'top-right');
+
     diagram.arrange();
     diagram.fitScreen();
 
+    // 12. Rotating BoxShape Badge
+    diagram.addElement(new Element('el12', new RectangleShape(80, 50)))
+        .addWrappedText('Rotating Box\nBadge')
+        .positionRightOf('el11')
+        .addBadge(new BoxShape(15, 15, 15, 0xff0000), 'top-right', null, true);
+
+    // 13. Rotating 3D Star Badge
+    diagram.addElement(new Element('el13', new RectangleShape(80, 50)))
+        .addWrappedText('3D Star\nBadge')
+        .positionRightOf('el12')
+        .addBadge(new StarShape(15, 5, 0xffd700), 'top-right', null, true);
+
+    diagram.arrange();
     return diagram;
 }
