@@ -38,10 +38,9 @@ export default {
       type: Array,
       default: () => []
     },
-    badgeType: {
-      type: String,
-      default: 'gif', // 'gif' or 'svg'
-      validator: (value) => ['gif', 'svg'].includes(value)
+    legacyStars: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props, { expose, emit }) {
@@ -129,27 +128,40 @@ export default {
         });
         badgedElementIds.clear();
 
-        // 2. Add badges for my active tasks (Gold Star)
+        // Helper to check badge type
+        const isGif = props.legacyStars;
+
+        // 2. Add badges for my active tasks
         if (props.myActiveTasks) {
             props.myActiveTasks.forEach(id => {
                 const el = diagramInstance.value.getElementById(id);
                 if (el) {
-                    // Gold Star with explicit animation
-                    el.addBadge(new StarShape(15, 5, 0xffd700), 'top-right', null, true);
+                    el.userData.taskType = 'my'; // Tag as My Task
+                    if (isGif) {
+                        el.addBadge(starUrl, 'top-right', 30, true);
+                    } else {
+                        // Gold Star with explicit animation
+                        el.addBadge(new StarShape(15, 5, 0xffd700), 'top-right', null, true);
+                    }
                     badgedElementIds.add(id);
                 }
             });
         }
 
-        // 3. Add badges for other active tasks (Silver Star)
+        // 3. Add badges for other active tasks
         if (props.otherActiveTasks) {
             props.otherActiveTasks.forEach(id => {
                 const el = diagramInstance.value.getElementById(id);
                 if (el) {
                     // Avoid double badging if same ID is in both lists (prioritize myActiveTasks)
                     if (!badgedElementIds.has(id)) {
-                        // Silver Star with explicit animation
-                        el.addBadge(new StarShape(15, 5, 0xc0c0c0), 'top-right', null, true);
+                        el.userData.taskType = 'other'; // Tag as Other Task
+                        if (isGif) {
+                             el.addBadge(starSilverUrl, 'top-right', 30, true);
+                        } else {
+                            // Silver Star with explicit animation
+                            el.addBadge(new StarShape(15, 5, 0xc0c0c0), 'top-right', null, true);
+                        }
                         badgedElementIds.add(id);
                     }
                 }
@@ -176,7 +188,7 @@ export default {
         applyValues(newValues);
     }, { deep: true });
 
-    watch([() => props.myActiveTasks, () => props.otherActiveTasks, () => props.badgeType], () => {
+    watch([() => props.myActiveTasks, () => props.otherActiveTasks, () => props.legacyStars], () => {
         updateBadges();
     }, { deep: true });
 

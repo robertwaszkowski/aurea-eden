@@ -18,7 +18,7 @@ const DiagramControls = {
   props: {
     diagram: Object,
     wrapperComponent: Object,
-    badgeType: String
+    legacyStars: Boolean
   },
   data() {
     return {
@@ -64,9 +64,9 @@ const DiagramControls = {
     }
   },
   computed: {
-    badgeTypeModel: {
-      get() { return this.badgeType; },
-      set(val) { this.$emit('update:badgeType', val); }
+    legacyStarsModel: {
+      get() { return this.legacyStars; },
+      set(val) { this.$emit('update:legacyStars', val); }
     }
   },
   methods: {
@@ -154,10 +154,8 @@ const DiagramControls = {
             </v-list-item>
             <v-list-item>
                 <v-switch 
-                    v-model="badgeTypeModel" 
-                    true-value="svg" 
-                    false-value="gif" 
-                    label="Use SVG Stars"
+                    v-model="legacyStarsModel" 
+                    label="Use Legacy Stars"
                     density="compact" 
                     hide-details
                     color="primary"
@@ -230,7 +228,7 @@ const App = {
       myActiveTasks: [],
       myActiveTasks: [],
       otherActiveTasks: [],
-      badgeType: 'gif',
+      legacyStars: false,
 
       // Legacy support
       isVueDemo: false
@@ -337,11 +335,11 @@ const App = {
                 <DiagramControls
                     :diagram="diagramInstance" 
                     :wrapperComponent="$refs.diagramRef"
-                    :badgeType="badgeType"
+                    :legacyStars="legacyStars"
                     v-if="diagramInstance"
                     @update:mode="updateMode"
                     @update:helpers="updateHelpers"
-                    @update:badgeType="(val) => badgeType = val"
+                    @update:legacyStars="(val) => legacyStars = val"
                 />
             </template>
         </v-navigation-drawer>
@@ -376,7 +374,7 @@ const App = {
                     :helpers="wrapperHelpers"
                     :myActiveTasks="myActiveTasks"
                     :otherActiveTasks="otherActiveTasks"
-                    :badgeType="badgeType"
+                    :legacyStars="legacyStars"
                 />
             </div>
             
