@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.34.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.33.0...v1.34.0) (2026-01-24)
+
+
+### Features
+
+* **bpmn:** standardize visuals, simplify text API, and refine ANALYZE mode ([2b362f6](https://github.com/robertwaszkowski/aurea-eden/commit/2b362f69cd4be760ac8dd1dbff6591f2990c1d63))
+
 ## [1.33.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.32.1...v1.33.0) (2026-01-22)
 
 
