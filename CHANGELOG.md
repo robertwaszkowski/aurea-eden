@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.36.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.35.0...v1.36.0) (2026-01-24)
+
+
+### Features
+
+* finalize premium BPMN visual system with Neutral Dark Grey aesthetic ([ff3c146](https://github.com/robertwaszkowski/aurea-eden/commit/ff3c14626563b9296c9c23273de3eab41bfa8f69))
+
 ## [1.35.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.34.1...v1.35.0) (2026-01-24)
 
 
