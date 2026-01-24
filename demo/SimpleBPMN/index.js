@@ -4,8 +4,8 @@ import { BpmnDiagram } from "../../lib/notations/BpmnDiagram.js";
 // import * as dat from 'dat.gui';
 import * as THREE from 'three';
 
-export default function createDiagram(container) {
-    const diagram = new BpmnDiagram(container);
+export default function createDiagram(container, options = {}) {
+    const diagram = new BpmnDiagram(container, options);
 
     // Set GUI
 

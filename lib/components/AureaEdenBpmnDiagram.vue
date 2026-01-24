@@ -54,7 +54,7 @@ export default {
     // --- Initialization ---
     onMounted(() => {
       if (container.value) {
-        const diagram = new BpmnDiagram(container.value);
+        const diagram = new BpmnDiagram(container.value, { theme: props.theme, mode: props.mode });
         diagramInstance.value = diagram;
 
         // Apply theme
@@ -96,6 +96,8 @@ export default {
             
             // Re-apply badges after build
             updateBadges();
+
+            // buildDiagram now internally handles re-applying theme and mode
         } catch (e) {
             console.error("Error parsing BPMN XML:", e);
         }

@@ -2,8 +2,8 @@
 
 import { BpmnDiagram } from "../../lib/notations/BpmnDiagram.js";
 
-export default function createDiagram(container) {
-    var diagram = new BpmnDiagram(container);
+export default function createDiagram(container, options = {}) {
+    var diagram = new BpmnDiagram(container, options);
 
     // Add diagram elements
 

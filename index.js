@@ -19,11 +19,11 @@ const DiagramControls = {
     diagram: Object,
     wrapperComponent: Object,
     legacyStars: Boolean,
-    theme: String
+    theme: String,
+    mode: String
   },
   data() {
     return {
-      mode: 'VIEW',
       camPosition: '(... Loading ...)',
       camLookAt: '(... Loading ...)',
       helpersEnabled: false,
@@ -31,6 +31,14 @@ const DiagramControls = {
     };
   },
   watch: {
+    mode: {
+      handler(newMode) {
+        if (!this.wrapperComponent && this.diagram) {
+          this.diagram.setMode(newMode);
+        }
+      },
+      immediate: true
+    },
     diagram: {
       handler(newDiagram, oldDiagram) {
         if (oldDiagram && oldDiagram.controls) {
@@ -46,19 +54,19 @@ const DiagramControls = {
       },
       immediate: true,
     },
-    mode(newMode) {
-      // If we don't have a wrapper component, we must update the diagram instance directly
-      if (!this.wrapperComponent && this.diagram) {
-        this.diagram.setMode(newMode);
-      }
-      this.$emit('update:mode', newMode);
-    },
+    // We don't need the local mode watcher anymore as we emit from the radio group directly
+    // but the radio group needs to point to the prop or a computed
     helpersEnabled(enabled) {
       if (!this.wrapperComponent && this.diagram) {
         if (enabled) this.diagram.showHelpers();
         else this.diagram.hideHelpers();
       }
       this.$emit('update:helpers', enabled);
+    },
+    theme(newTheme) {
+      if (!this.wrapperComponent && this.diagram) {
+        this.diagram.setTheme(newTheme);
+      }
     }
   },
   computed: {
@@ -81,7 +89,7 @@ const DiagramControls = {
       }
     },
     resetDiagram() {
-      this.mode = 'VIEW';
+      this.$emit('update:mode', 'VIEW');
       if (this.wrapperComponent) {
         this.wrapperComponent.reset();
       } else if (this.diagram) {
@@ -137,7 +145,7 @@ const DiagramControls = {
       <v-card-text>
             <v-list density="compact">
             <v-list-subheader>Mode</v-list-subheader>
-            <v-radio-group v-model="mode" inline>
+            <v-radio-group :model-value="mode" @update:model-value="(val) => $emit('update:mode', val)" inline>
                 <v-radio label="VIEW" value="VIEW"></v-radio>
                 <v-radio label="ANALYZE" value="ANALYZE"></v-radio>
             </v-radio-group>
@@ -307,7 +315,7 @@ const App = {
             // We need the container element again because v-if might have recreated it
             const el = document.getElementById('diagram-container');
             if (el) {
-              this.diagramInstance = demoModule.default(el);
+              this.diagramInstance = demoModule.default(el, { theme: this.wrapperTheme, mode: this.wrapperMode });
             }
           } catch (error) {
             console.error(`Error loading demo ${this.selectedDemo}:`, error);
@@ -350,6 +358,7 @@ const App = {
                     :wrapperComponent="$refs.diagramRef"
                     :legacyStars="legacyStars"
                     :theme="wrapperTheme"
+                    :mode="wrapperMode"
                     v-if="diagramInstance"
                     @update:mode="updateMode"
                     @update:helpers="updateHelpers"
