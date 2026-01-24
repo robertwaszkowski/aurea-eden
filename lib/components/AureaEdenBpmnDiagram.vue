@@ -41,6 +41,10 @@ export default {
     legacyStars: {
       type: Boolean,
       default: false
+    },
+    theme: {
+      type: String,
+      default: 'LIGHT'
     }
   },
   setup(props, { expose, emit }) {
@@ -52,6 +56,9 @@ export default {
       if (container.value) {
         const diagram = new BpmnDiagram(container.value);
         diagramInstance.value = diagram;
+
+        // Apply theme
+        if (props.theme) diagram.setTheme(props.theme);
 
         // Apply helpers
         if (props.helpers) diagram.showHelpers();
@@ -142,6 +149,9 @@ export default {
                     } else {
                         // Gold Star with explicit animation
                         el.addBadge(new StarShape(15, 5, 0xffd700), 'top-right', null, true);
+                        const badge = el.badges[el.badges.length - 1].element;
+                        badge.semanticType = 'my-task';
+                        badge.themable = true;
                     }
                     badgedElementIds.add(id);
                 }
@@ -161,6 +171,9 @@ export default {
                         } else {
                             // Silver Star with explicit animation
                             el.addBadge(new StarShape(15, 5, 0xc0c0c0), 'top-right', null, true);
+                            const badge = el.badges[el.badges.length - 1].element;
+                            badge.semanticType = 'other-task';
+                            badge.themable = true;
                         }
                         badgedElementIds.add(id);
                     }
@@ -178,6 +191,10 @@ export default {
         if (diagramInstance.value) {
             newVal ? diagramInstance.value.showHelpers() : diagramInstance.value.hideHelpers();
         }
+    });
+
+    watch(() => props.theme, (newTheme) => {
+        if (diagramInstance.value) diagramInstance.value.setTheme(newTheme);
     });
 
     watch(() => props.bpmnXml, (newXml) => {

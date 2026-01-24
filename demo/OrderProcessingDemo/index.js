@@ -7,7 +7,8 @@ export default function createDiagram(container) {
 
     // Add diagram elements
 
-    diagram.addStartEvent('e1');
+    diagram.addStartEvent('e1')
+        .addWrappedText('Order Received');
 
     diagram.addTask('a1')
         .positionRightOf('e1')
@@ -70,7 +71,8 @@ export default function createDiagram(container) {
 
     diagram.addEndEvent('e2')
         .positionRightOf('a7')
-        .connectFrom('a7', 'E', 'W');
+        .connectFrom('a7', 'E', 'W')
+        .addWrappedText('Process Finished');
 
     // Non-standard connector
     const waypoints = [

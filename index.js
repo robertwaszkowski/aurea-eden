@@ -18,7 +18,8 @@ const DiagramControls = {
   props: {
     diagram: Object,
     wrapperComponent: Object,
-    legacyStars: Boolean
+    legacyStars: Boolean,
+    theme: String
   },
   data() {
     return {
@@ -46,17 +47,14 @@ const DiagramControls = {
       immediate: true,
     },
     mode(newMode) {
-      // If we have a wrapper component, prefer updating via props/model if linked
-      // But here we might be controlling either raw diagram or wrapper's internal diagram.
-      // Easiest is to emit an event or update parent data if we want strict props flow.
-      // For now, imperative calls still work on the diagram instance.
-      if (this.diagram) {
+      // If we don't have a wrapper component, we must update the diagram instance directly
+      if (!this.wrapperComponent && this.diagram) {
         this.diagram.setMode(newMode);
       }
       this.$emit('update:mode', newMode);
     },
     helpersEnabled(enabled) {
-      if (this.diagram) {
+      if (!this.wrapperComponent && this.diagram) {
         if (enabled) this.diagram.showHelpers();
         else this.diagram.hideHelpers();
       }
@@ -67,6 +65,10 @@ const DiagramControls = {
     legacyStarsModel: {
       get() { return this.legacyStars; },
       set(val) { this.$emit('update:legacyStars', val); }
+    },
+    isDarkMode: {
+      get() { return this.theme === 'DARK'; },
+      set(val) { this.$emit('update:theme', val ? 'DARK' : 'LIGHT'); }
     }
   },
   methods: {
@@ -154,6 +156,16 @@ const DiagramControls = {
             </v-list-item>
             <v-list-item>
                 <v-switch 
+                    v-model="isDarkMode" 
+                    label="Dark Mode"
+                    density="compact" 
+                    hide-details
+                    color="primary"
+                    class="ml-2"
+                ></v-switch>
+            </v-list-item>
+            <v-list-item>
+                <v-switch 
                     v-model="legacyStarsModel" 
                     label="Use Legacy Stars"
                     density="compact" 
@@ -229,6 +241,7 @@ const App = {
       myActiveTasks: [],
       otherActiveTasks: [],
       legacyStars: false,
+      wrapperTheme: 'LIGHT',
 
       // Legacy support
       isVueDemo: false
@@ -336,10 +349,12 @@ const App = {
                     :diagram="diagramInstance" 
                     :wrapperComponent="$refs.diagramRef"
                     :legacyStars="legacyStars"
+                    :theme="wrapperTheme"
                     v-if="diagramInstance"
                     @update:mode="updateMode"
                     @update:helpers="updateHelpers"
                     @update:legacyStars="(val) => legacyStars = val"
+                    @update:theme="(val) => wrapperTheme = val"
                 />
             </template>
         </v-navigation-drawer>
@@ -375,6 +390,7 @@ const App = {
                     :myActiveTasks="myActiveTasks"
                     :otherActiveTasks="otherActiveTasks"
                     :legacyStars="legacyStars"
+                    :theme="wrapperTheme"
                 />
             </div>
             
