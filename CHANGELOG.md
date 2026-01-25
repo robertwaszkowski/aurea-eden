@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.38.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.37.1...v1.38.0) (2026-01-25)
+
+
+### Features
+
+* **diagram:** implement precise diagram centering and unified camera reset ([6dbaf69](https://github.com/robertwaszkowski/aurea-eden/commit/6dbaf69e1e6bd2fadd03b27e46e6ee6489cabd9a))
+
 ### [1.37.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.37.0...v1.37.1) (2026-01-25)
 
 ## [1.37.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.36.0...v1.37.0) (2026-01-25)
