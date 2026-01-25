@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.37.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.36.0...v1.37.0) (2026-01-25)
+
+
+### Features
+
+* **diagram:** implement seamless camera switching with subtle jumping effect ([7eeef7c](https://github.com/robertwaszkowski/aurea-eden/commit/7eeef7cd255def848b2b76a19d67bbcba60296c9))
+
+
+### Bug Fixes
+
+* **diagram:** restore and refine robust container resizing ([a5bfc94](https://github.com/robertwaszkowski/aurea-eden/commit/a5bfc94b8c05bcc4def2b1507099996bc4d41603))
+
 ## [1.36.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.35.0...v1.36.0) (2026-01-24)
 
 
