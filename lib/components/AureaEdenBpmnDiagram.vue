@@ -60,6 +60,23 @@ export default {
         // Apply theme
         if (props.theme) diagram.setTheme(props.theme);
 
+        // --- Proxy methods for Vue reactivity ---
+        // We intercept these methods to emit events back to Vue when the internal state changes
+        const originalSetMode = diagram.setMode.bind(diagram);
+        diagram.setMode = (mode, onComplete) => {
+          originalSetMode(mode, onComplete);
+          emit('update:mode', mode);
+          emit('mode-change', mode);
+        };
+
+        const originalReset = diagram.reset.bind(diagram);
+        diagram.reset = () => {
+          originalReset();
+          // After reset, the library always goes back to 'VIEW' mode
+          emit('update:mode', 'VIEW');
+          emit('mode-change', 'VIEW');
+        };
+
         // Apply helpers
         if (props.helpers) diagram.showHelpers();
         
@@ -186,7 +203,9 @@ export default {
 
     // --- Watchers ---
     watch(() => props.mode, (newMode) => {
-        if (diagramInstance.value) diagramInstance.value.setMode(newMode);
+        if (diagramInstance.value && diagramInstance.value.mode !== newMode) {
+          diagramInstance.value.setMode(newMode);
+        }
     });
 
     watch(() => props.helpers, (newVal) => {
