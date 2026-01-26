@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.39.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.38.0...v1.39.0) (2026-01-26)
+
+
+### Features
+
+* implement automatic mode reactivity in BpmnDiagram Vue wrapper ([58209e9](https://github.com/robertwaszkowski/aurea-eden/commit/58209e94b2bfc5e01a6a474a5a0deec8124bcad8))
+
 ## [1.38.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.37.1...v1.38.0) (2026-01-25)
 
 
