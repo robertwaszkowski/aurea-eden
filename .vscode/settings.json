@@ -4,5 +4,11 @@
         "vuetify",
         "Waszkowski"
     ],
-    "terminal.integrated.fontFamily": "MesloLGS NF"
+    "terminal.integrated.fontFamily": "MesloLGS NF",
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#4a1010",
+        "titleBar.activeForeground": "#ffffff",
+        "activityBar.background": "#4a1010",
+        "statusBar.background": "#4a1010"
+    }
 }
