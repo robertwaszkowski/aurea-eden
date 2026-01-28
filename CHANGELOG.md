@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.40.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.39.0...v1.40.0) (2026-01-28)
+
+
+### Features
+
+* **analyze:** implement spectacular triple-stage exit animation ([ccb4280](https://github.com/robertwaszkowski/aurea-eden/commit/ccb428035c152b94a4ac69973f20a5e96babcae2))
+* **analyze:** overhaul ANALYZE mode UI with HUD-style labels and theme adaptability ([c07fd18](https://github.com/robertwaszkowski/aurea-eden/commit/c07fd1834290929ee2742b45c9cceac03f733915))
+* **animation:** refine data bubble exit transition ([24e93e9](https://github.com/robertwaszkowski/aurea-eden/commit/24e93e906ced68f7eb5bfe1a68db068ba8096de7))
+
 ## [1.39.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.38.0...v1.39.0) (2026-01-26)
 
 
