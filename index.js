@@ -8,6 +8,7 @@ import '@mdi/font/css/materialdesignicons.css';
 import AureaEdenBpmnDiagram from './lib/components/AureaEdenBpmnDiagram.vue';
 import simpleBpmnTemplate from './demo/VueWrapperBpmnDemo/simple-process-template.bpmn?raw';
 import wniosekOWsparcieBpmn from './demo/VueWrapperBpmnDemo/wniosek-o-wsparcie.bpmn?raw';
+import hardwareRetailerBpmn from './demo/VueWrapperBpmnDemo/hardware-retailer-template.bpmn?raw';
 
 const vuetify = createVuetify({
   components,
@@ -230,7 +231,7 @@ const App = {
       selectedDemo: 'VueWrapperBpmnDemo',
       demos: [
         { title: 'Vue Wrapper BPMN Demo', value: 'VueWrapperBpmnDemo' },
-        { title: 'Multi-Bar Vue Demo', value: 'MultiBarVueDemo' },
+        { title: 'Multi-Bar BPMN Demo', value: 'MultiBarBpmnDemo' },
         { title: 'Text Annotation Demo', value: 'TextAnnotationDemo' },
         { title: 'Order Processing Demo', value: 'OrderProcessingDemo' },
         { title: 'Simple BPMN', value: 'SimpleBPMN' },
@@ -292,34 +293,41 @@ const App = {
         if (this.$refs.diagramRef) {
           this.diagramInstance = this.$refs.diagramRef.diagramInstance;
         }
-      } else if (this.selectedDemo === 'MultiBarVueDemo') {
+      } else if (this.selectedDemo === 'MultiBarBpmnDemo') {
         this.isVueDemo = true;
         await nextTick();
-        // Use a different BPMN to distinguish from VueWrapperBpmnDemo
-        this.bpmnXml = wniosekOWsparcieBpmn;
-        // Demonstrate all three badge strategies:
-        //   Activity_0otz49q → 1 bar   (single badge)
-        //   Activity_0emz3c3 → 2 bars  (two individual badges)
-        //   Activity_0mcyc3a → 3 bars  (one combined badge: "val1 · val2 · val3")
-        //   Activity_0czbr6c → 2 bars  (two individual badges, colorsInverted on bar 2)
+        // Hardware Retailer shipping process — demonstrates 1-bar, 2-bar, and 3-bar configurations
+        this.bpmnXml = hardwareRetailerBpmn;
         this.barValues = {
-          'Activity_0otz49q': 45,                             // 1 bar: shorthand
-          'Activity_0emz3c3': [
-            { heightValue: 70, colorValue: 70 },              // bar 1: throughput (higher=greener)
-            { heightValue: 40, colorValue: 40, colorsInverted: true } // bar 2: wait time (higher=redder)
+          // 1 bar — simple throughput
+          '_6-102': 55,                                                    // Decide mode of delivery
+          '_6-153': 70,                                                    // Package goods
+          '_6-569': 45,                                                    // Add paperwork
+
+          // 2 bars — throughput (normal) + processing time (inverted)
+          '_6-226': [
+            { heightValue: 80, colorValue: 80 },                          // Carrier quotes volume
+            { heightValue: 60, colorValue: 60, colorsInverted: true }     // Quote turnaround time
           ],
-          'Activity_0mcyc3a': [
-            { heightValue: 60, colorValue: 60 },              // bar 1
-            { heightValue: 30, colorValue: 30, colorsInverted: true }, // bar 2
-            { heightValue: 80, colorValue: 80 }               // bar 3 → triggers combined badge
+          '_6-277': [
+            { heightValue: 50, colorValue: 50 },                          // Assignments completed
+            { heightValue: 35, colorValue: 35, colorsInverted: true }     // Paperwork prep time
           ],
-          'Activity_0czbr6c': [
-            { heightValue: 55, colorValue: 55 },
-            { heightValue: 90, colorValue: 90, colorsInverted: true }
+
+          // 3 bars — combined badge ("v1 · v2 · v3")
+          '_6-379': [
+            { heightValue: 40, colorValue: 40 },                          // Checks performed
+            { heightValue: 75, colorValue: 75, colorsInverted: true },    // Checks requiring insurance
+            { heightValue: 60, colorValue: 60 }                           // Insurance cost ratio
+          ],
+          '_6-452': [
+            { heightValue: 30, colorValue: 30 },                          // Policies issued
+            { heightValue: 85, colorValue: 85, colorsInverted: true },    // Policy cost
+            { heightValue: 50, colorValue: 50 }                           // Claim rate
           ]
         };
-        this.myActiveTasks = ['Activity_0emz3c3'];
-        this.otherActiveTasks = ['Activity_0mcyc3a'];
+        this.myActiveTasks = ['_6-226'];    // Request quotes — gold star
+        this.otherActiveTasks = ['_6-379']; // Check insurance — silver star
         if (this.$refs.diagramRef) {
           this.diagramInstance = this.$refs.diagramRef.diagramInstance;
         }
