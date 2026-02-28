@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.41.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.40.2...v1.41.0) (2026-02-28)
+
+
+### Features
+
+* Add several new BPMN templates for various use cases to the demo. ([03e6fc5](https://github.com/robertwaszkowski/aurea-eden/commit/03e6fc54fe3dfc553aaaf4bf502d872b47a259e2))
+* **bpmn:** implement 3D structural rendering for Swimlanes (Pools and Lanes) ([9c03543](https://github.com/robertwaszkowski/aurea-eden/commit/9c035437fa544fcf7d52fe1bcec57ac985608178))
+
+
+### Bug Fixes
+
+* fix badge width, ANALYZE exit tilt, and sprite label counter ([240c754](https://github.com/robertwaszkowski/aurea-eden/commit/240c754aa19e509ca708c053caf422202697631d))
+* fix BPMN sequence flow rendering for collinear and off-axis waypoints ([22ba974](https://github.com/robertwaszkowski/aurea-eden/commit/22ba9747be85054980a9eb18ac5b0d49a87a013d))
+* Handle missing BPMNDI bounds for sequence flows and label positioning ([02fe512](https://github.com/robertwaszkowski/aurea-eden/commit/02fe51292b8e0c079c2bd532a6d4826cca720a21))
+* scale gateway icons proportionally to gateway diamond width ([35a89aa](https://github.com/robertwaszkowski/aurea-eden/commit/35a89aa73cf8426e3054fa4338a7908af73fdf05))
+
 ### [1.40.2](https://github.com/robertwaszkowski/aurea-eden/compare/v1.40.1...v1.40.2) (2026-01-28)
 
 ### [1.40.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.40.0...v1.40.1) (2026-01-28)
