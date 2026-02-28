@@ -122,24 +122,66 @@ export default {
 
     const applyValues = (values) => {
         if (!diagramInstance.value || !values) return;
-        
+
+        /**
+         * Normalizes one bar entry to canonical form: { heightValue, colorValue, colorsInverted }.
+         * Accepts: number | { heightValue, colorValue?, colorsInverted? }
+         */
+        const normalizeBarEntry = (entry) => {
+            if (typeof entry === 'number') {
+                return { heightValue: entry, colorValue: entry, colorsInverted: false };
+            }
+            if (entry !== null && typeof entry === 'object') {
+                const { heightValue, colorValue, colorsInverted = false } = entry;
+                return {
+                    heightValue,
+                    colorValue: colorValue !== undefined ? colorValue : heightValue,
+                    colorsInverted
+                };
+            }
+            return null;
+        };
+
+        /**
+         * Normalizes the full value for one element into an array of bar definitions.
+         * Accepts:
+         *   42                              → one bar shorthand
+         *   { heightValue, ... }            → one bar with options
+         *   [42, 15]                        → two bars (each shorthand or object)
+         */
+        const normalizeBars = (val) => {
+            if (typeof val === 'number') {
+                return [normalizeBarEntry(val)];
+            }
+            if (Array.isArray(val)) {
+                return val.map(normalizeBarEntry).filter(Boolean);
+            }
+            if (val !== null && typeof val === 'object') {
+                return [normalizeBarEntry(val)];
+            }
+            return null;
+        };
+
         let updated = false;
         Object.entries(values).forEach(([id, val]) => {
             const el = diagramInstance.value.getElementById(id);
             if (el) {
-                el.parameters.value = val;
-                updated = true;
-            } else {
-                // Warn or ignore if element ID from JSON doesn't exist in diagram
+                const bars = normalizeBars(val);
+                if (bars && bars.length > 0) {
+                    el.parameters.bars = bars;
+                    // Keep backward-compat alias
+                    el.parameters.value = bars[0].heightValue;
+                    updated = true;
+                }
             }
         });
 
-        // If in ANALYZE mode and we updated values, we might need to refresh visualization
-        // The simplest way with current Diagram implementation is to re-set the mode.
+        // If in ANALYZE mode and we updated values, refresh visualization
         if (updated && props.mode === 'ANALYZE') {
             diagramInstance.value.setMode('ANALYZE');
         }
     };
+
 
     // --- Badges ---
     const badgedElementIds = new Set();

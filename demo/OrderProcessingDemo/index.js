@@ -33,7 +33,7 @@ export default function createDiagram(container, options = {}) {
     diagram.addTask('a3')
         .positionUpRightOf('a2')
         .addWrappedText('Ship Order')
-        .addValueBar(30)
+        .addValueBar({ heightValue: 30, colorValue: 80 }) // object form
         .connectFrom('a2', 'N', 'W');
 
     diagram.addTask('a4')

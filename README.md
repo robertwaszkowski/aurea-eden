@@ -135,11 +135,11 @@ import AureaEdenBpmnDiagram from 'aurea-eden/vue';
 ### Component Props
 
 - **`bpmnXml`** (String): The BPMN XML content to render.
-- **`values`** (Object): Key-value pairs matching element IDs to their values (used in `ANALYZE` mode).
+- **`values`** (Object): Maps element IDs to value bar definitions (see [Value Bars](#value-bars) below). Used in `ANALYZE` mode.
 - **`mode`** (String): Diagram mode (`VIEW`, `ANALYZE`, or `EDIT`). Default is `VIEW`.
 - **`helpers`** (Boolean): If `true`, shows helper elements like grid and axes. Default is `false`.
-- **`myActiveTasks`** (Array): List of element IDs to be marked with a Gold Star (indicating user's active tasks).
-- **`otherActiveTasks`** (Array): List of element IDs to be marked with a Silver Star (indicating active tasks of others).
+- **`myActiveTasks`** (Array): Element IDs marked with a Gold Star (user's active tasks).
+- **`otherActiveTasks`** (Array): Element IDs marked with a Silver Star (active tasks of others).
 
 ### Example Usage
 
@@ -148,14 +148,33 @@ import AureaEdenBpmnDiagram from 'aurea-eden/vue';
   <div style="height: 600px;">
     <AureaEdenBpmnDiagram
       :bpmnXml="xmlString"
-      :values="{ 'Task_1': 42, 'Task_2': 15 }"
+      :values="barValues"
       mode="ANALYZE"
       :myActiveTasks="['Task_1']"
       :otherActiveTasks="['Task_3']"
-      :helpers="true"
     />
   </div>
 </template>
+
+<script setup>
+const barValues = {
+
+  // Shorthand: single number — one bar, height = colorValue, colorsInverted = false
+  'Task_1': 42,
+
+  // Single bar with options — object form
+  'Task_2': { heightValue: 60, colorValue: 80, colorsInverted: true },
+
+  // Two bars — array of shorthand numbers
+  'Task_3': [42, 15],
+
+  // Two bars — full control over each
+  'Task_4': [
+    { heightValue: 42, colorValue: 70 },               // bar 1: normal color scale
+    { heightValue: 30, colorValue: 90, colorsInverted: true }  // bar 2: inverted scale
+  ]
+};
+</script>
 ```
 
 # Core Concepts / Architecture Overview
@@ -221,16 +240,86 @@ const waypoints = [
 diagram.addFlowConnector('customFlow1', waypoints);
 ```
 
-## 3D Visualization & Analysis Mode
+## Value Bars
 
-* **Value Bars**: Use element.addValueBar(value) to associate quantitative data with an element.
-* **Analyze Mode**: Switch to "ANALYZE" mode to view these values as 3D bars. The diagram tilts, and bars are color-coded (green for high, red for low).
+Value bars visualize quantitative data as 3D columns rising from diagram elements in **ANALYZE** mode. Each element can have **one or multiple bars** with independently configurable height, color scale value, and color direction.
 
-    ```js
-    diagram.getElementById('task1').addValueBar(75);
-    diagram.getElementById('task2').addValueBar(30);
-    diagram.setMode("ANALYZE"); // Switches to perspective view, shows bars
-    ```
+### Bar Definition
+
+Each bar is described by three properties:
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `heightValue` | `number` (0–100) | required | Visual bar height |
+| `colorValue` | `number` (0–100) | = `heightValue` | Drives the color scale independently of bar height |
+| `colorsInverted` | `boolean` | `false` | `false` → higher = greener (better); `true` → higher = redder (worse, e.g. error rate, cost) |
+
+> **Default is `colorsInverted: false`** — higher value = greener color. Only set `colorsInverted: true` for KPIs where lower is better (e.g. processing time, error rate).
+
+### Chain API: `addValueBar()`
+
+Call `.addValueBar()` once per bar. Multiple calls add multiple side-by-side bars (element width divides equally).
+
+Two equivalent signatures are supported:
+
+```js
+// Positional form: addValueBar(heightValue, colorValue?, colorsInverted?)
+.addValueBar(80)                      // height=80, colorValue=80, colorsInverted=false (default ✅)
+.addValueBar(80, 60)                  // height=80, colorValue=60, colorsInverted=false
+.addValueBar(80, 60, true)            // height=80, colorValue=60, colorsInverted=true 🔴
+
+// Object form — identical results
+.addValueBar({ heightValue: 80 })
+.addValueBar({ heightValue: 80, colorValue: 60 })
+.addValueBar({ heightValue: 80, colorValue: 60, colorsInverted: true })
+```
+
+**Multi-bar example** (two bars per element — e.g. throughput vs. processing time):
+
+```js
+diagram.addTask('a1')
+    .positionRightOf('e1')
+    .addWrappedText('Handle Quotations')
+    .connectFrom('e1', 'E', 'W')
+    .addValueBar(20)             // bar 1: throughput (higher=greener, default)
+    .addValueBar(60, 60, true);  // bar 2: processing time (higher=redder, inverted)
+```
+
+### Vue Wrapper: `:values` prop
+
+Each element ID maps to one of these shapes:
+
+```js
+// Single bar — number shorthand (heightValue = colorValue, colorsInverted = false ✅)
+'Task_1': 42
+
+// Single bar — object form
+'Task_1': { heightValue: 42, colorValue: 70, colorsInverted: true }
+
+// Multiple bars — array (each item is a shorthand number or object)
+'Task_1': [42, 15]                               // two bars, both shorthands
+'Task_1': [
+  { heightValue: 42, colorValue: 70 },           // bar 1
+  { heightValue: 15, colorsInverted: true }       // bar 2 — inverted
+]
+```
+
+> **An array always means multiple bars.** Use an object `{ heightValue }` for a single bar with options.
+
+**Color normalization** is computed **per slot** — all elements' first bars are normalized together, all second bars separately. This makes each bar slot independently meaningful when different slots represent different KPIs.
+
+### Switching to ANALYZE Mode
+
+```js
+// In the chain API:
+diagram.setMode('ANALYZE'); // Shows bars; switches to perspective view
+diagram.setMode('VIEW');    // Hides bars; returns to top-down view
+```
+
+```html
+<!-- In the Vue wrapper: -->
+<AureaEdenBpmnDiagram :mode="currentMode" ... />
+```
 
 * **Camera Control**:
     ```js

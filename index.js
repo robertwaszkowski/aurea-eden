@@ -230,6 +230,7 @@ const App = {
       selectedDemo: 'VueWrapperBpmnDemo',
       demos: [
         { title: 'Vue Wrapper BPMN Demo', value: 'VueWrapperBpmnDemo' },
+        { title: 'Multi-Bar Vue Demo', value: 'MultiBarVueDemo' },
         { title: 'Text Annotation Demo', value: 'TextAnnotationDemo' },
         { title: 'Order Processing Demo', value: 'OrderProcessingDemo' },
         { title: 'Simple BPMN', value: 'SimpleBPMN' },
@@ -288,6 +289,37 @@ const App = {
         this.myActiveTasks = ['_6-190']; // Order Handling
         this.otherActiveTasks = ['_6-241']; // Shipping Handling as silver
         // Get instance from ref
+        if (this.$refs.diagramRef) {
+          this.diagramInstance = this.$refs.diagramRef.diagramInstance;
+        }
+      } else if (this.selectedDemo === 'MultiBarVueDemo') {
+        this.isVueDemo = true;
+        await nextTick();
+        // Use a different BPMN to distinguish from VueWrapperBpmnDemo
+        this.bpmnXml = wniosekOWsparcieBpmn;
+        // Demonstrate all three badge strategies:
+        //   Activity_0otz49q → 1 bar   (single badge)
+        //   Activity_0emz3c3 → 2 bars  (two individual badges)
+        //   Activity_0mcyc3a → 3 bars  (one combined badge: "val1 · val2 · val3")
+        //   Activity_0czbr6c → 2 bars  (two individual badges, colorsInverted on bar 2)
+        this.barValues = {
+          'Activity_0otz49q': 45,                             // 1 bar: shorthand
+          'Activity_0emz3c3': [
+            { heightValue: 70, colorValue: 70 },              // bar 1: throughput (higher=greener)
+            { heightValue: 40, colorValue: 40, colorsInverted: true } // bar 2: wait time (higher=redder)
+          ],
+          'Activity_0mcyc3a': [
+            { heightValue: 60, colorValue: 60 },              // bar 1
+            { heightValue: 30, colorValue: 30, colorsInverted: true }, // bar 2
+            { heightValue: 80, colorValue: 80 }               // bar 3 → triggers combined badge
+          ],
+          'Activity_0czbr6c': [
+            { heightValue: 55, colorValue: 55 },
+            { heightValue: 90, colorValue: 90, colorsInverted: true }
+          ]
+        };
+        this.myActiveTasks = ['Activity_0emz3c3'];
+        this.otherActiveTasks = ['Activity_0mcyc3a'];
         if (this.$refs.diagramRef) {
           this.diagramInstance = this.$refs.diagramRef.diagramInstance;
         }
