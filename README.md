@@ -1,6 +1,6 @@
-# Aurea EDEN: <br>Evolving Diagramming with Enriched Notations
+# Aurea EDEN — Evolving Diagramming with Enriched Notations
 
-[![Version](https://img.shields.io/badge/version-1.25.1-blue.svg)](https://github.com/robertwaszkowski/aurea-eden)
+[![Version](https://img.shields.io/npm/v/aurea-eden.svg)](https://www.npmjs.com/package/aurea-eden)
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Live Demo](https://img.shields.io/badge/Live_Demo-gh--pages-green.svg)](https://robertwaszkowski.github.io/aurea-eden/)
 
@@ -11,54 +11,90 @@
         </td>
         <td valign="top">
             <p>
-                <strong>Aurea EDEN</strong> (<i>Evolving Diagramming with Enriched Notations</i>) is a flexible JavaScript library built on Three.js. It helps you create 3D diagrams, going beyond basic 2D to handle complex data better. <strong>Aurea EDEN</strong> offers extended element placement functionality, utilizes JavaScript method chaining for easy diagram manipulation, and enables users to define custom elements for any notation. This facilitates the creation of richer, more insightful models and enhances data visualization across diverse scientific and engineering domains.
+                <strong>Aurea EDEN</strong> (<em>Evolving Diagramming with Enriched Notations</em>) is a JavaScript library built on <a href="https://threejs.org/">Three.js</a> for creating interactive 3D diagrams. It goes beyond static 2D rendering to support custom visual notations, quantitative data overlays (value bars), animated badges, and multiple camera modes — all via a clean, chainable API.
+            </p>
+            <p>
+                Designed for <strong>scientific, engineering, and business process domains</strong> where a diagram needs to communicate not only structure but also runtime data, performance metrics, or process state.
             </p>
         </td>
     </tr>
 </table>
 
+## Table of Contents
+
+- [Motivation](#motivation)
+- [Key Features](#key-features)
+- [Live Demo](#live-demo)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Vue Component Usage](#vue-component-usage)
+- [Core Concepts](#core-concepts)
+- [API Reference](#api-reference)
+  - [Diagram Modes](#diagram-modes)
+  - [Element Placement](#element-placement)
+  - [Connecting Elements](#connecting-elements)
+  - [Value Bars (ANALYZE mode)](#value-bars-analyze-mode)
+  - [Badges](#badges)
+  - [Theming](#theming)
+  - [Camera Controls](#camera-controls)
+- [Extensibility](#extensibility)
+  - [Custom Notations](#custom-notations)
+  - [Custom Shapes](#custom-shapes)
+  - [Custom Materials](#custom-materials)
+  - [Custom Connectors](#custom-connectors)
+- [Project Structure](#project-structure)
+- [Development](#development)
+- [Deployment](#deployment)
+- [Dependencies](#dependencies)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
 ## Motivation
 
-Traditional 2D diagrams often struggle to convey the full depth of information in complex systems, leading to cluttered representations. While 3D visualization offers potential for richer semantics and improved comprehension, many tools lack the flexibility to create custom notations or integrate quantitative data directly into the visual model. Aurea EDEN addresses this gap by providing a framework that empowers users to:
+Traditional 2D diagrams often struggle to convey the full depth of information in complex systems. While 3D visualization offers richer semantics and improved comprehension, most tools lack the flexibility to:
 
-* Define, adapt, and evolve their own visual notations.
-* Seamlessly integrate 2D and 3D elements.
-* Visualize not only the model's structure but also associated execution data or statistical parameters.
+- Define and evolve **custom visual notations** (UML, BPMN, domain-specific).
+- Integrate **quantitative data** (KPIs, performance metrics) directly into models.
+- Seamlessly switch between **structural (2D) and analytical (3D) views** of the same diagram.
+
+Aurea EDEN addresses this gap.
+
+---
 
 ## Key Features
 
-* **3D Diagramming:** Leverages Three.js for robust 3D rendering of diagrams.
-* **Flexible Notation Development:** Easily create and customize new diagrammatic notations (e.g., UML, BPMN, or domain-specific).
-* **Enriched Data Visualization:** Directly visualize quantitative data (e.g., performance metrics, statistical parameters) as 3D elements (like value bars) on diagram components.
-* **Extended Element Placement:** Advanced options for positioning elements, including contextual placement relative to other elements and direct coordinate positioning.
-* **Intuitive Connection Design:** Definable connection points (e.g., "north," "west") and automated routing for connectors.
-* **Method Chaining API:** Simplifies diagram construction and manipulation through a fluent JavaScript API.
-* **Modular Architecture:** Core components for Diagrams, Elements, Shapes, Connectors, and Materials allow for high extensibility.
-* **Import/Export Capabilities:** Support for importing and exporting diagrams (extensible for various formats).
-* **Multiple Diagram Modes:**
-    * **VIEW Mode:** Default top-down view for standard diagram display.
-    * **ANALYZE Mode:** Perspective view for 3D data visualization, automatically adding value bars and using color scales.
-    * **EDIT Mode:** Top-down view intended for diagram modification operations.
+| Feature | Description |
+|---|---|
+| **3D Diagramming** | Powered by Three.js — orthographic VIEW, perspective EDIT and perspective ANALYZE modes |
+| **Custom Notations** | Extend `Diagram` and `Shape` to build UML, BPMN, or domain-specific diagrams |
+| **Value Bars** | Animate 3D data columns atop elements in ANALYZE mode — color-coded per slot |
+| **Multiple Bars** | Elements can carry 1–N side-by-side bars, independently normalized per slot |
+| **Active Task Badges** | Gold/silver animated 3D star badges for my-task / other-task process states |
+| **Method Chaining API** | Fluent, composable API: `.addTask().positionRightOf().addValueBar()...` |
+| **BPMN Import** | Parse BPMN 2.0 XML and render it as a live 3D diagram |
+| **Vue Component** | Drop-in `<AureaEdenBpmnDiagram>` component for Vue 3 / Vuetify apps |
+| **Theming** | LIGHT / DARK themes with semantic color overrides per element type |
+| **Animated Transitions** | Smooth camera animations between VIEW ↔ ANALYZE ↔ EDIT modes using Tween.js |
+
+---
 
 ## Live Demo
 
-<a href="https://robertwaszkowski.github.io/aurea-eden/">
-    <img src="assets/figDiagramVisualization.png" alt="Diagram Visualization Example" width="600"/>
-</a>
+[![Demo screenshot](assets/figDiagramVisualization.png)](https://robertwaszkowski.github.io/aurea-eden/)
 
-Explore Aurea EDEN's capabilities through the live demo:
-[https://robertwaszkowski.github.io/aurea-eden/](https://robertwaszkowski.github.io/aurea-eden/)
+**[➜ Open the live demo](https://robertwaszkowski.github.io/aurea-eden/)**
 
-## Table of Contents
+The demo includes:
+- **Simple BPMN** — basic diagram rendering from BPMN XML.
+- **Order Processing Demo** — multi-bar value visualization with inverted color scales.
+- **Vue Wrapper Demo** — full Vue 3 integration with reactive props.
+- **Badges Demo** — animated gold/silver star badges on active tasks.
+- **Custom Notation Demo** — user-defined shapes and element types.
+- **Shapes Demo** — gallery of all built-in shapes.
 
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Features](#features)
-- [Core Components](#core-components)
-- [Advanced Usage](#advanced-usage)
-- [API Reference](#api-reference)
-- [Contributing](#contributing)
-- [License](#license)
+---
 
 ## Installation
 
@@ -66,24 +102,24 @@ Explore Aurea EDEN's capabilities through the live demo:
 npm install aurea-eden
 ```
 
+---
+
 ## Quick Start
 
-To quickly try Aurea EDEN, create two files in your project directory:
+Create two files in your project:
 
 **index.html**
 ```html
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-        <meta charset="UTF-8">
-        <title>Aurea EDEN Quick Start</title>
-		<style>
-			body { margin: 0; }
-		</style>
-	</head>
-	<body>
-		<script type="module" src="index.js"></script>
-	</body>
+  <head>
+    <meta charset="UTF-8">
+    <title>Aurea EDEN Quick Start</title>
+    <style>body { margin: 0; }</style>
+  </head>
+  <body>
+    <script type="module" src="index.js"></script>
+  </body>
 </html>
 ```
 
@@ -91,10 +127,8 @@ To quickly try Aurea EDEN, create two files in your project directory:
 ```javascript
 import { BpmnDiagram } from 'aurea-eden';
 
-// Create new diagram
 const diagram = new BpmnDiagram(document.body);
 
-// Add elements
 diagram.addStartEvent('e1');
 
 diagram.addTask('a1')
@@ -107,12 +141,10 @@ diagram.addEndEvent('e2')
     .positionRightOf('a1')
     .connectFrom('a1', 'E', 'W');
 
-// Arrange and display
 diagram.arrange();
 diagram.fitScreen();
 
-// Add a listener to the window. 
-// Let it toggle VIEW and ANALYZE modes when the user push the space key.
+// Toggle VIEW ↔ ANALYZE with the space bar
 window.addEventListener('keydown', (event) => {
     if (event.key === ' ') {
         diagram.setMode(diagram.mode === 'VIEW' ? 'ANALYZE' : 'VIEW');
@@ -120,28 +152,32 @@ window.addEventListener('keydown', (event) => {
 });
 ```
 
-Open `index.html` in your browser to see the diagram rendered.
+Open `index.html` in any modern browser. Press **Space** to animate between VIEW and ANALYZE modes.
+
+---
 
 ## Vue Component Usage
 
-For Vue.js applications, Aurea EDEN provides a dedicated component `AureaEdenBpmnDiagram`.
-
-### Import
+For Vue 3 applications, import the pre-built wrapper component:
 
 ```javascript
 import AureaEdenBpmnDiagram from 'aurea-eden/vue';
 ```
 
-### Component Props
+### Props
 
-- **`bpmnXml`** (String): The BPMN XML content to render.
-- **`values`** (Object): Maps element IDs to value bar definitions (see [Value Bars](#value-bars) below). Used in `ANALYZE` mode.
-- **`mode`** (String): Diagram mode (`VIEW`, `ANALYZE`, or `EDIT`). Default is `VIEW`.
-- **`helpers`** (Boolean): If `true`, shows helper elements like grid and axes. Default is `false`.
-- **`myActiveTasks`** (Array): Element IDs marked with a Gold Star (user's active tasks).
-- **`otherActiveTasks`** (Array): Element IDs marked with a Silver Star (active tasks of others).
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `bpmnXml` | `String` | — | BPMN 2.0 XML content to render |
+| `values` | `Object` | `{}` | Maps element IDs to value bar definitions (see [Value Bars](#value-bars-analyze-mode)) |
+| `mode` | `String` | `'VIEW'` | `'VIEW'`, `'ANALYZE'`, or `'EDIT'` |
+| `theme` | `String` | `'LIGHT'` | `'LIGHT'` or `'DARK'` |
+| `helpers` | `Boolean` | `false` | Show grid / axes helpers |
+| `myActiveTasks` | `Array` | `[]` | Element IDs to mark with a **gold star** (current user's active tasks) |
+| `otherActiveTasks` | `Array` | `[]` | Element IDs to mark with a **silver star** (other users' active tasks) |
+| `legacyStars` | `Boolean` | `false` | Use GIF-based stars instead of 3D `StarShape` |
 
-### Example Usage
+### Example
 
 ```html
 <template>
@@ -149,7 +185,8 @@ import AureaEdenBpmnDiagram from 'aurea-eden/vue';
     <AureaEdenBpmnDiagram
       :bpmnXml="xmlString"
       :values="barValues"
-      mode="ANALYZE"
+      :mode="currentMode"
+      theme="DARK"
       :myActiveTasks="['Task_1']"
       :otherActiveTasks="['Task_3']"
     />
@@ -157,344 +194,445 @@ import AureaEdenBpmnDiagram from 'aurea-eden/vue';
 </template>
 
 <script setup>
-const barValues = {
+import { ref } from 'vue';
 
-  // Shorthand: single number — one bar, height = colorValue, colorsInverted = false
+const currentMode = ref('VIEW');
+
+const barValues = {
+  // Shorthand: single number (heightValue = colorValue, colorsInverted = false)
   'Task_1': 42,
 
-  // Single bar with options — object form
+  // Single bar with options
   'Task_2': { heightValue: 60, colorValue: 80, colorsInverted: true },
 
-  // Two bars — array of shorthand numbers
+  // Two bars — shorthand array
   'Task_3': [42, 15],
 
-  // Two bars — full control over each
+  // Two bars — full control
   'Task_4': [
-    { heightValue: 42, colorValue: 70 },               // bar 1: normal color scale
-    { heightValue: 30, colorValue: 90, colorsInverted: true }  // bar 2: inverted scale
+    { heightValue: 42, colorValue: 70 },
+    { heightValue: 30, colorValue: 90, colorsInverted: true }
   ]
 };
 </script>
 ```
 
-# Core Concepts / Architecture Overview
+---
 
-Aurea EDEN's architecture is modular, built around several key components:
+## Core Concepts
 
-* **Diagram:** Manages the overall scene, camera, rendering (via Three.js), elements, and connectors. Base class for specific notations (e.g., `BpmnDiagram`).
-* **Element:** Represents individual components in a diagram (e.g., tasks, events). Combines shapes, materials, text, icons, and value bars. Provides methods for positioning and connecting.
-* **Shape:** Defines the 3D geometry of elements and connectors (e.g., `RoundedRectangleShape`, `CircleShape`, `DiamondShape`). Custom shapes can be created by extending the base `Shape` class.
-* **Connector:** Defines relationships between elements. Handles positioning and alignment, supporting custom styles and waypoints.
-* **Material:** Defines the appearance (color, texture, transparency) of shapes and connectors using Three.js materials.
+Aurea EDEN's architecture is organized into five layers:
 
-This architecture allows for easy extension and customization to support various diagramming needs.
-
-
-# Detailed Usage / API Highlights
-
-## Creating Diagrams
-
-Instantiate a diagram class (either a pre-defined one like `BpmnDiagram` or a custom one).
-
-```js
-import { UmlActivityDiagram } from './lib/notations/UmlActivityDiagram.js'; // Example custom notation
-const umlDiagram = new UmlActivityDiagram(document.getElementById('diagram-container'));
+```
+Diagram  (scene, camera, controls, theming, mode transitions)
+  └─ Element  (3D object in the scene; carries shape, texts, icons, badges, value bars)
+       └─ Shape  (THREE.js geometry + material)
+  └─ Connector  (relationship line between elements; also has a Shape)
+Material  (reusable THREE.js materials shared across shapes)
 ```
 
-## Adding Elements
+| Class | Role |
+|---|---|
+| `Diagram` | Manages the Three.js scene, camera, renderer, and all elements/connectors. Base class for `BpmnDiagram`. |
+| `Element` | A Three.js `Object3D` that wraps a `Shape` and exposes the chainable API. |
+| `Shape` | Any class that returns a `THREE.BufferGeometry` + `THREE.Material` pair. |
+| `Connector` | An `Element` whose shape is a path (polyline, curve). |
+| `Material` | Thin wrappers around Three.js materials for consistent visual defaults. |
 
-Elements are added using notation-specific methods (e.g., addStartEvent, addTask in BpmnDiagram) or a generic addElement method. Method chaining is heavily used for configuration.
+---
 
-```js
-// BPMN Example
-diagram.addTask('task1')
-    .positionAt({ x: 100, y: 50, z: 0 }) // Direct positioning
-    .addWrappedText('My Task Text');
+## API Reference
 
-// Generic element with a custom shape
-import { MyCustomShape } from './lib/shapes/MyCustomShape.js';
-const customShapeInstance = new MyCustomShape();
-diagram.addElement('customElem1', customShapeInstance)
-    .positionRightOf('task1')
-    .addValueBar(90);
+### Diagram Modes
+
+| Mode | Camera | Purpose |
+|---|---|---|
+| `VIEW` | Orthographic (top-down) | Default read-only display |
+| `EDIT` | Perspective (top-down) | Interactive editing |
+| `ANALYZE` | Perspective (tilted) | 3D value-bar visualization; camera tilts to –65° |
+
+```javascript
+diagram.setMode('ANALYZE');       // animated transition
+diagram.setMode('VIEW');          // animated transition back
+diagram.setMode('ANALYZE', () => console.log('done'));  // with callback
 ```
 
-## Connecting Elements
+---
 
-Connect elements using the connectFrom method or by adding connectors directly.
+### Element Placement
 
-```js
-// Connect 'task2' from the 'East' point of 'task1' to the 'West' point of 'task2'
-diagram.getElementByID('task2').connectFrom('task1', 'E', 'W');
+Elements can be placed using absolute coordinates or relative positioning helpers:
 
-// Create a custom connector with specific waypoints
-const DISTANCE_BETWEEN_ELEMENTS = 48;
-const waypoints = [
+```javascript
+element.positionAt({ x: 100, y: 50, z: 0 });  // absolute
+element.positionRightOf('anotherElementId');    // relative
+element.positionLeftOf('anotherElementId');
+element.positionAbove('anotherElementId');
+element.positionBelow('anotherElementId');
+```
+
+---
+
+### Connecting Elements
+
+```javascript
+// Fluent — connect 'task2' FROM the East point of 'task1'
+diagram.getElementById('task2').connectFrom('task1', 'E', 'W');
+
+// Manual waypoints
+diagram.addFlowConnector('flow1', [
     diagram.getElementById('g1').getNorthPoint(),
-    {   x: diagram.getElementById('g1').getNorthPoint().x,
-        y: diagram.getElementById('a3').getNorthPoint().y + DISTANCE_BETWEEN_ELEMENTS },
-    {   x: diagram.getElementById('a7').getNorthPoint().x,
-        y: diagram.getElementById('a3').getNorthPoint().y + DISTANCE_BETWEEN_ELEMENTS },    
+    { x: 100, y: 200 },
     diagram.getElementById('a7').getNorthPoint()
-];
-diagram.addFlowConnector('customFlow1', waypoints);
+]);
+
+// Association (dashed) connector
+diagram.addAssociationConnector('assoc1', waypoints);
 ```
 
-## Value Bars
+Connection point identifiers: `'N'`, `'S'`, `'E'`, `'W'` (and their full-name equivalents).
 
-Value bars visualize quantitative data as 3D columns rising from diagram elements in **ANALYZE** mode. Each element can have **one or multiple bars** with independently configurable height, color scale value, and color direction.
+---
 
-### Bar Definition
+### Value Bars (ANALYZE mode)
 
-Each bar is described by three properties:
+Value bars are 3D columns that rise from elements when the diagram is in `ANALYZE` mode. Each element can have **one or more** bars placed side-by-side (element width is divided equally).
+
+#### Bar properties
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `heightValue` | `number` (0–100) | required | Visual bar height |
-| `colorValue` | `number` (0–100) | = `heightValue` | Drives the color scale independently of bar height |
-| `colorsInverted` | `boolean` | `false` | `false` → higher = greener (better); `true` → higher = redder (worse, e.g. error rate, cost) |
+| `heightValue` | `number` (0–100) | required | Visual bar height (normalized within the slot) |
+| `colorValue` | `number` (0–100) | `= heightValue` | Value driving the color scale, independently of height |
+| `colorsInverted` | `boolean` | `false` | `false` → higher = greener (better); `true` → higher = redder (worse) |
 
-> **Default is `colorsInverted: false`** — higher value = greener color. Only set `colorsInverted: true` for KPIs where lower is better (e.g. processing time, error rate).
+> Use `colorsInverted: true` for KPIs where a lower value is better (e.g. error rate, cost, processing time).
 
-### Chain API: `addValueBar()`
+#### Chain API: `addValueBar()`
 
-Call `.addValueBar()` once per bar. Multiple calls add multiple side-by-side bars (element width divides equally).
+```javascript
+// Positional form
+.addValueBar(80)                        // height=80, color=80, normal scale
+.addValueBar(80, 60)                    // height=80, color=60, normal scale
+.addValueBar(80, 60, true)              // height=80, color=60, inverted scale
 
-Two equivalent signatures are supported:
-
-```js
-// Positional form: addValueBar(heightValue, colorValue?, colorsInverted?)
-.addValueBar(80)                      // height=80, colorValue=80, colorsInverted=false (default ✅)
-.addValueBar(80, 60)                  // height=80, colorValue=60, colorsInverted=false
-.addValueBar(80, 60, true)            // height=80, colorValue=60, colorsInverted=true 🔴
-
-// Object form — identical results
+// Object form (identical result)
 .addValueBar({ heightValue: 80 })
 .addValueBar({ heightValue: 80, colorValue: 60 })
 .addValueBar({ heightValue: 80, colorValue: 60, colorsInverted: true })
 ```
 
-**Multi-bar example** (two bars per element — e.g. throughput vs. processing time):
-
-```js
+**Multi-bar example:**
+```javascript
 diagram.addTask('a1')
     .positionRightOf('e1')
     .addWrappedText('Handle Quotations')
     .connectFrom('e1', 'E', 'W')
-    .addValueBar(20)             // bar 1: throughput (higher=greener, default)
-    .addValueBar(60, 60, true);  // bar 2: processing time (higher=redder, inverted)
+    .addValueBar(20)                 // bar 1: throughput — higher is greener
+    .addValueBar(60, 60, true);      // bar 2: processing time — higher is redder
 ```
 
-### Vue Wrapper: `:values` prop
+#### Color normalization
 
-Each element ID maps to one of these shapes:
+Colors are normalized **per slot** across all elements. All elements' first bars are normalized together, all second bars separately — so each slot independently represents a different KPI dimension.
 
-```js
-// Single bar — number shorthand (heightValue = colorValue, colorsInverted = false ✅)
-'Task_1': 42
+#### Badge labels in ANALYZE mode
 
-// Single bar — object form
-'Task_1': { heightValue: 42, colorValue: 70, colorsInverted: true }
+Each bar (or combined group for 3+ bars) gets an animated floating label that counts up from zero to the final value during the rise animation. If the element has an active-task type set, the label also carries the appropriate star icon.
 
-// Multiple bars — array (each item is a shorthand number or object)
-'Task_1': [42, 15]                               // two bars, both shorthands
-'Task_1': [
-  { heightValue: 42, colorValue: 70 },           // bar 1
-  { heightValue: 15, colorsInverted: true }       // bar 2 — inverted
-]
+---
+
+### Badges
+
+Badges are icons (3D shapes, SVG, or image URLs) attached to elements at corner positions.
+
+```javascript
+import { StarShape } from 'aurea-eden';
+
+// 3D animated gold star at top-right
+element.addBadge(new StarShape(15, 5, 0xffd700), 'top-right', null, true);
+
+// Static SVG icon
+element.addBadge('<svg>...</svg>', 'top-left');
+
+// Image URL
+element.addBadge('/icons/warning.png', 'bottom-right', 20);
+
+// Remove all badges from an element
+element.clearBadges();
 ```
 
-> **An array always means multiple bars.** Use an object `{ heightValue }` for a single bar with options.
+Badge position values: `'top-left'`, `'top-right'`, `'bottom-left'`, `'bottom-right'`.
 
-**Color normalization** is computed **per slot** — all elements' first bars are normalized together, all second bars separately. This makes each bar slot independently meaningful when different slots represent different KPIs.
+In the Vue wrapper, badges are managed automatically via the `myActiveTasks` / `otherActiveTasks` props.
 
-### Switching to ANALYZE Mode
+---
 
-```js
-// In the chain API:
-diagram.setMode('ANALYZE'); // Shows bars; switches to perspective view
-diagram.setMode('VIEW');    // Hides bars; returns to top-down view
+### Theming
+
+```javascript
+diagram.setTheme('DARK');   // switches all elements, connectors, and scene background
+diagram.setTheme('LIGHT');
 ```
 
-```html
-<!-- In the Vue wrapper: -->
-<AureaEdenBpmnDiagram :mode="currentMode" ... />
+Elements can be tagged with a `semanticType` string for per-type color overrides defined in `DiagramConstants.js`:
+
+```javascript
+element.semanticType = 'task';   // applies SEMANTIC_STROKE / SEMANTIC_TEXT from theme config
+element.themable = true;         // opt-in to theme updates (default: true)
 ```
 
-* **Camera Control**:
-    ```js
-    diagram.center();       // Center the diagram in view
-    diagram.fitScreen();    // Fit the entire diagram within the viewport
-    diagram.rotate(45);     // Rotate the camera view by 45 degrees around Y-axis
-    ```
+---
 
-# Customization & Extensibility
+### Camera Controls
 
-Aurea EDEN is designed for extensibility:
+```javascript
+diagram.fitScreen();        // Fit all elements within the viewport
+diagram.center();           // Animate camera back to the initial fit position
+diagram.rotate(45);         // Rotate camera around origin by 45° (Y-axis tilt)
+diagram.rotate(0);          // Reset tilt (used internally on ANALYZE → VIEW exit)
+```
 
-## Creating New Notations:
+The `fitScreen()` method supports both `OrthographicCamera` (VIEW) and `PerspectiveCamera` (EDIT/ANALYZE) and handles aspect ratio automatically.
 
-Extend the base Diagram class. Implement methods to add notation-specific elements and connectors.
-```js
+---
+
+## Extensibility
+
+### Custom Notations
+
+Extend `Diagram` and add methods that return chainable `Element` instances:
+
+```javascript
 // lib/notations/MyNotationDiagram.js
-import { Diagram } from '../diagrams/Diagram.js';
+import { Diagram } from 'aurea-eden';
 import { Element } from '../elements/Element.js';
 import { MyCustomShape } from '../shapes/MyCustomShape.js';
 
 class MyNotationDiagram extends Diagram {
-    constructor(container) {
-        super(container);
+    constructor(container, options = {}) {
+        super(container, options);
     }
 
-    addMyCustomElement(elementId, text) {
-        const element = new Element(elementId, new MyCustomShape());
+    addMyNode(id, label) {
+        const element = new Element(id, new MyCustomShape());
+        element.semanticType = 'my-node';
+        element.themable = true;
         this.addElement(element);
-        element.addWrappedText(text);
-        return element;
+        element.addWrappedText(label);
+        return element;  // enables chaining
     }
 }
+
 export { MyNotationDiagram };
 ```
 
-## Custom Shapes:
+---
 
-Extend the base Shape class (which itself uses THREE.BufferGeometry and THREE.Material).
+### Custom Shapes
 
-```js
+Extend the base `Shape` class, which wraps a `THREE.BufferGeometry` and a `THREE.Material`:
+
+```javascript
 // lib/shapes/HexagonShape.js
 import * as THREE from 'three';
-import { Shape } from '../Shape.js';
-import { DiagramEditMaterial } from '../../materials/DiagramEditMaterial.js';
+import { Shape } from 'aurea-eden';
+import { DiagramEditMaterial } from '../materials/DiagramEditMaterial.js';
 
 class HexagonShape extends Shape {
-    constructor(lineWidth = 1) {
-        const shape = new THREE.Shape();
-        const size = 30;
-        // define hexagon points and shape path
-        const points = [];
+    constructor(size = 30) {
+        const outline = new THREE.Shape();
         for (let i = 0; i < 6; i++) {
             const angle = (i * Math.PI) / 3;
-            points.push(new THREE.Vector2(size * Math.cos(angle), size * Math.sin(angle)));
+            const method = i === 0 ? 'moveTo' : 'lineTo';
+            outline[method](size * Math.cos(angle), size * Math.sin(angle));
         }
-        shape.moveTo(points[0].x, points[0].y);
-        points.forEach(point => shape.lineTo(point.x, point.y));
-        shape.lineTo(points[0].x, points[0].y); // Close the shape
+        outline.closePath();
 
-        const extrudeSettings = {
-            steps: 2,
-            depth: 1,
-            bevelEnabled: true,
-            bevelThickness: 0.2,
-            bevelSize: 0.1,
-            bevelOffset: 0,
-            bevelSegments: 3
-        };
-        const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-        const material = new DiagramEditMaterial(0x006699); // Example material
-        super(geometry, material);
-        this.width = size * 2; // Approximate width
-        this.height = size * Math.sqrt(3); // Approximate height
+        const geometry = new THREE.ExtrudeGeometry(outline, {
+            depth: 1, bevelEnabled: true, bevelThickness: 0.2, bevelSize: 0.1
+        });
+
+        super(geometry, new DiagramEditMaterial(0x006699));
+        this.width = size * 2;
+        this.height = size * Math.sqrt(3);
     }
 }
+
 export { HexagonShape };
 ```
 
-## Custom Materials:
+---
 
-Create new materials by extending THREE.Material subclasses (e.g., `THREE.ShaderMaterial`, `THREE.MeshLambertMaterial`).
+### Custom Materials
 
-```js
-// lib/materials/GradientMaterial.js
+Create any `THREE.Material` subclass. The convention in Aurea EDEN is to expose a reusable class:
+
+```javascript
+// lib/materials/GlowMaterial.js
 import * as THREE from 'three';
 
-class GradientMaterial extends THREE.ShaderMaterial {
-    constructor(colorStart = 0x00ff00, colorEnd = 0x0000ff) {
+class GlowMaterial extends THREE.MeshStandardMaterial {
+    constructor(color = 0x00ffff) {
         super({
-            uniforms: {
-                colorStart: { value: new THREE.Color(colorStart) },
-                colorEnd: { value: new THREE.Color(colorEnd) }
-            },
-            vertexShader: `
-                varying vec2 vUv;
-                void main() {
-                    vUv = uv;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                }
-            `,
-            fragmentShader: `
-                uniform vec3 colorStart;
-                uniform vec3 colorEnd;
-                varying vec2 vUv;
-                void main() {
-                    gl_FragColor = vec4(mix(colorStart, colorEnd, vUv.y), 1.0);
-                }
-            `
+            color,
+            emissive: new THREE.Color(color),
+            emissiveIntensity: 0.4,
+            metalness: 0.3,
+            roughness: 0.2
         });
     }
 }
-export { GradientMaterial };
+
+export { GlowMaterial };
 ```
 
-## Custom Connectors:
+---
 
-Define the shape of a connector by creating a class that extends `Shape` and provides the geometry (e.g., using `THREE.TubeGeometry` for a curved connector).
+### Custom Connectors
 
-```js
+A connector shape must extend `Shape` and produce a path geometry:
+
+```javascript
 // lib/shapes/connector/CurvedConnectorShape.js
 import * as THREE from 'three';
-import { Shape } from '../Shape.js';
-import { DiagramEditMaterial } from '../../materials/DiagramEditMaterial.js';
+import { Shape } from 'aurea-eden';
+import { DiagramEditMaterial } from '../materials/DiagramEditMaterial.js';
 
 class CurvedConnectorShape extends Shape {
-    constructor(points) { // points is an array of {x, y, z} objects or THREE.Vector3 instances
-        const curvePoints = points.map(p => new THREE.Vector3(p.x, p.y, p.z || 0));
-        const curve = new THREE.CatmullRomCurve3(curvePoints);
-
-        const tubeRadius = 0.5;
-        const tubularSegments = 64;
-        const radialSegments = 8;
-        const closed = false;
-        const geometry = new THREE.TubeGeometry(curve, tubularSegments, tubeRadius, radialSegments, closed);
-        const material = new DiagramEditMaterial(0x006699); // Example material
-        super(geometry, material);
+    constructor(points) {
+        const curve = new THREE.CatmullRomCurve3(
+            points.map(p => new THREE.Vector3(p.x, p.y, p.z || 0))
+        );
+        const geometry = new THREE.TubeGeometry(curve, 64, 0.5, 8, false);
+        super(geometry, new DiagramEditMaterial(0x555555));
     }
 }
+
 export { CurvedConnectorShape };
 ```
 
-# Examples
-The library includes examples, such as a `BpmnDiagram` implementation, demonstrating how to:
+---
 
-* Define BPMN-specific elements (Events, Tasks, Gateways) using base shapes and icons.
-* Create connectors (Sequence Flows).
-* Add text labels.
-* Implement import functionality for BPMN data.
+## Project Structure
 
-Aurea EDEN is also utilized in the Aurea Low-Code Development Platform (LCDP) for its Modeler and Process Analysis components.
+```
+aurea-eden/
+├── lib/
+│   ├── components/         # Vue component (AureaEdenBpmnDiagram.vue)
+│   ├── connectors/         # Connector base class
+│   ├── diagrams/           # Diagram base class (Diagram.js, DiagramConstants.js)
+│   ├── elements/           # Element class
+│   ├── loaders/            # SVG / asset loaders
+│   ├── materials/          # Reusable THREE.js material wrappers
+│   ├── notations/          # Built-in notations (BpmnDiagram.js)
+│   └── shapes/             # All shape classes (paths, solids, bars, connectors, text)
+├── demo/
+│   ├── BadgesDemo/
+│   ├── CustomNotationDemo/
+│   ├── OrderProcessingDemo/
+│   ├── ShapesDemo/
+│   ├── SimpleBPMN/
+│   └── VueWrapperBpmnDemo/
+├── assets/                 # Static assets (logo, demo screenshots)
+├── dist/                   # Built library (ES module + UMD)
+├── dist-site/              # Built demo site
+├── index.js                # Main demo entry point
+└── package.json
+```
 
+---
 
-# Dependencies
+## Development
 
-* **Three.js**: A comprehensive 3D graphics library for creating and displaying animated 3D computer graphics in a web browser.
-* **@tweenjs/tween.js**: JavaScript tweening engine for easy animations.
-* **SVG Loader** (part of Three.js examples): For loading and rendering SVG icons.
+Install dependencies and start the Vite development server:
+
+```bash
+npm install
+npm run dev
+```
+
+The dev server starts at `http://localhost:5173/` with live-reloading. All demos in `demo/` are accessible from the index page.
+
+### Build
+
+```bash
+npm run build:lib    # Builds the library → dist/
+npm run build:site   # Builds the demo site → dist-site/
+```
+
+---
+
+## Deployment
+
+### Publish to npm
+
+```bash
+npm run deploy:npm
+```
+
+Make sure you are authenticated (`npm login`) before running.
+
+### Deploy demo to GitHub Pages
+
+```bash
+npm run deploy:pages
+```
+
+Uses `gh-pages` to publish `dist-site/` to the `gh-pages` branch.
+
+### Full release (`npm run ship`)
+
+A single command automates the full release pipeline:
+
+```bash
+npm run ship
+```
+
+This runs, in order:
+
+1. `npm run release` — bump version, create Git tag, update `CHANGELOG.md`.
+2. `npm run update-html-version` — inject new version into `index.html`.
+3. `npm run build:lib` — build library to `dist/`.
+4. `npm run build:site` — build demo to `dist-site/`.
+5. `npm run deploy:npm` — publish library to npm.
+6. `npm run deploy:pages` — deploy demo to GitHub Pages.
+7. `npm run push:git` — push commits and tags to `origin/main`.
+
+---
+
+## Dependencies
+
+| Package | Purpose |
+|---|---|
+| [`three`](https://threejs.org/) | 3D rendering — geometry, materials, camera, renderer |
+| [`@tweenjs/tween.js`](https://github.com/tweenjs/tween.js) | Smooth value animations (camera transitions, bar rise/fall) |
+| [`troika-three-text`](https://github.com/protectwise/troika/tree/main/packages/troika-three-text) | High-quality SDF text rendering on 3D elements |
+| [`vue`](https://vuejs.org/) / [`vuetify`](https://vuetifyjs.com/) | Required only when using the Vue wrapper component |
+| [`vite`](https://vitejs.dev/) | Dev server and build tool (dev dependency) |
+
+---
 
 ## Contributing
 
-1. Fork the repository (https://github.com/robertwaszkowski/aurea-eden)
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork the repository: [github.com/robertwaszkowski/aurea-eden](https://github.com/robertwaszkowski/aurea-eden)
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Make your changes with clear, focused commits.
+4. Push: `git push origin feature/my-feature`
+5. Open a Pull Request describing what you changed and why.
+
+Please follow the existing code style (ESM modules, JSDoc comments, method chaining conventions).
+
+---
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+GNU General Public License v3.0 — see [LICENSE](LICENSE) for details.
 
-## Author / Contact
+---
 
-Robert Waszkowski
+## Author
 
-**Email:** robert.waszkowski@wat.edu.pl
-
-**GitHub:** [robertwaszkowski/aurea-eden](https://github.com/robertwaszkowski/aurea-eden)
+**Robert Waszkowski**
+- Email: robert.waszkowski@wat.edu.pl
+- GitHub: [robertwaszkowski](https://github.com/robertwaszkowski)
