@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.41.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.41.0...v1.41.1) (2026-02-28)
+
 ## [1.41.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.40.2...v1.41.0) (2026-02-28)
 
 
