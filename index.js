@@ -9,6 +9,7 @@ import AureaEdenBpmnDiagram from './lib/components/AureaEdenBpmnDiagram.vue';
 import simpleBpmnTemplate from './demo/VueWrapperBpmnDemo/simple-process-template.bpmn?raw';
 import wniosekOWsparcieBpmn from './demo/VueWrapperBpmnDemo/wniosek-o-wsparcie.bpmn?raw';
 import hardwareRetailerBpmn from './demo/VueWrapperBpmnDemo/hardware-retailer-template.bpmn?raw';
+import incidentManagementBpmn from './demo/VueWrapperBpmnDemo/incident-management-template.bpmn?raw';
 
 const vuetify = createVuetify({
   components,
@@ -233,6 +234,7 @@ const App = {
         { title: 'Vue Wrapper BPMN Demo', value: 'VueWrapperBpmnDemo' },
         { title: 'Multi-Bar BPMN Demo', value: 'MultiBarBpmnDemo' },
         { title: 'Text Annotation Demo', value: 'TextAnnotationDemo' },
+        { title: 'Incident Management Demo', value: 'IncidentManagementDemo' },
         { title: 'Order Processing Demo', value: 'OrderProcessingDemo' },
         { title: 'Simple BPMN', value: 'SimpleBPMN' },
         { title: 'Shapes Demo', value: 'ShapesDemo' },
@@ -343,6 +345,13 @@ const App = {
         };
         this.myActiveTasks = ['Activity_0emz3c3']; // Zarejestruj i zweryfikuj wniosek
         this.otherActiveTasks = ['Activity_0otz49q']; // Dekretuj wniosek
+        if (this.$refs.diagramRef) {
+          this.diagramInstance = this.$refs.diagramRef.diagramInstance;
+        }
+      } else if (this.selectedDemo === 'IncidentManagementDemo') {
+        this.isVueDemo = true;
+        await nextTick();
+        this.bpmnXml = incidentManagementBpmn;
         if (this.$refs.diagramRef) {
           this.diagramInstance = this.$refs.diagramRef.diagramInstance;
         }
