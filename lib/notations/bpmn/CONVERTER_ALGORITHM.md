@@ -2,6 +2,23 @@
 
 This document details the step-by-step algorithms, heuristics, and placement rules used by the `BpmnToFluentConverter` engine to transition raw BPMN XML models into robust, natively laid out Fluent API chains for the Aurea EDEN framework.
 
+## Algorithm Steps Summary
+1. **Phase 1: The "Longest Path" Baseline**
+   - Adjacency Mapping
+   - Pathfinding
+   - Weighting the "Happy Path"
+   - Baseline Serialization
+2. **Phase 2: Placement of Branches and Off-Path Elements**
+   - Rule 1: Terminating End Events (The Upward Override)
+   - Rule 2: Diverging Gateways (Avoiding Under-Gateway placement)
+   - Rule 3: Y_TOLERANCE (Visual Sequence Chaining off the Main Path)
+3. **Phase 3: Global Connectors and Gateway Port Rules**
+   - Dealing with Gateway Ambiguity (`_sourcePort`):
+     - Return Trips and Backward Paths
+     - Targeting End Events
+     - Primary Baseline Paths
+     - Secondary Branches
+
 ## 1. Principles of Connectors and Positioning
 
 Unlike XML which relies on absolute Cartesian (X, Y) coordinates, Aurea EDEN diagrams are generated structurally using relative geometric relationships. These relationships dictate not only where an element sits, but how the arrows (Sequence Flows) travel between them. 
