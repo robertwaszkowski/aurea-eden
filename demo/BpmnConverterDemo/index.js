@@ -111,6 +111,8 @@ function renderBothPanels(topCanvas, bottomCanvas, xmlString, options) {
 // ─────────────────────────────────────────────────────────────────────────────
 // Main export — called by the demo app loader
 // ─────────────────────────────────────────────────────────────────────────────
+import { BpmnExporter } from '../../lib/notations/bpmn/BpmnExporter.js';
+
 export default function initDemo(container, options = {}) {
 
     // ── Outer layout: toolbar + two diagram panes ───────────────────────────
@@ -158,6 +160,52 @@ export default function initDemo(container, options = {}) {
         select.appendChild(opt);
     });
     toolbar.appendChild(select);
+
+    // Add spacer
+    const spacer = document.createElement('div');
+    spacer.style.flex = '1';
+    toolbar.appendChild(spacer);
+
+    // Export Button
+    const exportBtn = document.createElement('button');
+    exportBtn.textContent = 'Export Auto-generated to BPMN';
+    exportBtn.style.cssText = `
+        font-size: 12px;
+        font-family: sans-serif;
+        padding: 4px 12px;
+        border-radius: 4px;
+        border: 1px solid #3b82f6;
+        background: #2563eb;
+        color: white;
+        cursor: pointer;
+        outline: none;
+        transition: background 0.2s;
+    `;
+    exportBtn.onmouseover = () => exportBtn.style.background = '#1d4ed8';
+    exportBtn.onmouseout = () => exportBtn.style.background = '#2563eb';
+
+    exportBtn.addEventListener('click', async () => {
+        if (!currentDiagram) return;
+
+        try {
+            const exporter = new BpmnExporter();
+            const xmlString = await exporter.export(currentDiagram);
+
+            const blob = new Blob([xmlString], { type: 'application/xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const currentLabel = DIAGRAM_FILES[select.value].label.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            a.download = `exported_${currentLabel}.bpmn`;
+            a.click();
+            URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Failed to export diagram:', error);
+            alert('Export failed. Check console for details.');
+        }
+    });
+
+    toolbar.appendChild(exportBtn);
 
     const phaseControls = { enablePhase1: true, enablePhase2: true, enablePhase3: true };
 

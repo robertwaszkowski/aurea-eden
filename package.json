@@ -58,6 +58,7 @@
     "@mdi/font": "^7.4.47",
     "@tweenjs/tween.js": "^25.0.0",
     "@vitejs/plugin-vue": "^6.0.3",
+    "bpmn-js": "^18.12.1",
     "dat.gui": "^0.7.9",
     "fs": "^0.0.1-security",
     "three": "^0.172.0",
