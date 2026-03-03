@@ -1,6 +1,5 @@
 // --- Step 1: Primary Straight Path ---
-const step1 = diagram.addStartEvent('StartProcess')
-    .addWrappedText('StartProcess'); // Starting anchor
+const step1 = diagram.addStartEvent('StartProcess'); // Starting anchor
 const step2 = diagram.addTask('TaskQuotationHandling')
     .addWrappedText('Quotation Handling')
     .positionRightOf('StartProcess');
@@ -8,30 +7,25 @@ const step3 = diagram.addUserTask('TaskApproveOrder')
     .addWrappedText('Approve Order')
     .positionRightOf('TaskQuotationHandling');
 const step4 = diagram.addExclusiveGateway('GatewayOrderApprovedDecision')
-    .addWrappedText('GatewayOrderApprovedDecision')
     .positionRightOf('TaskApproveOrder');
 const step5 = diagram.addParallelGateway('ParaSplitOrderAndShipment')
-    .addWrappedText('ParaSplitOrderAndShipment')
     .positionRightOf('GatewayOrderApprovedDecision');
 const step6 = diagram.addTask('_6-190')
     .addWrappedText('Order  Handling')
     .positionRightOf('ParaSplitOrderAndShipment');
 const step7 = diagram.addParallelGateway('ParaJoinOderAndShipment')
-    .addWrappedText('ParaJoinOderAndShipment')
     .positionRightOf('_6-190');
 const step8 = diagram.addUserTask('TaskReviewOrder')
     .addWrappedText('Review Order')
     .positionRightOf('ParaJoinOderAndShipment');
 const step9 = diagram.addEndEvent('EndProcess')
-    .addWrappedText('EndProcess')
     .positionRightOf('TaskReviewOrder');
 
 // --- Step 2: Branched / Off-path Elements ---
 const step10 = diagram.addTask('_6-241')
     .addWrappedText('Shipping Handling')
     .positionDownOf('ParaSplitOrderAndShipment');
-const step11 = diagram.addEndEvent('TerminateProcess')
-    .addWrappedText('TerminateProcess')
+const step11 = diagram.addTerminateEndEvent('TerminateProcess')
     .positionUpOf('GatewayOrderApprovedDecision');
 
 // --- Step 3: Global Connectors ---
