@@ -92,7 +92,7 @@ function renderBothPanels(topCanvas, bottomCanvas, xmlString, options) {
     const diagram = fluentDiagram; // alias used in eval'd code
 
     const converter = new BpmnToFluentConverter();
-    const generatedCode = converter.convert(xmlString);
+    const generatedCode = converter.convert(xmlString, options);
 
     try {
         // eslint-disable-next-line no-new-func
