@@ -231,6 +231,7 @@ const App = {
     return {
       selectedDemo: 'ConnectionVariantsDemo',
       demos: [
+        { title: 'BPMN Converter Demo', value: 'BpmnConverterDemo' },
         { title: 'Connection Variants Demo', value: 'ConnectionVariantsDemo' },
         { title: 'Vue Wrapper BPMN Demo', value: 'VueWrapperBpmnDemo' },
         { title: 'Multi-Bar BPMN Demo', value: 'MultiBarBpmnDemo' },
