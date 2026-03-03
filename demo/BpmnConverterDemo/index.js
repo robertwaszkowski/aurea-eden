@@ -158,6 +158,29 @@ export default function initDemo(container, options = {}) {
         select.appendChild(opt);
     });
     toolbar.appendChild(select);
+
+    const phaseControls = { enablePhase1: true, enablePhase2: true, enablePhase3: true };
+
+    const createCheckbox = (text, key) => {
+        const lbl = document.createElement('label');
+        lbl.style.cssText = 'display: flex; align-items: center; gap: 4px; color: #94a3b8; font-size: 12px; font-family: sans-serif; cursor: pointer; margin-left: 12px; border-left: 1px solid #334155; padding-left: 12px;';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = true;
+        cb.addEventListener('change', () => {
+            phaseControls[key] = cb.checked;
+            const idx = parseInt(select.value, 10);
+            currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[idx].xml, { ...options, ...phaseControls });
+        });
+        lbl.appendChild(cb);
+        lbl.appendChild(document.createTextNode(text));
+        toolbar.appendChild(lbl);
+    };
+
+    createCheckbox('Phase 1 (Baseline)', 'enablePhase1');
+    createCheckbox('Phase 2 (Branches)', 'enablePhase2');
+    createCheckbox('Phase 3 (Connectors)', 'enablePhase3');
+
     container.appendChild(toolbar);
 
     // ── Diagrams area ───────────────────────────────────────────────────────
@@ -175,12 +198,12 @@ export default function initDemo(container, options = {}) {
     const bottomCanvas = createCard(diagramArea, 'Auto-generated Fluent API', 'BpmnToFluentConverter.convert(xml)');
 
     // ── Initial render ──────────────────────────────────────────────────────
-    let currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[0].xml, options);
+    let currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[0].xml, { ...options, ...phaseControls });
 
     // ── On file change, re-render both panels ───────────────────────────────
     select.addEventListener('change', () => {
         const idx = parseInt(select.value, 10);
-        currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[idx].xml, options);
+        currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[idx].xml, { ...options, ...phaseControls });
     });
 
     return currentDiagram;
