@@ -40,7 +40,16 @@ The converter loops over all unplaced elements, finding an already-placed elemen
 
 Yes, we absolutely wrote that logic! Here is exactly how those heuristics analyze the coordinates of the XML to write the fluent API syntax:
 
-### Rule 1: Diverging Gateways (Avoiding Under-Gateway placement)
+### Rule 1: Terminating End Events (The Upward Override)
+In the XML, an end-event terminating a branch right off a gateway might just be drawn slightly above the gateway visually. 
+However, standard rules only push elements rightwards or downwards. Without overriding this, terminating events would drop below the line, muddying parallel logic flows.
+
+**How it works:**
+The code checks `isElementEndEvent && isAnchorGateway`. 
+If an `<endEvent>` is explicitly attached direct to a `<gateway>`, it overrides all normal X/Y reading logic and forces `.positionUpOf(gatewayId)`.
+*Result: Terminating aborts visually snap to the ceiling above the line, isolating them from parallel forward-progression.*
+
+### Rule 2: Diverging Gateways (Avoiding Under-Gateway placement)
 When a gateway splits the flow into two streams, the easiest algorithmic approach would simply be to place the branching element directly underneath the gateway (`.positionDownOf('gatewayId')`).
 However, this causes the parallel sequence to be visually "stuck" back where the gate was split, breaking clean columns.
 
@@ -49,15 +58,6 @@ The code detects if `anchorOutgoing.length === 2`:
 1. It looks at the two outgoing targets, and checks which one belongs to the *Longest Primary Path* baseline we generated in Phase 1 (let's call it `mainSuccessorId`).
 2. Rather than dropping the branch below the gateway itself, the algorithm dynamically assigns `.positionDownOf(mainSuccessorId)`. 
 *Result: The parallel lane structurally aligns exactly below the first step of the main path, ensuring matching columns.*
-
-### Rule 2: Terminating End Events (The Upward Override)
-In the XML, an end-event terminating a branch right off a gateway might just be drawn slightly above the gateway visually. 
-However, standard rules only push elements rightwards or downwards. Without overriding this, terminating events would drop below the line, muddying parallel logic flows.
-
-**How it works:**
-The code checks `isElementEndEvent && isAnchorGateway`. 
-If an `<endEvent>` is explicitly attached direct to a `<gateway>`, it overrides all normal X/Y reading logic and forces `.positionUpOf(gatewayId)`.
-*Result: Terminating aborts visually snap to the ceiling above the line, isolating them from parallel forward-progression.*
 
 ### Rule 3: `Y_TOLERANCE` (Visual Sequence Chaining off the Main Path)
 When the converter builds the primary baseline in Phase 1, it simply writes `.positionRightOf()` infinitely because it's guaranteed to be a single chained path. 
