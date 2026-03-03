@@ -229,7 +229,7 @@ const App = {
   },
   data() {
     return {
-      selectedDemo: 'ConnectionVariantsDemo',
+      selectedDemo: 'BpmnConverterDemo',
       demos: [
         { title: 'BPMN Converter Demo', value: 'BpmnConverterDemo' },
         { title: 'Connection Variants Demo', value: 'ConnectionVariantsDemo' },
