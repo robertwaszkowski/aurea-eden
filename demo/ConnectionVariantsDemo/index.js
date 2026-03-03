@@ -653,5 +653,14 @@ export default function initDemo(container, options = {}) {
 
     testCounter++;
 
+    // --- TEMPORARY: Test BPMN to Fluent Converter ---
+    fetch('/sample-diagrams/bpmn_02_Simple_gateway.bpmn')
+        .then(response => response.text())
+        .then(xmlString => {
+            const converter = new BpmnToFluentConverter();
+            console.log("=== BPMN CONVERTER OUTPUT ===\n" + converter.convert(xmlString));
+        })
+        .catch(err => console.error("Converter Test Failed:", err));
+
     return diagram;
 }

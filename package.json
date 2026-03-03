@@ -64,6 +64,7 @@
     "troika-three-text": "^0.52.3",
     "tween.js": "^16.6.0",
     "vue": "^3.5.25",
-    "vuetify": "^3.11.3"
+    "vuetify": "^3.11.3",
+    "xmldom": "^0.6.0"
   }
 }
