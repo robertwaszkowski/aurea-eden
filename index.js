@@ -229,8 +229,9 @@ const App = {
   },
   data() {
     return {
-      selectedDemo: 'VueWrapperBpmnDemo',
+      selectedDemo: 'ConnectionVariantsDemo',
       demos: [
+        { title: 'Connection Variants Demo', value: 'ConnectionVariantsDemo' },
         { title: 'Vue Wrapper BPMN Demo', value: 'VueWrapperBpmnDemo' },
         { title: 'Multi-Bar BPMN Demo', value: 'MultiBarBpmnDemo' },
         { title: 'Text Annotation Demo', value: 'TextAnnotationDemo' },
@@ -259,8 +260,36 @@ const App = {
       isVueDemo: false
     };
   },
+  mounted() {
+    // Check if a specific demo is requested via URL: e.g. /demo/ConnectionVariantsDemo/
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    if (pathParts.length >= 2 && pathParts[0] === 'demo') {
+      const requestedDemo = pathParts[1];
+      if (this.demos.find(d => d.value === requestedDemo)) {
+        this.selectedDemo = requestedDemo;
+      }
+    }
+
+    // Listen for browser back/forward buttons
+    window.addEventListener('popstate', () => {
+      const parts = window.location.pathname.split('/').filter(Boolean);
+      if (parts.length >= 2 && parts[0] === 'demo') {
+        const demo = parts[1];
+        if (this.selectedDemo !== demo && this.demos.find(d => d.value === demo)) {
+          this.selectedDemo = demo;
+          this.loadDemo(false);
+        }
+      }
+    });
+
+    this.loadDemo(false);
+  },
   methods: {
-    async loadDemo() {
+    async loadDemo(pushState = true) {
+      if (pushState) {
+        window.history.pushState({}, '', `/demo/${this.selectedDemo}/`);
+      }
+
       // Cleanup previous state
       this.isVueDemo = false;
       this.diagramInstance = null;
