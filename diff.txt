@@ -1,527 +1,1083 @@
-diff --git a/index.js b/index.js
-index de560c9..45b828d 100644
---- a/index.js
-+++ b/index.js
-@@ -229,8 +229,9 @@ const App = {
-   },
-   data() {
-     return {
--      selectedDemo: 'VueWrapperBpmnDemo',
-+      selectedDemo: 'ConnectionVariantsDemo',
-       demos: [
-+        { title: 'Connection Variants Demo', value: 'ConnectionVariantsDemo' },
-         { title: 'Vue Wrapper BPMN Demo', value: 'VueWrapperBpmnDemo' },
-         { title: 'Multi-Bar BPMN Demo', value: 'MultiBarBpmnDemo' },
-         { title: 'Text Annotation Demo', value: 'TextAnnotationDemo' },
-@@ -259,8 +260,36 @@ const App = {
-       isVueDemo: false
-     };
-   },
-+  mounted() {
-+    // Check if a specific demo is requested via URL: e.g. /demo/ConnectionVariantsDemo/
-+    const pathParts = window.location.pathname.split('/').filter(Boolean);
-+    if (pathParts.length >= 2 && pathParts[0] === 'demo') {
-+      const requestedDemo = pathParts[1];
-+      if (this.demos.find(d => d.value === requestedDemo)) {
-+        this.selectedDemo = requestedDemo;
-+      }
-+    }
-+
-+    // Listen for browser back/forward buttons
-+    window.addEventListener('popstate', () => {
-+      const parts = window.location.pathname.split('/').filter(Boolean);
-+      if (parts.length >= 2 && parts[0] === 'demo') {
-+        const demo = parts[1];
-+        if (this.selectedDemo !== demo && this.demos.find(d => d.value === demo)) {
-+          this.selectedDemo = demo;
-+          this.loadDemo(false);
-+        }
-+      }
-+    });
-+
-+    this.loadDemo(false);
-+  },
-   methods: {
--    async loadDemo() {
-+    async loadDemo(pushState = true) {
-+      if (pushState) {
-+        window.history.pushState({}, '', `/demo/${this.selectedDemo}/`);
-+      }
-+
-       // Cleanup previous state
-       this.isVueDemo = false;
-       this.diagramInstance = null;
-diff --git a/lib/connectors/Connector.js b/lib/connectors/Connector.js
-index 2d0bea1..2223834 100644
---- a/lib/connectors/Connector.js
-+++ b/lib/connectors/Connector.js
-@@ -1,15 +1,17 @@
- import * as THREE from 'three';
- import { RoundedCornerOrthogonalConnectorShape } from '../shapes/connector/RoundedCornerOrthogonalConnectorShape.js';
-+import { Element } from '../elements/Element.js';
-+import { CircleShape } from '../shapes/paths/CircleShape.js';
+diff --git a/converter_output.txt b/converter_output.txt
+index 086640a..81ce8bd 100644
+--- a/converter_output.txt
++++ b/converter_output.txt
+@@ -1,42 +1,65 @@
+ // --- Step 1: Primary Straight Path ---
+-const step1 = diagram.addStartEvent('StartProcess'); // Starting anchor
+-const step2 = diagram.addTask('TaskQuotationHandling')
+-    .addWrappedText('Quotation Handling')
+-    .positionRightOf('StartProcess');
+-const step3 = diagram.addUserTask('TaskApproveOrder')
+-    .addWrappedText('Approve Order')
+-    .positionRightOf('TaskQuotationHandling');
+-const step4 = diagram.addExclusiveGateway('GatewayOrderApprovedDecision')
+-    .positionRightOf('TaskApproveOrder');
+-const step5 = diagram.addParallelGateway('ParaSplitOrderAndShipment')
+-    .positionRightOf('GatewayOrderApprovedDecision');
+-const step6 = diagram.addTask('_6-190')
+-    .addWrappedText('Order  Handling')
+-    .positionRightOf('ParaSplitOrderAndShipment');
+-const step7 = diagram.addParallelGateway('ParaJoinOderAndShipment')
+-    .positionRightOf('_6-190');
+-const step8 = diagram.addUserTask('TaskReviewOrder')
+-    .addWrappedText('Review Order')
+-    .positionRightOf('ParaJoinOderAndShipment');
+-const step9 = diagram.addEndEvent('EndProcess')
+-    .positionRightOf('TaskReviewOrder');
++const step1 = diagram.addStartEvent('_6-67')
++    .addWrappedText('Goods  to ship'); // Starting anchor
++const step2 = diagram.addParallelGateway('_6-80')
++    .positionRightOf('_6-67');
++const step3 = diagram.addTask('_6-102')
++    .addWrappedText('Decide if normal post or special shipment')
++    .positionRightOf('_6-80');
++const step4 = diagram.addExclusiveGateway('_6-204')
++    .addWrappedText('Mode of delivery')
++    .positionRightOf('_6-102');
++const step5 = diagram.addTask('_6-379')
++    .addWrappedText('Check if extra insurance is necessary')
++    .positionRightOf('_6-204');
++const step6 = diagram.addInclusiveGateway('_6-430')
++    .positionRightOf('_6-379');
++const step7 = diagram.addTask('_6-452')
++    .addWrappedText('Take out extra insurance')
++    .positionRightOf('_6-430');
++const step8 = diagram.addInclusiveGateway('_6-503')
++    .positionRightOf('_6-452');
++const step9 = diagram.addExclusiveGateway('_6-525')
++    .positionRightOf('_6-503');
++const step10 = diagram.addParallelGateway('_6-547')
++    .positionRightOf('_6-525');
++const step11 = diagram.addTask('_6-569')
++    .addWrappedText('Add paperwork and move package to pick area')
++    .positionRightOf('_6-547');
++const step12 = diagram.addEndEvent('_6-620')
++    .addWrappedText('Goods available  for pick')
++    .positionRightOf('_6-569');
  
- class Connector extends THREE.Mesh {
--    constructor(elementId, 
--                shape = new RoundedCornerOrthogonalConnectorShape(), 
--                sourceElement = null,
--                targetElement = null,
--                sourcePoint = { x: 0, y: 0 },
--                targetPoint = { x: 2, y: 2 },
--                waypoints = [{ x: 0, y: 1 }, { x: 2, y: 1 }], 
--                properties = {}) {
-+    constructor(elementId,
-+        shape = new RoundedCornerOrthogonalConnectorShape(),
-+        sourceElement = null,
-+        targetElement = null,
-+        sourcePoint = { x: 0, y: 0 },
-+        targetPoint = { x: 2, y: 2 },
-+        waypoints = [{ x: 0, y: 1 }, { x: 2, y: 1 }],
-+        properties = {}) {
-         super(shape.geometry, shape.material);
-         this.elementId = elementId;
-         this.sourceElement = sourceElement;
-@@ -17,30 +19,279 @@ class Connector extends THREE.Mesh {
-         this.shape = shape;
-         this.points = [sourcePoint, ...waypoints, targetPoint];
-         this.properties = properties;
-+        this.labelElement = null; // Store reference to assigned label
-     }
+ // --- Step 2: Branched / Off-path Elements ---
+-const step10 = diagram.addTask('_6-241')
+-    .addWrappedText('Shipping Handling')
+-    .positionDownOf('ParaSplitOrderAndShipment');
+-const step11 = diagram.addTerminateEndEvent('TerminateProcess')
+-    .positionUpOf('GatewayOrderApprovedDecision');
++const step13 = diagram.addTask('_6-226')
++    .addWrappedText('Request quotes from carriers')
++    .positionRightOf('_6-204');
++const step14 = diagram.addTask('_6-277')
++    .addWrappedText('Assign a carrier & prepare paperwork')
++    .positionRightOf('_6-226');
++const step15 = diagram.addTask('_6-328')
++    .addWrappedText('Fill in a Post label')
++    .positionRightOf('_6-430');
++const step16 = diagram.addTask('_6-153')
++    .addWrappedText('Package goods')
++    .positionDownOf('_6-80');
  
-     setDiagram(diagram) {
-         this.diagram = diagram;
-+        if (this.labelElement) {
-+            this.diagram.addElement(this.labelElement);
-+        }
-     }
+ // --- Step 3: Global Connectors ---
+-step1.connectTo('TaskQuotationHandling', 'auto', 'auto');
+-step2.connectTo('TaskApproveOrder', 'auto', 'auto');
+-step3.connectTo('GatewayOrderApprovedDecision', 'auto', 'auto');
+-step4.connectTo('ParaSplitOrderAndShipment', 'auto', 'auto', 'Approved');
+-step5.connectTo('_6-190', 'auto', 'auto');
+-step5.connectTo('_6-241', 'auto', 'auto');
+-step6.connectTo('ParaJoinOderAndShipment', 'auto', 'auto');
+-step10.connectTo('ParaJoinOderAndShipment', 'auto', 'auto');
+-step7.connectTo('TaskReviewOrder', 'auto', 'auto');
+-step8.connectTo('EndProcess', 'auto', 'auto');
+-step4.connectTo('TerminateProcess', 'auto', 'auto');
+\ No newline at end of file
++step6.connectTo('_6-452', 'auto', 'auto', 'extra insurance required');
++step7.connectTo('_6-503', 'auto', 'auto');
++step1.connectTo('_6-80', 'auto', 'auto');
++step2.connectTo('_6-102', 'auto', 'auto');
++step2.connectTo('_6-153', 'auto', 'auto');
++step3.connectTo('_6-204', 'auto', 'auto');
++step4.connectTo('_6-226', 'auto', 'auto', 'Special Carrier');
++step4.connectTo('_6-379', 'auto', 'auto', 'Normal Post');
++step13.connectTo('_6-277', 'auto', 'auto');
++step14.connectTo('_6-525', 'auto', 'auto');
++step6.connectTo('_6-328', 'auto', 'auto', 'Always');
++step15.connectTo('_6-503', 'auto', 'auto');
++step5.connectTo('_6-430', 'auto', 'auto');
++step8.connectTo('_6-525', 'auto', 'auto');
++step9.connectTo('_6-547', 'auto', 'auto');
++step16.connectTo('_6-547', 'auto', 'auto');
++step10.connectTo('_6-569', 'auto', 'auto');
++step11.connectTo('_6-620', 'auto', 'auto');
+\ No newline at end of file
+diff --git a/diff.txt b/diff.txt
+index 2e2614d..e69de29 100644
+--- a/diff.txt
++++ b/diff.txt
+@@ -1,527 +0,0 @@
+-diff --git a/index.js b/index.js
+-index de560c9..45b828d 100644
+---- a/index.js
+-+++ b/index.js
+-@@ -229,8 +229,9 @@ const App = {
+-   },
+-   data() {
+-     return {
+--      selectedDemo: 'VueWrapperBpmnDemo',
+-+      selectedDemo: 'ConnectionVariantsDemo',
+-       demos: [
+-+        { title: 'Connection Variants Demo', value: 'ConnectionVariantsDemo' },
+-         { title: 'Vue Wrapper BPMN Demo', value: 'VueWrapperBpmnDemo' },
+-         { title: 'Multi-Bar BPMN Demo', value: 'MultiBarBpmnDemo' },
+-         { title: 'Text Annotation Demo', value: 'TextAnnotationDemo' },
+-@@ -259,8 +260,36 @@ const App = {
+-       isVueDemo: false
+-     };
+-   },
+-+  mounted() {
+-+    // Check if a specific demo is requested via URL: e.g. /demo/ConnectionVariantsDemo/
+-+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+-+    if (pathParts.length >= 2 && pathParts[0] === 'demo') {
+-+      const requestedDemo = pathParts[1];
+-+      if (this.demos.find(d => d.value === requestedDemo)) {
+-+        this.selectedDemo = requestedDemo;
+-+      }
+-+    }
+-+
+-+    // Listen for browser back/forward buttons
+-+    window.addEventListener('popstate', () => {
+-+      const parts = window.location.pathname.split('/').filter(Boolean);
+-+      if (parts.length >= 2 && parts[0] === 'demo') {
+-+        const demo = parts[1];
+-+        if (this.selectedDemo !== demo && this.demos.find(d => d.value === demo)) {
+-+          this.selectedDemo = demo;
+-+          this.loadDemo(false);
+-+        }
+-+      }
+-+    });
+-+
+-+    this.loadDemo(false);
+-+  },
+-   methods: {
+--    async loadDemo() {
+-+    async loadDemo(pushState = true) {
+-+      if (pushState) {
+-+        window.history.pushState({}, '', `/demo/${this.selectedDemo}/`);
+-+      }
+-+
+-       // Cleanup previous state
+-       this.isVueDemo = false;
+-       this.diagramInstance = null;
+-diff --git a/lib/connectors/Connector.js b/lib/connectors/Connector.js
+-index 2d0bea1..2223834 100644
+---- a/lib/connectors/Connector.js
+-+++ b/lib/connectors/Connector.js
+-@@ -1,15 +1,17 @@
+- import * as THREE from 'three';
+- import { RoundedCornerOrthogonalConnectorShape } from '../shapes/connector/RoundedCornerOrthogonalConnectorShape.js';
+-+import { Element } from '../elements/Element.js';
+-+import { CircleShape } from '../shapes/paths/CircleShape.js';
+- 
+- class Connector extends THREE.Mesh {
+--    constructor(elementId, 
+--                shape = new RoundedCornerOrthogonalConnectorShape(), 
+--                sourceElement = null,
+--                targetElement = null,
+--                sourcePoint = { x: 0, y: 0 },
+--                targetPoint = { x: 2, y: 2 },
+--                waypoints = [{ x: 0, y: 1 }, { x: 2, y: 1 }], 
+--                properties = {}) {
+-+    constructor(elementId,
+-+        shape = new RoundedCornerOrthogonalConnectorShape(),
+-+        sourceElement = null,
+-+        targetElement = null,
+-+        sourcePoint = { x: 0, y: 0 },
+-+        targetPoint = { x: 2, y: 2 },
+-+        waypoints = [{ x: 0, y: 1 }, { x: 2, y: 1 }],
+-+        properties = {}) {
+-         super(shape.geometry, shape.material);
+-         this.elementId = elementId;
+-         this.sourceElement = sourceElement;
+-@@ -17,30 +19,279 @@ class Connector extends THREE.Mesh {
+-         this.shape = shape;
+-         this.points = [sourcePoint, ...waypoints, targetPoint];
+-         this.properties = properties;
+-+        this.labelElement = null; // Store reference to assigned label
+-     }
+- 
+-     setDiagram(diagram) {
+-         this.diagram = diagram;
+-+        if (this.labelElement) {
+-+            this.diagram.addElement(this.labelElement);
+-+        }
+-     }
+- 
+--    static determinePoints(sourcePoint, targetPoint, sourcePosition, targetPosition) { //TODO: rozbudować o sourcePosition i targetPosition (np. trzyelementowe konektory)
+-+    /**
+-+     * Natively assigns a text label to the connector by automatically calculating the optimal midpoint.
+-+     * @param {string} text - The label text to display
+-+     * @param {number} [offsetY=20] - Vertical offset from the longest line segment
+-+     */
+-+    setLabel(text, offsetY = 20) {
+-+        if (!this.diagram) {
+-+            console.warn("Connector.setLabel called before diagram was set. The label will be added when setDiagram is called.");
+-+        }
+-+
+-+        // Calculate the longest segment of the connector to place the label
+-+        let longestSegment = { p1: this.points[0], p2: this.points[1], length: 0 };
+-+        for (let i = 1; i < this.points.length; i++) {
+-+            const p1 = this.points[i - 1];
+-+            const p2 = this.points[i];
+-+            const dist = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+-+            if (dist > longestSegment.length) {
+-+                longestSegment = { p1, p2, length: dist };
+-+            }
+-+        }
+-+
+-+        const midX = (longestSegment.p1.x + longestSegment.p2.x) / 2;
+-+        const midY = (longestSegment.p1.y + longestSegment.p2.y) / 2;
+-+
+-+        const anchorGeo = new CircleShape(1, 1);
+-+        this.labelElement = new Element(`${this.elementId}-label`, anchorGeo);
+-+        this.labelElement.semanticType = 'flow';
+-+        this.labelElement.themable = true;
+-+
+-+        if (this.diagram) {
+-+            this.diagram.addElement(this.labelElement);
+-+        }
+-+
+-+        const isVertical = Math.abs(longestSegment.p1.x - longestSegment.p2.x) < 0.01;
+-+
+-+        let wrapWidth;
+-+        let finalOffsetX = 0;
+-+        let finalOffsetY = 0;
+-+
+-+        if (isVertical) {
+-+            // Text flows horizontally, so we don't constrain width based on the vertical segment length.
+-+            // Give it a safe static width to prevent overflowing adjacent objects
+-+            wrapWidth = 100;
+-+            // Shift the text horizontally to the right so it doesn't straddle the vertical line
+-+            finalOffsetX = 15;
+-+            // Center the text vertically relative to the midpoint
+-+            finalOffsetY = 5;
+-+        } else {
+-+            // For horizontal segments, constrain text to the segment length so it doesn't overhang
+-+            wrapWidth = Math.max(60, Math.min(longestSegment.length * 0.9, 150));
+-+            // Shift the text vertically so it rests above the line
+-+            finalOffsetY = offsetY; // Default is +20 
+-+        }
+-+
+-+        this.labelElement.positionAt({ x: midX + finalOffsetX, y: midY + finalOffsetY, z: 2 });
+-+        this.labelElement.visible = false; // Hide the anchor mesh itself
+-+
+-+        // Attach text to the invisible anchor
+-+        this.labelElement.addWrappedText(text, new THREE.Vector3(0, 0, 3), 7, 'center', wrapWidth, 0, 'top');
+-+
+-+        return this;
+-+    }
+-+
+-+    static determinePoints(sourcePoint, targetPoint, sourcePosition, targetPosition) {
+-         let waypoints = [];
+- 
+--        if (sourcePoint.x !== targetPoint.x && sourcePoint.y !== targetPoint.y) {
+--            // if source position starts with W or E then use the y coordinate of the source point
+--            // and the x coordinate of the target point
+--            if (sourcePosition.startsWith('W') || sourcePosition.startsWith('E')) {
+--                waypoints.push({ x: targetPoint.x, y: sourcePoint.y });
+-+        // Helper to get raw direction from position string (e.g. 'E', 'top-left' -> 'N')
+-+        const getDir = (pos) => {
+-+            if (!pos) return null;
+-+            if (pos.startsWith('E')) return 'E';
+-+            if (pos.startsWith('W')) return 'W';
+-+            if (pos.startsWith('N') || pos.startsWith('top')) return 'N';
+-+            if (pos.startsWith('S') || pos.startsWith('bottom')) return 'S';
+-+            return null;
+-+        };
+-+
+-+        const srcDir = getDir(sourcePosition);
+-+        const tgtDir = getDir(targetPosition);
+-+
+-+        // Define a safe fallback distance for C-curves (increased for breathing room around large tasks)
+-+        const safeMargin = 50;
+-+
+-+        // If either direction is missing, fallback to simple L-curve
+-+        if (!srcDir || !tgtDir) {
+-+            if (sourcePoint.x !== targetPoint.x && sourcePoint.y !== targetPoint.y) {
+-+                if (srcDir === 'W' || srcDir === 'E') waypoints.push({ x: targetPoint.x, y: sourcePoint.y });
+-+                else if (srcDir === 'N' || srcDir === 'S') waypoints.push({ x: sourcePoint.x, y: targetPoint.y });
+-+                else waypoints.push({ x: targetPoint.x, y: sourcePoint.y }); // Default fallback
+-             }
+--            // if source position starts with N or S then use the x coordinate of the source point
+--            // and the y coordinate of the target point
+--            if (sourcePosition.startsWith('N') || sourcePosition.startsWith('S')) {
+--                waypoints.push({ x: sourcePoint.x, y: targetPoint.y });
+-+            return [sourcePoint, ...waypoints, targetPoint];
+-+        }
+-+
+-+        const isHorizontal = (dir) => dir === 'E' || dir === 'W';
+-+        const isVertical = (dir) => dir === 'N' || dir === 'S';
+-+
+-+        if (isHorizontal(srcDir) && isHorizontal(tgtDir)) {
+-+            if (srcDir !== tgtDir) {
+-+                // Opposite Faces (East to West or West to East) -> S-Curve (2 elbows)
+-+                const isNaturallyOrdered = (srcDir === 'E' && sourcePoint.x < targetPoint.x) || (srcDir === 'W' && sourcePoint.x > targetPoint.x);
+-+                if (isNaturallyOrdered) {
+-+                    if (Math.abs(sourcePoint.y - targetPoint.y) > 0.1) {
+-+                        const midX = (sourcePoint.x + targetPoint.x) / 2;
+-+                        waypoints.push({ x: midX, y: sourcePoint.y });
+-+                        waypoints.push({ x: midX, y: targetPoint.y });
+-+                    }
+-+                } else {
+-+                    // C-Curve via Y-axis avoidance
+-+                    const avoidY = sourcePoint.y < targetPoint.y ? sourcePoint.y - safeMargin : sourcePoint.y + safeMargin;
+-+                    const margin1 = sourcePoint.x + (srcDir === 'E' ? safeMargin : -safeMargin);
+-+                    const margin2 = targetPoint.x + (tgtDir === 'E' ? safeMargin : -safeMargin);
+-+                    waypoints.push({ x: margin1, y: sourcePoint.y });
+-+                    waypoints.push({ x: margin1, y: avoidY });
+-+                    waypoints.push({ x: margin2, y: avoidY });
+-+                    waypoints.push({ x: margin2, y: targetPoint.y });
+-+                }
+-+            } else {
+-+                // Same Faces (East to East or West to West) -> C-Curve (2 elbows)
+-+                // When connecting identical faces, we must route the connector outwards.
+-+                // To avoid cutting through the elements if they are staggered, we must project to the *furthest* edge.
+-+                let marginX;
+-+                if (srcDir === 'E') {
+-+                    // Go further East than the rightmost element
+-+                    marginX = Math.max(sourcePoint.x, targetPoint.x) + safeMargin;
+-+                } else {
+-+                    // Go further West than the leftmost element
+-+                    marginX = Math.min(sourcePoint.x, targetPoint.x) - safeMargin;
+-+                }
+-+                waypoints.push({ x: marginX, y: sourcePoint.y });
+-+                waypoints.push({ x: marginX, y: targetPoint.y });
+-+            }
+-+        }
+-+        else if (isVertical(srcDir) && isVertical(tgtDir)) {
+-+            if (srcDir !== tgtDir) {
+-+                // Opposite Faces (North to South or South to North) -> S-Curve (2 elbows)
+-+                // In THREE.js ++Y is North (Up), --Y is South (Down)
+-+                const isNaturallyOrdered = (srcDir === 'N' && sourcePoint.y < targetPoint.y) || (srcDir === 'S' && sourcePoint.y > targetPoint.y);
+-+                if (isNaturallyOrdered) {
+-+                    if (Math.abs(sourcePoint.x - targetPoint.x) > 0.1) {
+-+                        const midY = (sourcePoint.y + targetPoint.y) / 2;
+-+                        waypoints.push({ x: sourcePoint.x, y: midY });
+-+                        waypoints.push({ x: targetPoint.x, y: midY });
+-+                    }
+-+                } else {
+-+                    // C-Curve via X-axis avoidance
+-+                    const avoidX = sourcePoint.x < targetPoint.x ? sourcePoint.x - safeMargin : sourcePoint.x + safeMargin;
+-+                    const margin1 = sourcePoint.y + (srcDir === 'N' ? safeMargin : -safeMargin);
+-+                    const margin2 = targetPoint.y + (tgtDir === 'N' ? safeMargin : -safeMargin);
+-+                    waypoints.push({ x: sourcePoint.x, y: margin1 });
+-+                    waypoints.push({ x: avoidX, y: margin1 });
+-+                    waypoints.push({ x: avoidX, y: margin2 });
+-+                    waypoints.push({ x: targetPoint.x, y: margin2 });
+-+                }
+-+            } else {
+-+                // Same Faces (North to North or South to South) -> C-Curve (2 elbows)
+-+                let marginY;
+-+                if (srcDir === 'N') {
+-+                    // Go further North (Up/Higher +Y) than the highest element
+-+                    marginY = Math.max(sourcePoint.y, targetPoint.y) + safeMargin;
+-+                } else {
+-+                    // Go further South (Down/Lower -Y) than the lowest element
+-+                    marginY = Math.min(sourcePoint.y, targetPoint.y) - safeMargin;
+-+                }
+-+                waypoints.push({ x: sourcePoint.x, y: marginY });
+-+                waypoints.push({ x: targetPoint.x, y: marginY });
+-+            }
+-+        }
+-+        else {
+-+            // Orthogonal Faces (e.g., East to North, West to South, etc.)
+-+            const dx = targetPoint.x - sourcePoint.x;
+-+            const dy = targetPoint.y - sourcePoint.y;
+-+
+-+            // Check if we can use a simple 1-elbow L-curve.
+-+            // A simple L-curve is valid ONLY if it arrives at the target face from the correct direction.
+-+            // Directional rules for sequence flows:
+-+            // - E: Enter from right (moving left) <- Impossible for L-curve starting E or W
+-+            // - W: Enter from left (moving right)  <- Impossible for L-curve starting E or W
+-+            // - N: Enter from top (moving down)    <- Impossible for L-curve starting N or S
+-+            // - S: Enter from bottom (moving up)   <- Impossible for L-curve starting N or S
+-+
+-+            // This means an L-curve is ONLY possible between a Horizontal start and a Vertical end (or vice versa)
+-+            // AND the target must be positioned such that the natural corner doesn't go "through" the target box.
+-+
+-+            let canUseSimpleL = false;
+-+            // If starting Horizontal (E/W), the last segment is Vertical. So it must enter a N or S port.
+-+            if (srcDir === 'E' && dx >= 0) {
+-+                if (tgtDir === 'S' && dy >= 0) canUseSimpleL = true; // Right then Up into South
+-+                if (tgtDir === 'N' && dy <= 0) canUseSimpleL = true; // Right then Down into North
+-+            }
+-+            if (srcDir === 'W' && dx <= 0) {
+-+                if (tgtDir === 'S' && dy >= 0) canUseSimpleL = true; // Left then Up into South
+-+                if (tgtDir === 'N' && dy <= 0) canUseSimpleL = true; // Left then Down into North
+-+            }
+-+            // If starting Vertical (N/S), the last segment is Horizontal. So it must enter an E or W port.
+-+            if (srcDir === 'N' && dy >= 0) {
+-+                if (tgtDir === 'W' && dx >= 0) canUseSimpleL = true; // Up then Right into West
+-+                if (tgtDir === 'E' && dx <= 0) canUseSimpleL = true; // Up then Left into East
+-+            }
+-+            if (srcDir === 'S' && dy <= 0) {
+-+                if (tgtDir === 'W' && dx >= 0) canUseSimpleL = true; // Down then Right into West
+-+                if (tgtDir === 'E' && dx <= 0) canUseSimpleL = true; // Down then Left into East
+-+            }
+-+
+-+            if (canUseSimpleL) {
+-+                // 1 elbow (L-curve)
+-+                if (isHorizontal(srcDir)) waypoints.push({ x: targetPoint.x, y: sourcePoint.y });
+-+                else waypoints.push({ x: sourcePoint.x, y: targetPoint.y });
+-+            } else {
+-+                // Complex orthogonal routing (3 elbows / 4 segments)
+-+                // This ensures we loop around and enter the port from the correct exterior side.
+-+                if (isHorizontal(srcDir)) {
+-+                    // Start Horizontally (E/W), must enter Vertically (N/S)
+-+                    const marginX = sourcePoint.x + (srcDir === 'E' ? safeMargin : -safeMargin);
+-+                    const marginY = targetPoint.y + (tgtDir === 'N' ? safeMargin : -safeMargin);
+-+                    waypoints.push({ x: marginX, y: sourcePoint.y });
+-+                    waypoints.push({ x: marginX, y: marginY });
+-+                    waypoints.push({ x: targetPoint.x, y: marginY });
+-+                } else {
+-+                    // Start Vertically (N/S), must enter Horizontally (E/W)
+-+                    const marginY = sourcePoint.y + (srcDir === 'N' ? safeMargin : -safeMargin);
+-+                    const marginX = targetPoint.x + (tgtDir === 'E' ? safeMargin : -safeMargin);
+-+                    waypoints.push({ x: sourcePoint.x, y: marginY });
+-+                    waypoints.push({ x: marginX, y: marginY });
+-+                    waypoints.push({ x: marginX, y: targetPoint.y });
+-+                }
+-             }
+-         }
+-+        // Ensure points are strictly orthogonal. If not, fallback.
+-+        const rawPoints = [sourcePoint, ...waypoints, targetPoint];
+-+        if (rawPoints.length <= 2) return rawPoints;
+-+
+-+        // -----------------------------------------
+-+        // CLEANUP: Filter collinear points
+-+        // RoundedCornerOrthogonalConnectorShape builds a rounded corner at EVERY interior waypoint.
+-+        // Therefore, any collinear "pass-through" points will cause rendering bugs (wobbles, broken geometry).
+-+        // We must ensure the final array only contains points where a 90-degree turn actually happens.
+-+        // -----------------------------------------
+-+        const filteredPoints = [rawPoints[0]]; // Always keep source
+- 
+--        return [sourcePoint, ...waypoints, targetPoint];
+--    }    
+-+        for (let i = 1; i < rawPoints.length - 1; i++) {
+-+            const prev = rawPoints[i - 1];
+-+            const curr = rawPoints[i];
+-+            const next = rawPoints[i + 1];
+-+
+-+            const collinearH = (Math.abs(prev.y - curr.y) < 0.1 && Math.abs(curr.y - next.y) < 0.1);
+-+            const collinearV = (Math.abs(prev.x - curr.x) < 0.1 && Math.abs(curr.x - next.x) < 0.1);
+-+
+-+            // If the point is NOT collinear with its neighbours, it's a true corner. Keep it.
+-+            if (!collinearH && !collinearV) {
+-+                // Also skip duplicate consecutive points just in case
+-+                if (Math.abs(curr.x - prev.x) > 0.1 || Math.abs(curr.y - prev.y) > 0.1) {
+-+                    filteredPoints.push(curr);
+-+                }
+-+            }
+-+        }
+-+
+-+        // Ensure the last target point isn't accidentally removed
+-+        const lastFiltered = filteredPoints[filteredPoints.length - 1];
+-+        if (Math.abs(lastFiltered.x - targetPoint.x) > 0.1 || Math.abs(lastFiltered.y - targetPoint.y) > 0.1) {
+-+            filteredPoints.push(targetPoint);
+-+        }
+-+
+-+        return filteredPoints;
+-+    }
+- 
+- }
+- 
+-diff --git a/lib/elements/Element.js b/lib/elements/Element.js
+-index 07ed124..4e05bfa 100644
+---- a/lib/elements/Element.js
+-+++ b/lib/elements/Element.js
+-@@ -1394,16 +1394,52 @@ class Element extends THREE.Mesh {
+-     // Add connecting methods
+-     // ================================================================
+- 
+-+    /**
+-+     * Helper to automatically determine the best connection ports based on relative positions.
+-+     * @param {Element} sourceElement 
+-+     * @param {Element} targetElement 
+-+     * @returns {Object} { sourcePort: 'N'|'S'|'E'|'W', targetPort: 'N'|'S'|'E'|'W' }
+-+     */
+-+    static determineAutoPorts(sourceElement, targetElement) {
+-+        const dx = targetElement.position.x - sourceElement.position.x;
+-+        const dy = targetElement.position.y - sourceElement.position.y;
+-+
+-+        let angle = Math.atan2(dy, dx);
+-+
+-+        // Normalize angle to [0, 2PI)
+-+        if (angle < 0) {
+-+            angle += 2 * Math.PI;
+-+        }
+-+
+-+        const PI_4 = Math.PI / 4;
+-+
+-+        // THREE.js coordinate system (+Y is North/Up)
+-+        if (angle >= 7 * PI_4 || angle < PI_4) {
+-+            // Target is to the East (Right)
+-+            return { sourcePort: 'E', targetPort: 'W' };
+-+        } else if (angle >= PI_4 && angle < 3 * PI_4) {
+-+            // Target is to the North (Up)
+-+            return { sourcePort: 'N', targetPort: 'S' };
+-+        } else if (angle >= 3 * PI_4 && angle < 5 * PI_4) {
+-+            // Target is to the West (Left)
+-+            return { sourcePort: 'W', targetPort: 'E' };
+-+        } else {
+-+            // Target is to the South (Down)
+-+            return { sourcePort: 'S', targetPort: 'N' };
+-+        }
+-+    }
+-+
+-     /**
+-      * Creates a connector from another element to this element.
+-      * @param {string} sourceElementId - ID of the source element
+--     * @param {string} sourcePosition - Connection point on the source element
+--     * @param {string} targetPosition - Connection point on this element
+-+     * @param {string} [sourcePosition='auto'] - Connection point on the source element ('N', 'S', 'E', 'W', or 'auto')
+-+     * @param {string} [targetPosition='auto'] - Connection point on this element ('N', 'S', 'E', 'W', or 'auto')
+-+     * @param {string} [label=null] - Optional text label to place on the connector
+-      * @param {string} [type='sequence'] - Type of connector ('sequence', 'association')
+-      * @returns {Element} This element for method chaining
+-      * @throws {Error} If the diagram is not set or source element is not found
+-      */
+--    connectFrom(sourceElementId, sourcePosition, targetPosition, type = 'sequence') {
+-+    connectFrom(sourceElementId, sourcePosition = 'auto', targetPosition = 'auto', label = null, type = 'sequence') {
+-         if (!this.diagram) {
+-             throw new Error("Diagram is not set for this element.");
+-         }
+-@@ -1415,21 +1451,90 @@ class Element extends THREE.Mesh {
+-             throw new Error(`Element with ID ${sourceElementId} not found.`);
+-         }
+- 
+-+        if (sourcePosition === 'auto' || targetPosition === 'auto') {
+-+            const ports = Element.determineAutoPorts(sourceElement, targetElement);
+-+            if (sourcePosition === 'auto') sourcePosition = ports.sourcePort;
+-+            if (targetPosition === 'auto') targetPosition = ports.targetPort;
+-+        }
+-+
+-         const sourcePoint = sourceElement.getPointPosition(sourcePosition);
+-         const targetPoint = targetElement.getPointPosition(targetPosition);
+- 
+-         let connectorShape;
+-+        let waypoints = [];
+- 
+-         if (type === 'association') {
+-             // Straight line between points
+-+            waypoints = [];
+-             connectorShape = new StraightDottedConnectorShape([sourcePoint, targetPoint]);
+-         } else {
+-             // Default orthogonal
+-             const points = Connector.determinePoints(sourcePoint, targetPoint, sourcePosition, targetPosition);
+-+            waypoints = points.slice(1, -1); // Extract inner waypoints, excluding source and target
+-             connectorShape = new RoundedCornerOrthogonalConnectorShape(points);
+-         }
+- 
+--        this.diagram.addConnector(new Connector(`connector-${sourceElement.elementId}-${targetElement.elementId}`, connectorShape));
+-+        const connector = new Connector(`connector-${sourceElement.elementId}-${targetElement.elementId}`, connectorShape, sourceElement, targetElement, sourcePoint, targetPoint, waypoints);
+-+        this.diagram.addConnector(connector);
+-+
+-+        if (label) {
+-+            connector.setLabel(label);
+-+        }
+-+
+-+        return this;
+-+    }
+-+
+-+    /**
+-+     * Creates a connector from this element to another element.
+-+     * @param {string} targetElementId - ID of the target element
+-+     * @param {string} [sourcePosition='auto'] - Connection point on this element
+-+     * @param {string} [targetPosition='auto'] - Connection point on the target element
+-+     * @param {string} [label=null] - Optional text label to place on the connector
+-+     * @param {string} [type='sequence'] - Type of connector ('sequence', 'association')
+-+     * @returns {Element} This element for method chaining
+-+     * @throws {Error} If the diagram is not set or target element is not found
+-+     */
+-+    connectTo(targetElementId, sourcePosition = 'auto', targetPosition = 'auto', label = null, type = 'sequence') {
+-+        if (!this.diagram) {
+-+            throw new Error("Diagram is not set for this element.");
+-+        }
+-+
+-+        const sourceElement = this;
+-+        const targetElement = this.diagram.getElementById(targetElementId);
+-+
+-+        if (!targetElement) {
+-+            throw new Error(`Element with ID ${targetElementId} not found.`);
+-+        }
+-+
+-+        if (sourcePosition === 'auto' || targetPosition === 'auto') {
+-+            const ports = Element.determineAutoPorts(sourceElement, targetElement);
+-+            if (sourcePosition === 'auto') sourcePosition = ports.sourcePort;
+-+            if (targetPosition === 'auto') targetPosition = ports.targetPort;
+-+        }
+-+
+-+        const sourcePoint = sourceElement.getPointPosition(sourcePosition);
+-+        const targetPoint = targetElement.getPointPosition(targetPosition);
+-+
+-+        let connectorShape;
+-+        let waypoints = [];
+-+
+-+        if (type === 'association') {
+-+            // Straight line between points
+-+            waypoints = [];
+-+            connectorShape = new StraightDottedConnectorShape([sourcePoint, targetPoint]);
+-+        } else {
+-+            // Default orthogonal
+-+            const points = Connector.determinePoints(sourcePoint, targetPoint, sourcePosition, targetPosition);
+-+            waypoints = points.slice(1, -1); // Extract inner waypoints, excluding source and target
+-+            connectorShape = new RoundedCornerOrthogonalConnectorShape(points);
+-+        }
+-+
+-+        const connector = new Connector(`connector-${sourceElement.elementId}-${targetElement.elementId}`, connectorShape, sourceElement, targetElement, sourcePoint, targetPoint, waypoints);
+-+        this.diagram.addConnector(connector);
+-+
+-+        if (label) {
+-+            connector.setLabel(label);
+-+        }
+- 
+-         return this;
+-     }
+diff --git a/lib/notations/bpmn/BpmnToFluentConverter.js b/lib/notations/bpmn/BpmnToFluentConverter.js
+index a19f7eb..156c42a 100644
+--- a/lib/notations/bpmn/BpmnToFluentConverter.js
++++ b/lib/notations/bpmn/BpmnToFluentConverter.js
+@@ -176,16 +176,33 @@ export class BpmnToFluentConverter {
+                     let positionMethod = 'positionDownOf';
+                     let placementAnchorId = anchorEl.id;
  
--    static determinePoints(sourcePoint, targetPoint, sourcePosition, targetPosition) { //TODO: rozbudować o sourcePosition i targetPosition (np. trzyelementowe konektory)
-+    /**
-+     * Natively assigns a text label to the connector by automatically calculating the optimal midpoint.
-+     * @param {string} text - The label text to display
-+     * @param {number} [offsetY=20] - Vertical offset from the longest line segment
-+     */
-+    setLabel(text, offsetY = 20) {
-+        if (!this.diagram) {
-+            console.warn("Connector.setLabel called before diagram was set. The label will be added when setDiagram is called.");
-+        }
+-                    const anchorOutgoing = outgoingFlows.get(anchorEl.id) || [];
+-                    if (anchorOutgoing.length === 2) {
+-                        // Find which outgoing target is on the primary path (the main flow)
+-                        const mainSuccessorId = anchorOutgoing.find(t => primaryPathSet.has(t));
+-                        if (mainSuccessorId && mainSuccessorId !== elId) {
+-                            // Place the branch element below the main-path successor
+-                            positionMethod = 'positionDownOf';
+-                            placementAnchorId = mainSuccessorId;
++                    const isElementEndEvent = element.type === 'bpmn:endEvent' || element.type === 'bpmn:terminateEndEvent';
++                    const isAnchorGateway = anchorEl.type.toLowerCase().includes('gateway');
 +
-+        // Calculate the longest segment of the connector to place the label
-+        let longestSegment = { p1: this.points[0], p2: this.points[1], length: 0 };
-+        for (let i = 1; i < this.points.length; i++) {
-+            const p1 = this.points[i - 1];
-+            const p2 = this.points[i];
-+            const dist = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
-+            if (dist > longestSegment.length) {
-+                longestSegment = { p1, p2, length: dist };
-+            }
-+        }
-+
-+        const midX = (longestSegment.p1.x + longestSegment.p2.x) / 2;
-+        const midY = (longestSegment.p1.y + longestSegment.p2.y) / 2;
-+
-+        const anchorGeo = new CircleShape(1, 1);
-+        this.labelElement = new Element(`${this.elementId}-label`, anchorGeo);
-+        this.labelElement.semanticType = 'flow';
-+        this.labelElement.themable = true;
-+
-+        if (this.diagram) {
-+            this.diagram.addElement(this.labelElement);
-+        }
-+
-+        const isVertical = Math.abs(longestSegment.p1.x - longestSegment.p2.x) < 0.01;
-+
-+        let wrapWidth;
-+        let finalOffsetX = 0;
-+        let finalOffsetY = 0;
-+
-+        if (isVertical) {
-+            // Text flows horizontally, so we don't constrain width based on the vertical segment length.
-+            // Give it a safe static width to prevent overflowing adjacent objects
-+            wrapWidth = 100;
-+            // Shift the text horizontally to the right so it doesn't straddle the vertical line
-+            finalOffsetX = 15;
-+            // Center the text vertically relative to the midpoint
-+            finalOffsetY = 5;
-+        } else {
-+            // For horizontal segments, constrain text to the segment length so it doesn't overhang
-+            wrapWidth = Math.max(60, Math.min(longestSegment.length * 0.9, 150));
-+            // Shift the text vertically so it rests above the line
-+            finalOffsetY = offsetY; // Default is +20 
-+        }
-+
-+        this.labelElement.positionAt({ x: midX + finalOffsetX, y: midY + finalOffsetY, z: 2 });
-+        this.labelElement.visible = false; // Hide the anchor mesh itself
-+
-+        // Attach text to the invisible anchor
-+        this.labelElement.addWrappedText(text, new THREE.Vector3(0, 0, 3), 7, 'center', wrapWidth, 0, 'top');
-+
-+        return this;
-+    }
-+
-+    static determinePoints(sourcePoint, targetPoint, sourcePosition, targetPosition) {
-         let waypoints = [];
++                    if (isElementEndEvent && isAnchorGateway) {
++                        // End events sprouting from a gateway should always be placed above it
++                        positionMethod = 'positionUpOf';
++                        placementAnchorId = anchorEl.id;
++                    } else {
++                        const anchorOutgoing = outgoingFlows.get(anchorEl.id) || [];
++                        if (anchorOutgoing.length === 2) {
++                            // Find which outgoing target is on the primary path (the main flow)
++                            const mainSuccessorId = anchorOutgoing.find(t => primaryPathSet.has(t));
++                            if (mainSuccessorId && mainSuccessorId !== elId) {
++                                // Place the branch element below the main-path successor
++                                positionMethod = 'positionDownOf';
++                                placementAnchorId = mainSuccessorId;
++                            } else {
++                                // Fall back to Y-coordinate heuristic vs the anchor element
++                                const Y_TOLERANCE = 25;
++                                if (element.y !== null && anchorEl.y !== null) {
++                                    const dy = element.y - anchorEl.y;
++                                    if (Math.abs(dy) <= Y_TOLERANCE) positionMethod = 'positionRightOf';
++                                    else if (dy < 0) positionMethod = 'positionUpOf';
++                                }
++                            }
+                         } else {
+-                            // Fall back to Y-coordinate heuristic vs the anchor element
++                            // Standard Y-coordinate heuristic
+                             const Y_TOLERANCE = 25;
+                             if (element.y !== null && anchorEl.y !== null) {
+                                 const dy = element.y - anchorEl.y;
+@@ -193,14 +210,6 @@ export class BpmnToFluentConverter {
+                                 else if (dy < 0) positionMethod = 'positionUpOf';
+                             }
+                         }
+-                    } else {
+-                        // Standard Y-coordinate heuristic
+-                        const Y_TOLERANCE = 25;
+-                        if (element.y !== null && anchorEl.y !== null) {
+-                            const dy = element.y - anchorEl.y;
+-                            if (Math.abs(dy) <= Y_TOLERANCE) positionMethod = 'positionRightOf';
+-                            else if (dy < 0) positionMethod = 'positionUpOf';
+-                        }
+                     }
  
--        if (sourcePoint.x !== targetPoint.x && sourcePoint.y !== targetPoint.y) {
--            // if source position starts with W or E then use the y coordinate of the source point
--            // and the x coordinate of the target point
--            if (sourcePosition.startsWith('W') || sourcePosition.startsWith('E')) {
--                waypoints.push({ x: targetPoint.x, y: sourcePoint.y });
-+        // Helper to get raw direction from position string (e.g. 'E', 'top-left' -> 'N')
-+        const getDir = (pos) => {
-+            if (!pos) return null;
-+            if (pos.startsWith('E')) return 'E';
-+            if (pos.startsWith('W')) return 'W';
-+            if (pos.startsWith('N') || pos.startsWith('top')) return 'N';
-+            if (pos.startsWith('S') || pos.startsWith('bottom')) return 'S';
-+            return null;
-+        };
-+
-+        const srcDir = getDir(sourcePosition);
-+        const tgtDir = getDir(targetPosition);
-+
-+        // Define a safe fallback distance for C-curves (increased for breathing room around large tasks)
-+        const safeMargin = 50;
-+
-+        // If either direction is missing, fallback to simple L-curve
-+        if (!srcDir || !tgtDir) {
-+            if (sourcePoint.x !== targetPoint.x && sourcePoint.y !== targetPoint.y) {
-+                if (srcDir === 'W' || srcDir === 'E') waypoints.push({ x: targetPoint.x, y: sourcePoint.y });
-+                else if (srcDir === 'N' || srcDir === 'S') waypoints.push({ x: sourcePoint.x, y: targetPoint.y });
-+                else waypoints.push({ x: targetPoint.x, y: sourcePoint.y }); // Default fallback
+                     let line = `const ${varName} = diagram`;
+@@ -213,208 +222,207 @@ export class BpmnToFluentConverter {
+                     line += `\n    .${positionMethod}('${placementAnchorId}');`;
+                     generatedLines.push(line);
+                 }
+-            }
+ 
+-            if (!processedInThisLoop) {
+-                // We have disconnected elements or loops that don't trace back to start.
+-                generatedLines.push(`// Warning: Could not find anchor path for ${unprocessed.length} isolated elements.`);
+-                break;
+-            }
+-            // Update unprocessed list
+-            unprocessed = Array.from(this.elements.keys()).filter(id => !processedElementIds.has(id));
+-        }
+-
+-
+-        // --- Step 3: Global Connectors ---
+-        // • Source has 2+ outgoing flows: compute the cardinal exit port (N/E/S/W)
+-        //   from the gateway toward each target using BPMN coordinates; target uses 'auto'.
+-        // • Single-output elements: fully automatic ('auto', 'auto').
+-        generatedLines.push("\n// --- Step 3: Global Connectors ---");
+-        for (const seq of this.sequences) {
+-            const src = this.elements.get(seq.sourceRef);
+-            const tgt = this.elements.get(seq.targetRef);
+-            const label = this._cleanText(seq.name);
+-            if (src && tgt && processedElementIds.has(src.id) && processedElementIds.has(tgt.id)) {
+-                const srcOutgoing = outgoingFlows.get(src.id) || [];
+-                const srcPort = srcOutgoing.length >= 2 ? this._sourcePort(src, tgt, srcOutgoing, primaryPathSet) : 'auto';
+-
+-                let line = `${src.codeVarName}.connectTo('${tgt.id}', '${srcPort}', 'auto'`;
+-                if (label) {
+-                    line += `, '${label}'`;
++                if (!processedInThisLoop) {
++                    // We have disconnected elements or loops that don't trace back to start.
++                    generatedLines.push(`// Warning: Could not find anchor path for ${unprocessed.length} isolated elements.`);
++                    break;
+                 }
+-                line += `);`;
+-                generatedLines.push(line);
++                // Update unprocessed list
++                unprocessed = Array.from(this.elements.keys()).filter(id => !processedElementIds.has(id));
              }
--            // if source position starts with N or S then use the x coordinate of the source point
--            // and the y coordinate of the target point
--            if (sourcePosition.startsWith('N') || sourcePosition.startsWith('S')) {
--                waypoints.push({ x: sourcePoint.x, y: targetPoint.y });
-+            return [sourcePoint, ...waypoints, targetPoint];
-+        }
+-        }
+ 
+ 
+-        return generatedLines.join('\n');
+-    }
+-
+-    _parseXml(xmlString) {
+-        this.elements.clear();
+-        this.sequences = [];
+-        this.startEventId = null;
+-        this.endEventIds = [];
+-
+-        const parser = new DOMParser();
+-        const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+-
+-        // Walk ALL nodes in the document to extract data regardless of namespace prefixes.
+-        // This handles bpmn:, bpmn2:, semantic:, or any other prefix transparently.
+-        const allNodes = xmlDoc.getElementsByTagName('*');
+-
+-        // First pass: build the shapeBounds map from BPMNShape nodes
+-        const shapeBounds = new Map();
+-        for (let i = 0; i < allNodes.length; i++) {
+-            const node = allNodes[i];
+-            const localName = node.localName || node.tagName.split(':').pop();
+-            if (localName === 'BPMNShape') {
+-                const bpmnElementRef = node.getAttribute('bpmnElement');
+-                // Find "Bounds" child node
+-                const children = node.childNodes;
+-                for (let j = 0; j < children.length; j++) {
+-                    const child = children[j];
+-                    const childLocalName = child.localName || (child.tagName ? child.tagName.split(':').pop() : '');
+-                    if (childLocalName === 'Bounds') {
+-                        if (bpmnElementRef) {
+-                            shapeBounds.set(bpmnElementRef, {
+-                                x: parseFloat(child.getAttribute('x')),
+-                                y: parseFloat(child.getAttribute('y')),
+-                                width: parseFloat(child.getAttribute('width')),
+-                                height: parseFloat(child.getAttribute('height'))
+-                            });
+-                        }
+-                        break;
++            // --- Step 3: Global Connectors ---
++            // • Source has 2+ outgoing flows: compute the cardinal exit port (N/E/S/W)
++            //   from the gateway toward each target using BPMN coordinates; target uses 'auto'.
++            // • Single-output elements: fully automatic ('auto', 'auto').
++            generatedLines.push("\n// --- Step 3: Global Connectors ---");
++            for (const seq of this.sequences) {
++                const src = this.elements.get(seq.sourceRef);
++                const tgt = this.elements.get(seq.targetRef);
++                const label = this._cleanText(seq.name);
++                if (src && tgt && processedElementIds.has(src.id) && processedElementIds.has(tgt.id)) {
++                    const srcOutgoing = outgoingFlows.get(src.id) || [];
++                    const srcPort = srcOutgoing.length >= 2 ? this._sourcePort(src, tgt, srcOutgoing, primaryPathSet) : 'auto';
 +
-+        const isHorizontal = (dir) => dir === 'E' || dir === 'W';
-+        const isVertical = (dir) => dir === 'N' || dir === 'S';
++                    let line = `${src.codeVarName}.connectTo('${tgt.id}', '${srcPort}', 'auto'`;
++                    if (label) {
++                        line += `, '${label}'`;
+                     }
++                    line += `);`;
++                    generatedLines.push(line);
+                 }
+             }
 +
-+        if (isHorizontal(srcDir) && isHorizontal(tgtDir)) {
-+            if (srcDir !== tgtDir) {
-+                // Opposite Faces (East to West or West to East) -> S-Curve (2 elbows)
-+                const isNaturallyOrdered = (srcDir === 'E' && sourcePoint.x < targetPoint.x) || (srcDir === 'W' && sourcePoint.x > targetPoint.x);
-+                if (isNaturallyOrdered) {
-+                    if (Math.abs(sourcePoint.y - targetPoint.y) > 0.1) {
-+                        const midX = (sourcePoint.x + targetPoint.x) / 2;
-+                        waypoints.push({ x: midX, y: sourcePoint.y });
-+                        waypoints.push({ x: midX, y: targetPoint.y });
++
++            return generatedLines.join('\n');
+         }
+ 
+-        // Second pass: extract process elements and sequence flows
+-        const ELEMENT_TYPES = ['startEvent', 'task', 'userTask', 'serviceTask', 'manualTask',
+-            'scriptTask', 'businessRuleTask', 'sendTask', 'receiveTask',
+-            'exclusiveGateway', 'inclusiveGateway', 'parallelGateway', 'eventBasedGateway', 'complexGateway',
+-            'endEvent'];
+-
+-        for (let i = 0; i < allNodes.length; i++) {
+-            const node = allNodes[i];
+-            const localName = node.localName || node.tagName.split(':').pop();
+-
+-            if (ELEMENT_TYPES.includes(localName)) {
+-                const id = node.getAttribute('id');
+-                if (!id) continue;
+-
+-                // Track whether the BPMN source had a real, non-empty name
+-                const rawName = node.getAttribute('name');
+-                const hasName = !!(rawName && rawName.trim().length > 0);
+-                const name = hasName ? rawName.trim() : id; // fallback to id for internal use only
+-                const bounds = shapeBounds.get(id);
+-
+-                // Determine the concrete type. For endEvents, check whether a
+-                // terminateEventDefinition child exists and change the type accordingly.
+-                let type = `bpmn:${localName}`;
+-                let isTerminate = false;
+-                if (localName === 'endEvent') {
++        _parseXml(xmlString) {
++            this.elements.clear();
++            this.sequences = [];
++            this.startEventId = null;
++            this.endEventIds = [];
++
++            const parser = new DOMParser();
++            const xmlDoc = parser.parseFromString(xmlString, "text/xml");
++
++            // Walk ALL nodes in the document to extract data regardless of namespace prefixes.
++            // This handles bpmn:, bpmn2:, semantic:, or any other prefix transparently.
++            const allNodes = xmlDoc.getElementsByTagName('*');
++
++            // First pass: build the shapeBounds map from BPMNShape nodes
++            const shapeBounds = new Map();
++            for (let i = 0; i < allNodes.length; i++) {
++                const node = allNodes[i];
++                const localName = node.localName || node.tagName.split(':').pop();
++                if (localName === 'BPMNShape') {
++                    const bpmnElementRef = node.getAttribute('bpmnElement');
++                    // Find "Bounds" child node
+                     const children = node.childNodes;
+                     for (let j = 0; j < children.length; j++) {
+-                        const childLocal = children[j].localName || (children[j].tagName ? children[j].tagName.split(':').pop() : '');
+-                        if (childLocal === 'terminateEventDefinition') { isTerminate = true; break; }
++                        const child = children[j];
++                        const childLocalName = child.localName || (child.tagName ? child.tagName.split(':').pop() : '');
++                        if (childLocalName === 'Bounds') {
++                            if (bpmnElementRef) {
++                                shapeBounds.set(bpmnElementRef, {
++                                    x: parseFloat(child.getAttribute('x')),
++                                    y: parseFloat(child.getAttribute('y')),
++                                    width: parseFloat(child.getAttribute('width')),
++                                    height: parseFloat(child.getAttribute('height'))
++                                });
++                            }
++                            break;
++                        }
+                     }
+-                    if (isTerminate) type = 'bpmn:terminateEndEvent';
+                 }
++            }
+ 
+-                this.elements.set(id, {
+-                    id,
+-                    name,
+-                    hasName,   // true only if the BPMN source had a non-empty name=""
+-                    type,
+-                    x: bounds ? bounds.x : null,
+-                    y: bounds ? bounds.y : null
+-                });
+-
+-                if (localName === 'startEvent' && !this.startEventId) this.startEventId = id;
+-                if (localName === 'endEvent') {
+-                    if (isTerminate) {
+-                        this.terminateEventIds.push(id);
+-                    } else {
+-                        this.endEventIds.push(id);
++            // Second pass: extract process elements and sequence flows
++            const ELEMENT_TYPES = ['startEvent', 'task', 'userTask', 'serviceTask', 'manualTask',
++                'scriptTask', 'businessRuleTask', 'sendTask', 'receiveTask',
++                'exclusiveGateway', 'inclusiveGateway', 'parallelGateway', 'eventBasedGateway', 'complexGateway',
++                'endEvent'];
++
++            for (let i = 0; i < allNodes.length; i++) {
++                const node = allNodes[i];
++                const localName = node.localName || node.tagName.split(':').pop();
++
++                if (ELEMENT_TYPES.includes(localName)) {
++                    const id = node.getAttribute('id');
++                    if (!id) continue;
++
++                    // Track whether the BPMN source had a real, non-empty name
++                    const rawName = node.getAttribute('name');
++                    const hasName = !!(rawName && rawName.trim().length > 0);
++                    const name = hasName ? rawName.trim() : id; // fallback to id for internal use only
++                    const bounds = shapeBounds.get(id);
++
++                    // Determine the concrete type. For endEvents, check whether a
++                    // terminateEventDefinition child exists and change the type accordingly.
++                    let type = `bpmn:${localName}`;
++                    let isTerminate = false;
++                    if (localName === 'endEvent') {
++                        const children = node.childNodes;
++                        for (let j = 0; j < children.length; j++) {
++                            const childLocal = children[j].localName || (children[j].tagName ? children[j].tagName.split(':').pop() : '');
++                            if (childLocal === 'terminateEventDefinition') { isTerminate = true; break; }
++                        }
++                        if (isTerminate) type = 'bpmn:terminateEndEvent';
+                     }
+-                }
+ 
+-            } else if (localName === 'sequenceFlow') {
+-                const sourceRef = node.getAttribute('sourceRef');
+-                const targetRef = node.getAttribute('targetRef');
+-                if (sourceRef && targetRef) {
+-                    this.sequences.push({
+-                        id: node.getAttribute('id'),
+-                        name: node.getAttribute('name') || '',
+-                        sourceRef,
+-                        targetRef
++                    this.elements.set(id, {
++                        id,
++                        name,
++                        hasName,   // true only if the BPMN source had a non-empty name=""
++                        type,
++                        x: bounds ? bounds.x : null,
++                        y: bounds ? bounds.y : null
+                     });
++
++                    if (localName === 'startEvent' && !this.startEventId) this.startEventId = id;
++                    if (localName === 'endEvent') {
++                        if (isTerminate) {
++                            this.terminateEventIds.push(id);
++                        } else {
++                            this.endEventIds.push(id);
++                        }
 +                    }
-+                } else {
-+                    // C-Curve via Y-axis avoidance
-+                    const avoidY = sourcePoint.y < targetPoint.y ? sourcePoint.y - safeMargin : sourcePoint.y + safeMargin;
-+                    const margin1 = sourcePoint.x + (srcDir === 'E' ? safeMargin : -safeMargin);
-+                    const margin2 = targetPoint.x + (tgtDir === 'E' ? safeMargin : -safeMargin);
-+                    waypoints.push({ x: margin1, y: sourcePoint.y });
-+                    waypoints.push({ x: margin1, y: avoidY });
-+                    waypoints.push({ x: margin2, y: avoidY });
-+                    waypoints.push({ x: margin2, y: targetPoint.y });
-+                }
-+            } else {
-+                // Same Faces (East to East or West to West) -> C-Curve (2 elbows)
-+                // When connecting identical faces, we must route the connector outwards.
-+                // To avoid cutting through the elements if they are staggered, we must project to the *furthest* edge.
-+                let marginX;
-+                if (srcDir === 'E') {
-+                    // Go further East than the rightmost element
-+                    marginX = Math.max(sourcePoint.x, targetPoint.x) + safeMargin;
-+                } else {
-+                    // Go further West than the leftmost element
-+                    marginX = Math.min(sourcePoint.x, targetPoint.x) - safeMargin;
-+                }
-+                waypoints.push({ x: marginX, y: sourcePoint.y });
-+                waypoints.push({ x: marginX, y: targetPoint.y });
-+            }
-+        }
-+        else if (isVertical(srcDir) && isVertical(tgtDir)) {
-+            if (srcDir !== tgtDir) {
-+                // Opposite Faces (North to South or South to North) -> S-Curve (2 elbows)
-+                // In THREE.js ++Y is North (Up), --Y is South (Down)
-+                const isNaturallyOrdered = (srcDir === 'N' && sourcePoint.y < targetPoint.y) || (srcDir === 'S' && sourcePoint.y > targetPoint.y);
-+                if (isNaturallyOrdered) {
-+                    if (Math.abs(sourcePoint.x - targetPoint.x) > 0.1) {
-+                        const midY = (sourcePoint.y + targetPoint.y) / 2;
-+                        waypoints.push({ x: sourcePoint.x, y: midY });
-+                        waypoints.push({ x: targetPoint.x, y: midY });
++
++                } else if (localName === 'sequenceFlow') {
++                    const sourceRef = node.getAttribute('sourceRef');
++                    const targetRef = node.getAttribute('targetRef');
++                    if (sourceRef && targetRef) {
++                        this.sequences.push({
++                            id: node.getAttribute('id'),
++                            name: node.getAttribute('name') || '',
++                            sourceRef,
++                            targetRef
++                        });
 +                    }
-+                } else {
-+                    // C-Curve via X-axis avoidance
-+                    const avoidX = sourcePoint.x < targetPoint.x ? sourcePoint.x - safeMargin : sourcePoint.x + safeMargin;
-+                    const margin1 = sourcePoint.y + (srcDir === 'N' ? safeMargin : -safeMargin);
-+                    const margin2 = targetPoint.y + (tgtDir === 'N' ? safeMargin : -safeMargin);
-+                    waypoints.push({ x: sourcePoint.x, y: margin1 });
-+                    waypoints.push({ x: avoidX, y: margin1 });
-+                    waypoints.push({ x: avoidX, y: margin2 });
-+                    waypoints.push({ x: targetPoint.x, y: margin2 });
-+                }
-+            } else {
-+                // Same Faces (North to North or South to South) -> C-Curve (2 elbows)
-+                let marginY;
-+                if (srcDir === 'N') {
-+                    // Go further North (Up/Higher +Y) than the highest element
-+                    marginY = Math.max(sourcePoint.y, targetPoint.y) + safeMargin;
-+                } else {
-+                    // Go further South (Down/Lower -Y) than the lowest element
-+                    marginY = Math.min(sourcePoint.y, targetPoint.y) - safeMargin;
-+                }
-+                waypoints.push({ x: sourcePoint.x, y: marginY });
-+                waypoints.push({ x: targetPoint.x, y: marginY });
-+            }
-+        }
-+        else {
-+            // Orthogonal Faces (e.g., East to North, West to South, etc.)
-+            const dx = targetPoint.x - sourcePoint.x;
-+            const dy = targetPoint.y - sourcePoint.y;
-+
-+            // Check if we can use a simple 1-elbow L-curve.
-+            // A simple L-curve is valid ONLY if it arrives at the target face from the correct direction.
-+            // Directional rules for sequence flows:
-+            // - E: Enter from right (moving left) <- Impossible for L-curve starting E or W
-+            // - W: Enter from left (moving right)  <- Impossible for L-curve starting E or W
-+            // - N: Enter from top (moving down)    <- Impossible for L-curve starting N or S
-+            // - S: Enter from bottom (moving up)   <- Impossible for L-curve starting N or S
-+
-+            // This means an L-curve is ONLY possible between a Horizontal start and a Vertical end (or vice versa)
-+            // AND the target must be positioned such that the natural corner doesn't go "through" the target box.
-+
-+            let canUseSimpleL = false;
-+            // If starting Horizontal (E/W), the last segment is Vertical. So it must enter a N or S port.
-+            if (srcDir === 'E' && dx >= 0) {
-+                if (tgtDir === 'S' && dy >= 0) canUseSimpleL = true; // Right then Up into South
-+                if (tgtDir === 'N' && dy <= 0) canUseSimpleL = true; // Right then Down into North
-+            }
-+            if (srcDir === 'W' && dx <= 0) {
-+                if (tgtDir === 'S' && dy >= 0) canUseSimpleL = true; // Left then Up into South
-+                if (tgtDir === 'N' && dy <= 0) canUseSimpleL = true; // Left then Down into North
-+            }
-+            // If starting Vertical (N/S), the last segment is Horizontal. So it must enter an E or W port.
-+            if (srcDir === 'N' && dy >= 0) {
-+                if (tgtDir === 'W' && dx >= 0) canUseSimpleL = true; // Up then Right into West
-+                if (tgtDir === 'E' && dx <= 0) canUseSimpleL = true; // Up then Left into East
-+            }
-+            if (srcDir === 'S' && dy <= 0) {
-+                if (tgtDir === 'W' && dx >= 0) canUseSimpleL = true; // Down then Right into West
-+                if (tgtDir === 'E' && dx <= 0) canUseSimpleL = true; // Down then Left into East
-+            }
-+
-+            if (canUseSimpleL) {
-+                // 1 elbow (L-curve)
-+                if (isHorizontal(srcDir)) waypoints.push({ x: targetPoint.x, y: sourcePoint.y });
-+                else waypoints.push({ x: sourcePoint.x, y: targetPoint.y });
-+            } else {
-+                // Complex orthogonal routing (3 elbows / 4 segments)
-+                // This ensures we loop around and enter the port from the correct exterior side.
-+                if (isHorizontal(srcDir)) {
-+                    // Start Horizontally (E/W), must enter Vertically (N/S)
-+                    const marginX = sourcePoint.x + (srcDir === 'E' ? safeMargin : -safeMargin);
-+                    const marginY = targetPoint.y + (tgtDir === 'N' ? safeMargin : -safeMargin);
-+                    waypoints.push({ x: marginX, y: sourcePoint.y });
-+                    waypoints.push({ x: marginX, y: marginY });
-+                    waypoints.push({ x: targetPoint.x, y: marginY });
-+                } else {
-+                    // Start Vertically (N/S), must enter Horizontally (E/W)
-+                    const marginY = sourcePoint.y + (srcDir === 'N' ? safeMargin : -safeMargin);
-+                    const marginX = targetPoint.x + (tgtDir === 'E' ? safeMargin : -safeMargin);
-+                    waypoints.push({ x: sourcePoint.x, y: marginY });
-+                    waypoints.push({ x: marginX, y: marginY });
-+                    waypoints.push({ x: marginX, y: targetPoint.y });
-+                }
+                 }
              }
          }
-+        // Ensure points are strictly orthogonal. If not, fallback.
-+        const rawPoints = [sourcePoint, ...waypoints, targetPoint];
-+        if (rawPoints.length <= 2) return rawPoints;
-+
-+        // -----------------------------------------
-+        // CLEANUP: Filter collinear points
-+        // RoundedCornerOrthogonalConnectorShape builds a rounded corner at EVERY interior waypoint.
-+        // Therefore, any collinear "pass-through" points will cause rendering bugs (wobbles, broken geometry).
-+        // We must ensure the final array only contains points where a 90-degree turn actually happens.
-+        // -----------------------------------------
-+        const filteredPoints = [rawPoints[0]]; // Always keep source
+-    }
  
--        return [sourcePoint, ...waypoints, targetPoint];
--    }    
-+        for (let i = 1; i < rawPoints.length - 1; i++) {
-+            const prev = rawPoints[i - 1];
-+            const curr = rawPoints[i];
-+            const next = rawPoints[i + 1];
-+
-+            const collinearH = (Math.abs(prev.y - curr.y) < 0.1 && Math.abs(curr.y - next.y) < 0.1);
-+            const collinearV = (Math.abs(prev.x - curr.x) < 0.1 && Math.abs(curr.x - next.x) < 0.1);
-+
-+            // If the point is NOT collinear with its neighbours, it's a true corner. Keep it.
-+            if (!collinearH && !collinearV) {
-+                // Also skip duplicate consecutive points just in case
-+                if (Math.abs(curr.x - prev.x) > 0.1 || Math.abs(curr.y - prev.y) > 0.1) {
-+                    filteredPoints.push(curr);
-+                }
+-    _buildGraph() {
+-        this.adjacencyList.clear();
+-        for (const [id, _] of this.elements) {
+-            this.adjacencyList.set(id, []);
+-        }
++        _buildGraph() {
++            this.adjacencyList.clear();
++            for (const [id, _] of this.elements) {
++                this.adjacencyList.set(id, []);
 +            }
-+        }
-+
-+        // Ensure the last target point isn't accidentally removed
-+        const lastFiltered = filteredPoints[filteredPoints.length - 1];
-+        if (Math.abs(lastFiltered.x - targetPoint.x) > 0.1 || Math.abs(lastFiltered.y - targetPoint.y) > 0.1) {
-+            filteredPoints.push(targetPoint);
-+        }
-+
-+        return filteredPoints;
-+    }
  
- }
- 
-diff --git a/lib/elements/Element.js b/lib/elements/Element.js
-index 07ed124..4e05bfa 100644
---- a/lib/elements/Element.js
-+++ b/lib/elements/Element.js
-@@ -1394,16 +1394,52 @@ class Element extends THREE.Mesh {
-     // Add connecting methods
-     // ================================================================
- 
-+    /**
-+     * Helper to automatically determine the best connection ports based on relative positions.
-+     * @param {Element} sourceElement 
-+     * @param {Element} targetElement 
-+     * @returns {Object} { sourcePort: 'N'|'S'|'E'|'W', targetPort: 'N'|'S'|'E'|'W' }
-+     */
-+    static determineAutoPorts(sourceElement, targetElement) {
-+        const dx = targetElement.position.x - sourceElement.position.x;
-+        const dy = targetElement.position.y - sourceElement.position.y;
-+
-+        let angle = Math.atan2(dy, dx);
-+
-+        // Normalize angle to [0, 2PI)
-+        if (angle < 0) {
-+            angle += 2 * Math.PI;
-+        }
-+
-+        const PI_4 = Math.PI / 4;
-+
-+        // THREE.js coordinate system (+Y is North/Up)
-+        if (angle >= 7 * PI_4 || angle < PI_4) {
-+            // Target is to the East (Right)
-+            return { sourcePort: 'E', targetPort: 'W' };
-+        } else if (angle >= PI_4 && angle < 3 * PI_4) {
-+            // Target is to the North (Up)
-+            return { sourcePort: 'N', targetPort: 'S' };
-+        } else if (angle >= 3 * PI_4 && angle < 5 * PI_4) {
-+            // Target is to the West (Left)
-+            return { sourcePort: 'W', targetPort: 'E' };
-+        } else {
-+            // Target is to the South (Down)
-+            return { sourcePort: 'S', targetPort: 'N' };
-+        }
-+    }
-+
-     /**
-      * Creates a connector from another element to this element.
-      * @param {string} sourceElementId - ID of the source element
--     * @param {string} sourcePosition - Connection point on the source element
--     * @param {string} targetPosition - Connection point on this element
-+     * @param {string} [sourcePosition='auto'] - Connection point on the source element ('N', 'S', 'E', 'W', or 'auto')
-+     * @param {string} [targetPosition='auto'] - Connection point on this element ('N', 'S', 'E', 'W', or 'auto')
-+     * @param {string} [label=null] - Optional text label to place on the connector
-      * @param {string} [type='sequence'] - Type of connector ('sequence', 'association')
-      * @returns {Element} This element for method chaining
-      * @throws {Error} If the diagram is not set or source element is not found
-      */
--    connectFrom(sourceElementId, sourcePosition, targetPosition, type = 'sequence') {
-+    connectFrom(sourceElementId, sourcePosition = 'auto', targetPosition = 'auto', label = null, type = 'sequence') {
-         if (!this.diagram) {
-             throw new Error("Diagram is not set for this element.");
+-        for (const seq of this.sequences) {
+-            const neighbors = this.adjacencyList.get(seq.sourceRef) || [];
+-            neighbors.push(seq.targetRef);
+-            this.adjacencyList.set(seq.sourceRef, neighbors);
++            for (const seq of this.sequences) {
++                const neighbors = this.adjacencyList.get(seq.sourceRef) || [];
++                neighbors.push(seq.targetRef);
++                this.adjacencyList.set(seq.sourceRef, neighbors);
++            }
          }
-@@ -1415,21 +1451,90 @@ class Element extends THREE.Mesh {
-             throw new Error(`Element with ID ${sourceElementId} not found.`);
-         }
+-    }
  
-+        if (sourcePosition === 'auto' || targetPosition === 'auto') {
-+            const ports = Element.determineAutoPorts(sourceElement, targetElement);
-+            if (sourcePosition === 'auto') sourcePosition = ports.sourcePort;
-+            if (targetPosition === 'auto') targetPosition = ports.targetPort;
-+        }
+-    /**
+-     * Finds the LONGEST path from startEvent to a regular (non-terminate) endEvent using BFS.
+-     * This finds the main happy path rather than shortcut reject branches.
+-     */
+-    _findPrimaryPath() {
+-        if (!this.startEventId) return null;
+-
+-        // Prefer regular end events. Fall back to terminate events if no regular end exists.
+-        const targetEndIds = this.endEventIds.length > 0 ? this.endEventIds : this.terminateEventIds;
+-        if (targetEndIds.length === 0) return null;
+-
+-        // BFS to find ALL paths to any preferred end event, return the longest
+-        const allPaths = [];
+-        let queue = [[this.startEventId]];
+-        let visited = new Set();
+-        visited.add(this.startEventId);
+-
+-        while (queue.length > 0) {
+-            const path = queue.shift();
+-            const currentNode = path[path.length - 1];
+-
+-            if (targetEndIds.includes(currentNode)) {
+-                allPaths.push(path);
+-                continue; // Don't expand from end nodes
+-            }
++        /**
++         * Finds the LONGEST path from startEvent to a regular (non-terminate) endEvent using BFS.
++         * This finds the main happy path rather than shortcut reject branches.
++         */
++        _findPrimaryPath() {
++            if (!this.startEventId) return null;
 +
-         const sourcePoint = sourceElement.getPointPosition(sourcePosition);
-         const targetPoint = targetElement.getPointPosition(targetPosition);
++            // Prefer regular end events. Fall back to terminate events if no regular end exists.
++            const targetEndIds = this.endEventIds.length > 0 ? this.endEventIds : this.terminateEventIds;
++            if (targetEndIds.length === 0) return null;
++
++            // BFS to find ALL paths to any preferred end event, return the longest
++            const allPaths = [];
++            let queue = [[this.startEventId]];
++            let visited = new Set();
++            visited.add(this.startEventId);
++
++            while (queue.length > 0) {
++                const path = queue.shift();
++                const currentNode = path[path.length - 1];
++
++                if (targetEndIds.includes(currentNode)) {
++                    allPaths.push(path);
++                    continue; // Don't expand from end nodes
++                }
  
-         let connectorShape;
-+        let waypoints = [];
+-            // Stop exploring beyond terminate events so they don't inflate branch paths
+-            if (this.terminateEventIds.includes(currentNode)) continue;
++                // Stop exploring beyond terminate events so they don't inflate branch paths
++                if (this.terminateEventIds.includes(currentNode)) continue;
  
-         if (type === 'association') {
-             // Straight line between points
-+            waypoints = [];
-             connectorShape = new StraightDottedConnectorShape([sourcePoint, targetPoint]);
-         } else {
-             // Default orthogonal
-             const points = Connector.determinePoints(sourcePoint, targetPoint, sourcePosition, targetPosition);
-+            waypoints = points.slice(1, -1); // Extract inner waypoints, excluding source and target
-             connectorShape = new RoundedCornerOrthogonalConnectorShape(points);
-         }
+-            const neighbors = this.adjacencyList.get(currentNode) || [];
+-            for (const neighbor of neighbors) {
+-                if (!path.includes(neighbor)) { // use path-local visited to allow branching
+-                    queue.push([...path, neighbor]);
++                const neighbors = this.adjacencyList.get(currentNode) || [];
++                for (const neighbor of neighbors) {
++                    if (!path.includes(neighbor)) { // use path-local visited to allow branching
++                        queue.push([...path, neighbor]);
++                    }
+                 }
+             }
+-        }
  
--        this.diagram.addConnector(new Connector(`connector-${sourceElement.elementId}-${targetElement.elementId}`, connectorShape));
-+        const connector = new Connector(`connector-${sourceElement.elementId}-${targetElement.elementId}`, connectorShape, sourceElement, targetElement, sourcePoint, targetPoint, waypoints);
-+        this.diagram.addConnector(connector);
-+
-+        if (label) {
-+            connector.setLabel(label);
-+        }
-+
-+        return this;
-+    }
-+
-+    /**
-+     * Creates a connector from this element to another element.
-+     * @param {string} targetElementId - ID of the target element
-+     * @param {string} [sourcePosition='auto'] - Connection point on this element
-+     * @param {string} [targetPosition='auto'] - Connection point on the target element
-+     * @param {string} [label=null] - Optional text label to place on the connector
-+     * @param {string} [type='sequence'] - Type of connector ('sequence', 'association')
-+     * @returns {Element} This element for method chaining
-+     * @throws {Error} If the diagram is not set or target element is not found
-+     */
-+    connectTo(targetElementId, sourcePosition = 'auto', targetPosition = 'auto', label = null, type = 'sequence') {
-+        if (!this.diagram) {
-+            throw new Error("Diagram is not set for this element.");
-+        }
-+
-+        const sourceElement = this;
-+        const targetElement = this.diagram.getElementById(targetElementId);
-+
-+        if (!targetElement) {
-+            throw new Error(`Element with ID ${targetElementId} not found.`);
-+        }
-+
-+        if (sourcePosition === 'auto' || targetPosition === 'auto') {
-+            const ports = Element.determineAutoPorts(sourceElement, targetElement);
-+            if (sourcePosition === 'auto') sourcePosition = ports.sourcePort;
-+            if (targetPosition === 'auto') targetPosition = ports.targetPort;
-+        }
-+
-+        const sourcePoint = sourceElement.getPointPosition(sourcePosition);
-+        const targetPoint = targetElement.getPointPosition(targetPosition);
-+
-+        let connectorShape;
-+        let waypoints = [];
-+
-+        if (type === 'association') {
-+            // Straight line between points
-+            waypoints = [];
-+            connectorShape = new StraightDottedConnectorShape([sourcePoint, targetPoint]);
-+        } else {
-+            // Default orthogonal
-+            const points = Connector.determinePoints(sourcePoint, targetPoint, sourcePosition, targetPosition);
-+            waypoints = points.slice(1, -1); // Extract inner waypoints, excluding source and target
-+            connectorShape = new RoundedCornerOrthogonalConnectorShape(points);
-+        }
-+
-+        const connector = new Connector(`connector-${sourceElement.elementId}-${targetElement.elementId}`, connectorShape, sourceElement, targetElement, sourcePoint, targetPoint, waypoints);
-+        this.diagram.addConnector(connector);
-+
-+        if (label) {
-+            connector.setLabel(label);
+-        if (allPaths.length === 0) return null;
++            if (allPaths.length === 0) return null;
+ 
+-        // Return the longest path (the main happy path)
+-        return allPaths.reduce((longest, current) => current.length > longest.length ? current : longest, []);
+-    }
++            // Return the longest path (the main happy path)
++            return allPaths.reduce((longest, current) => current.length > longest.length ? current : longest, []);
 +        }
  
-         return this;
+-    _cleanText(text) {
+-        if (!text) return '';
+-        return text.replace(/\n/g, '\\n').replace(/'/g, "\\'");
++        _cleanText(text) {
++            if (!text) return '';
++            return text.replace(/\n/g, '\\n').replace(/'/g, "\\'");
++        }
      }
+-}
