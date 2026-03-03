@@ -1,4 +1,4 @@
-import { BpmnDiagram } from '../../lib/notations/BpmnDiagram.js';
+import { BpmnDiagram } from '../../lib/notations/bpmn/BpmnDiagram.js';
 
 export default function initDemo(container, options = {}) {
     const diagram = new BpmnDiagram(container, options);
@@ -655,3 +655,4 @@ export default function initDemo(container, options = {}) {
 
     return diagram;
 }
+

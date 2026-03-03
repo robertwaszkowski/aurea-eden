@@ -1,6 +1,6 @@
 // Prepare a BPMN diagram
 
-import { BpmnDiagram } from "../../lib/notations/BpmnDiagram.js";
+import { BpmnDiagram } from "../../lib/notations/bpmn/BpmnDiagram.js";
 
 export default function createDiagram(container, options = {}) {
     var diagram = new BpmnDiagram(container, options);
@@ -96,3 +96,4 @@ export default function createDiagram(container, options = {}) {
 
     return diagram;
 }
+

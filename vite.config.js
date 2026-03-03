@@ -57,7 +57,7 @@ export default defineConfig(({ mode }) => {
       plugins: [vue(), cssInjectedByJsPlugin()],
       build: {
         lib: {
-          entry: path.resolve(__dirname, "./lib/notations/BpmnDiagram.js"),
+          entry: path.resolve(__dirname, "./lib/notations/bpmn/BpmnDiagram.js"),
           name: "AureaEDEN",
           fileName: (format) => `bpmn-diagram.${format}.js`,
           formats: ['es', 'umd']

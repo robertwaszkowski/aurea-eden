@@ -1,5 +1,5 @@
 
-import { MyCustomNotationDiagram } from "../../lib/notations/MyCustomNotationDiagram.js";
+import { MyCustomNotationDiagram } from "../../lib/notations/custom/MyCustomNotationDiagram.js";
 
 export default (container, options = {}) => {
     // Create an instance of the custom notation diagram
@@ -23,3 +23,4 @@ export default (container, options = {}) => {
 
     return diagram;
 }
+

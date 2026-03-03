@@ -1,6 +1,6 @@
 // Prepare a BPMN diagram
 
-import { BpmnDiagram } from "../../lib/notations/BpmnDiagram.js";
+import { BpmnDiagram } from "../../lib/notations/bpmn/BpmnDiagram.js";
 // import * as dat from 'dat.gui';
 import * as THREE from 'three';
 

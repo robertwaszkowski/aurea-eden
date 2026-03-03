@@ -8,8 +8,8 @@
  *   BOTTOM — Auto-generated fluent API (via BpmnToFluentConverter.convert)
  */
 
-import { BpmnDiagram } from '../../lib/notations/BpmnDiagram.js';
-import { BpmnToFluentConverter } from '../../lib/converters/BpmnToFluentConverter.js';
+import { BpmnDiagram } from '../../lib/notations/bpmn/BpmnDiagram.js';
+import { BpmnToFluentConverter } from '../../lib/notations/bpmn/BpmnToFluentConverter.js';
 
 // Import the BPMN source file as raw XML text
 import bpmnXml from '../VueWrapperBpmnDemo/simple-process-template.bpmn?raw';
@@ -118,3 +118,4 @@ export default function initDemo(container, options = {}) {
     // Return the fluent diagram as the primary instance for the controls panel
     return fluentDiagram;
 }
+

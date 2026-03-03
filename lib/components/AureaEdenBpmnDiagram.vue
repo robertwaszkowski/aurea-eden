@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { BpmnDiagram } from '../notations/BpmnDiagram.js';
+import { BpmnDiagram } from '../notations/bpmn/BpmnDiagram.js';
 import { StarShape } from '../shapes/solids/StarShape.js';
 import { shallowRef, onMounted, onUnmounted, watch } from 'vue';
 import starUrl from '../../assets/star_gold.gif';
@@ -304,3 +304,4 @@ export default {
   }
 };
 </script>
+
