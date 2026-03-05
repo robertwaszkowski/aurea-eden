@@ -266,12 +266,13 @@ function showBranchModal(branch, elementsMap) {
 // ─────────────────────────────────────────────────────────────────────────────
 // Helper: render/refresh branch analysis badges into the bottom card's header
 // ─────────────────────────────────────────────────────────────────────────────
-function renderBranchPanel(branches, elementsMap, barId) {
-    const bar = document.getElementById(barId);
-    if (!bar) return;
+function renderBranchPanel(branches, elementsMap, barId, options, triggerRender) {
+    const bar = document.createElement('div'); // to avoid undefined, but we will find it by ID
+    const actualBar = document.getElementById(barId);
+    if (!actualBar) return;
 
     // Remove any previously rendered branch badges (keep title and subtitle spans)
-    const oldPanel = bar.querySelector('.branch-panel');
+    const oldPanel = actualBar.querySelector('.branch-panel');
     if (oldPanel) oldPanel.remove();
 
     if (!branches || branches.length === 0) return;
@@ -308,8 +309,10 @@ function renderBranchPanel(branches, elementsMap, barId) {
         const colors = BADGE_COLORS[branch.type] || { bg: '#f3f4f6', border: '#d1d5db', text: '#374151' };
         const firstNode = branch.nodes[0] || '';
 
+        let branchKey = branch.type === 'Primary Path' ? 'PRIMARY' : firstNode;
+
         const badge = document.createElement('span');
-        badge.title = 'Click to inspect elements';
+        badge.title = 'Click checkbox to toggle visibility. Click text to inspect elements.';
         badge.style.cssText = `
             display: inline-flex;
             align-items: center;
@@ -322,34 +325,59 @@ function renderBranchPanel(branches, elementsMap, barId) {
             font-family: monospace;
             color: ${colors.text};
             white-space: nowrap;
-            cursor: pointer;
             transition: filter 0.15s;
         `;
-        badge.onmouseover = () => badge.style.filter = 'brightness(0.9)';
-        badge.onmouseout = () => badge.style.filter = '';
-        badge.addEventListener('click', () => showBranchModal(branch, elementsMap));
+
+        const isHidden = options && options.hiddenBranches && options.hiddenBranches.has(branchKey);
+        if (isHidden) {
+            badge.style.opacity = '0.5';
+            badge.style.background = 'transparent';
+        }
+
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = !isHidden;
+        cb.style.cursor = 'pointer';
+        cb.addEventListener('change', () => {
+            if (options && options.hiddenBranches) {
+                if (cb.checked) options.hiddenBranches.delete(branchKey);
+                else options.hiddenBranches.add(branchKey);
+            }
+            if (triggerRender) triggerRender();
+        });
+        badge.appendChild(cb);
+
+        const textWrapper = document.createElement('span');
+        textWrapper.style.cursor = 'pointer';
+        textWrapper.style.display = 'inline-flex';
+        textWrapper.style.alignItems = 'center';
+        textWrapper.style.gap = '5px';
+        textWrapper.onmouseover = () => badge.style.filter = 'brightness(0.9)';
+        textWrapper.onmouseout = () => badge.style.filter = '';
+        textWrapper.addEventListener('click', () => showBranchModal(branch, elementsMap));
 
         // Type label (bold)
         const typeSpan = document.createElement('b');
         typeSpan.textContent = branch.type;
-        badge.appendChild(typeSpan);
+        textWrapper.appendChild(typeSpan);
 
         // Node summary
         const detail = document.createElement('span');
         detail.style.opacity = '0.75';
         detail.textContent = `(${branch.nodes.length}): ${firstNode}`;
-        badge.appendChild(detail);
+        textWrapper.appendChild(detail);
 
+        badge.appendChild(textWrapper);
         panel.appendChild(badge);
     }
 
-    bar.appendChild(panel);
+    actualBar.appendChild(panel);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Core render: build both panels from a given XML string
 // ─────────────────────────────────────────────────────────────────────────────
-function renderBothPanels(topCanvas, bottomCanvas, xmlString, options) {
+function renderBothPanels(topCanvas, bottomCanvas, xmlString, options, triggerRender) {
     // Clear existing children and dispose any old Three.js context
     [topCanvas, bottomCanvas].forEach(c => {
         while (c.firstChild) c.removeChild(c.firstChild);
@@ -378,7 +406,7 @@ function renderBothPanels(topCanvas, bottomCanvas, xmlString, options) {
     }
 
     // Render branch analysis badges into the bottom card header
-    renderBranchPanel(converter.getBranches(), converter.elements, 'bottom-card-bar');
+    renderBranchPanel(converter.getBranches(), converter.elements, 'bottom-card-bar', options, triggerRender);
 
     fluentDiagram.arrange();
     fluentDiagram.fitScreen();
@@ -486,6 +514,15 @@ export default function initDemo(container, options = {}) {
     toolbar.appendChild(exportBtn);
 
     const phaseControls = { enablePhase1: true, enablePhase2: true, enablePhase3: true };
+    const stateVars = { hiddenBranches: new Set() };
+
+    const triggerRender = (resetState = false) => {
+        if (resetState === true) {
+            stateVars.hiddenBranches.clear();
+        }
+        const idx = parseInt(select.value, 10);
+        currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[idx].xml, { ...options, ...phaseControls, ...stateVars }, triggerRender);
+    };
 
     const createCheckbox = (text, key) => {
         const lbl = document.createElement('label');
@@ -495,8 +532,7 @@ export default function initDemo(container, options = {}) {
         cb.checked = true;
         cb.addEventListener('change', () => {
             phaseControls[key] = cb.checked;
-            const idx = parseInt(select.value, 10);
-            currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[idx].xml, { ...options, ...phaseControls });
+            triggerRender(false);
         });
         lbl.appendChild(cb);
         lbl.appendChild(document.createTextNode(text));
@@ -524,13 +560,10 @@ export default function initDemo(container, options = {}) {
     const bottomCanvas = createCard(diagramArea, 'Auto-generated Fluent API', 'BpmnToFluentConverter.convert(xml)', 'bottom-card-bar');
 
     // ── Initial render ──────────────────────────────────────────────────────
-    let currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[0].xml, { ...options, ...phaseControls });
+    let currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[0].xml, { ...options, ...phaseControls, ...stateVars }, triggerRender);
 
     // ── On file change, re-render both panels ───────────────────────────────
-    select.addEventListener('change', () => {
-        const idx = parseInt(select.value, 10);
-        currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[idx].xml, { ...options, ...phaseControls });
-    });
+    select.addEventListener('change', () => triggerRender(true));
 
     return currentDiagram;
 }
