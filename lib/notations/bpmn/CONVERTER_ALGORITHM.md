@@ -11,7 +11,7 @@ This document details the step-by-step algorithms, heuristics, and placement rul
 2. **Phase 2: Placement of Branches and Off-Path Elements**
    - Rule 1: Terminating End Events (The Upward Override)
    - Rule 2: Diverging Gateways (Avoiding Under-Gateway placement)
-   - Rule 3: Y_TOLERANCE (Visual Sequence Chaining off the Main Path)
+   - Rule 3: Topology-Based Flow Chaining (Forward vs Backward Flow)
 3. **Phase 3: Global Connectors and Gateway Port Rules**
    - Dealing with Gateway Ambiguity (`_sourcePort`):
      - Return Trips and Backward Paths
@@ -76,15 +76,16 @@ The code detects if `anchorOutgoing.length === 2`:
 2. Rather than dropping the branch below the gateway itself, the algorithm dynamically assigns `.positionDownOf(mainSuccessorId)`. 
 *Result: The parallel lane structurally aligns exactly below the first step of the main path, ensuring matching columns.*
 
-### Rule 3: `Y_TOLERANCE` (Visual Sequence Chaining off the Main Path)
+### Rule 3: Topology-Based Flow Chaining (Forward vs Backward Flow)
 When the converter builds the primary baseline in Phase 1, it simply writes `.positionRightOf()` infinitely because it's guaranteed to be a single chained path. 
-But branches (Phase 2) are tricky. If a downward branch contains three sequential tasks, how does the engine know they should chain left-to-right off of *each other* rather than continuously stacking downwards off the anchor?
+But branches (Phase 2) are trickier. If a downward branch contains three sequential tasks, how does the engine know they should chain sequentially?
 
 **How it works:**
-The code calculates standard geometric heuristic using absolute BPMN coordinates: `Math.abs(element.y - anchorEl.y)`.
-If a newly discovered element is graphically drawn within `25` pixels on the Y-axis of the anchor it connects to, the algorithm assumes they belong to the same sequence lane visually. 
-- `|Δy| <= 25` outputs `.positionRightOf(anchor)` (chains them horizontally).
-- `Δy > 25` outputs `.positionDownOf(anchor)` (forces a new lower lane drop).
+The algorithm abandons raw coordinates entirely and uses **Graph Reachability (Topology)**:
+1. When a new branch spawns from an anchor, the engine traces the entire continuous sub-path (`_traceBranch`) until it hits a merge, split, or end.
+2. It then performs a BFS reachability check to see if walking forward from the end of the branch can ever loop back to the *source anchor*. 
+   - **Forward/Parallel Branches:** If it does *not* loop back, the algorithm places the first node below the anchor (Rule 2) and chains all subsequent nodes left-to-right (`.positionRightOf()`), creating a clean, parallel horizontal lane beneath the baseline.
+   - **Backward/Iterative Branches:** If the graph *does* loop back (reachability test returns true), the algorithm places the first node above the anchor (Rule 1 equivalent) and chains all subsequent nodes right-to-left (`.positionLeftOf()`). This generates a clean ceiling route traveling backward.
 
 ---
 
