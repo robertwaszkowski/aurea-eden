@@ -53,39 +53,48 @@ The algorithm establishes this through graph traversal:
 
 Once the primary path is placed, the remaining elements (branches, error handlers, sub-processes) must be topologically spawned relative to the baseline.
 
-The converter loops over all unplaced elements, finding an already-placed element (anchor) it connects from, and evaluates placement using the following heuristic pipeline:
+Phase 2 abandons raw coordinates entirely and operates in a **two-pass architectural model**: 
+1. **Pass A: Branch Detection & Lane Assignment** (Calculates the vertical offsets)
+2. **Pass B: Geometry Generation** (Writes the layout code)
 
-Yes, we absolutely wrote that logic! Here is exactly how those heuristics analyze the coordinates of the XML to write the fluent API syntax:
+### Pass A: Branch Detection & Lane Assignment
 
-### Rule 1: Terminating End Events (The Upward Override)
-In the XML, an end-event terminating a branch right off a gateway might just be drawn slightly above the gateway visually. 
-However, standard rules only push elements rightwards or downwards. Without overriding this, terminating events would drop below the line, muddying parallel logic flows.
+The converter first loops over all unplaced elements, searching for any sequence flow that connects from an already-processed element (the anchor) to an unprocessed element (the branch start).
+When it finds one, it traces the entire continuous sub-path (`_traceBranch`) until it hits a merge, split, or end.
 
-**How it works:**
-The code checks `isElementEndEvent && isAnchorGateway`. 
-If an `<endEvent>` is explicitly attached direct to a `<gateway>`, it overrides all normal X/Y reading logic and forces `.positionUpOf(gatewayId)`.
+**1. Forward vs Backward Identification:**
+The engine performs a BFS reachability check to see if walking forward from the end of the newly discovered branch can ever loop back to its *source anchor*. 
+- **Parallel Branches:** If it does *not* loop back, it is a forward sequence.
+- **Iterative Branches:** If the graph *does* loop back, it is an upward/backward sequence.
+
+**2. Vertical Multi-Lane Assignment:**
+To prevent parallel branches from overlapping each other (e.g., three tasks all trying to spawn directly completely under a gateway), the algorithm dynamically assigns each branch to a collision-free horizontal "Lane".
+- It calculates the branch's **Column Range (`[startCol, mergeCol]`)** by finding where the branch spawns on the primary baseline, and where it ultimately merges back in.
+- The algorithm cycles through vertical `lane` integer indices, checking for overlaps against other branches already assigned to that lane.
+- If two branches exist in totally separate column spans (e.g. one at the start of the diagram, one at the end), they are safely assigned to the same shallow Lane 0. 
+- If their columns overlap, the new branch is pushed down to Lane 1, Lane 2, etc.
+
+### Pass B: Placement Rules and Geometry Generation
+
+With all branches securely assigned to collision-free lanes, the algorithm generates the layout using the composable single-axis API (`.alignXWith()`, `.alignYWith()`, `.shiftDownOf()`, etc.) built into `Element.js`.
+
+**Rule 1: Terminating End Events (The Upward Override)**
+If an `<endEvent>` is explicitly attached direct to a `<gateway>`, it overrides all normal lane logic and forces `.positionUpOf(gatewayId)`. 
 *Result: Terminating aborts visually snap to the ceiling above the line, isolating them from parallel forward-progression.*
 
-### Rule 2: Diverging Gateways (Avoiding Under-Gateway placement)
-When a gateway splits the flow into two streams, the easiest algorithmic approach would simply be to place the branching element directly underneath the gateway (`.positionDownOf('gatewayId')`).
-However, this causes the parallel sequence to be visually "stuck" back where the gate was split, breaking clean columns.
+**Rule 2: Diverging Parallel Branches (Lane Shifting)**
+When spawning a forward branch:
+- **Lane 0 (The Shallow Lane):** The branch starts directly beneath the main path successor using `.positionDownOf(mainPathNode)`.
+- **Lane N > 0 (Deep Lanes):** The branch geometry must start exactly below its target, but pushed further down geometrically explicitly beneath the branch that caused the overlap. The code combines X and Y rules: `.alignXWith(mainPathNode).shiftDownOf(overlappingBranchNode)`.
+*Result: Parallel sequences stack tightly beneath one another in clearly readable unbroken rows, but perfectly aligned to the column of the gateway they split from.*
 
-**How it works:**
-The code detects if `anchorOutgoing.length === 2`:
-1. It looks at the two outgoing targets, and checks which one belongs to the *Longest Primary Path* baseline we generated in Phase 1 (let's call it `mainSuccessorId`).
-2. Rather than dropping the branch below the gateway itself, the algorithm dynamically assigns `.positionDownOf(mainSuccessorId)`. 
-*Result: The parallel lane structurally aligns exactly below the first step of the main path, ensuring matching columns.*
+**Rule 3: Iterative Branches (Ceiling Routing)**
+Backward loops operate identically to Rule 2, but mirrored vertically. Lane 0 sits directly above the anchor using `.positionUpOf()`, and deeper overlapping iteration envelopes use `.alignXWith(anchor).shiftUpOf(overlappingBranchNode)`.
 
-### Rule 3: Topology-Based Flow Chaining (Forward vs Backward Flow)
-When the converter builds the primary baseline in Phase 1, it simply writes `.positionRightOf()` infinitely because it's guaranteed to be a single chained path. 
-But branches (Phase 2) are trickier. If a downward branch contains three sequential tasks, how does the engine know they should chain sequentially?
-
-**How it works:**
-The algorithm abandons raw coordinates entirely and uses **Graph Reachability (Topology)**:
-1. When a new branch spawns from an anchor, the engine traces the entire continuous sub-path (`_traceBranch`) until it hits a merge, split, or end.
-2. It then performs a BFS reachability check to see if walking forward from the end of the branch can ever loop back to the *source anchor*. 
-   - **Forward/Parallel Branches:** If it does *not* loop back, the algorithm places the first node below the anchor (Rule 2) and chains all subsequent nodes left-to-right (`.positionRightOf()`), creating a clean, parallel horizontal lane beneath the baseline.
-   - **Backward/Iterative Branches:** If the graph *does* loop back (reachability test returns true), the algorithm places the first node above the anchor (Rule 1 equivalent) and chains all subsequent nodes right-to-left (`.positionLeftOf()`). This generates a clean ceiling route traveling backward.
+**Rule 4: Flow Chaining (Subsequent Nodes)**
+For all subsequent nodes inside a branch (i.e. node index > 0), the placement chains continuously off the previous node.
+- **Parallel Lanes** build left-to-right (`.positionRightOf()`).
+- **Iterative Lanes** build right-to-left (`.positionLeftOf()`) to visually indicate the cycle traveling backward to the start.
 
 ---
 
