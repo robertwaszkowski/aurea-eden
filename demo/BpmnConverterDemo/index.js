@@ -513,7 +513,7 @@ export default function initDemo(container, options = {}) {
 
     toolbar.appendChild(exportBtn);
 
-    const phaseControls = { enablePhase1: true, enablePhase2: true, enablePhase3: true };
+    let currentStage = 'lanes';
     const stateVars = { hiddenBranches: new Set() };
 
     const triggerRender = (resetState = false) => {
@@ -521,27 +521,110 @@ export default function initDemo(container, options = {}) {
             stateVars.hiddenBranches.clear();
         }
         const idx = parseInt(select.value, 10);
-        currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[idx].xml, { ...options, ...phaseControls, ...stateVars }, triggerRender);
+        currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[idx].xml, { ...options, stage: currentStage, ...stateVars }, triggerRender);
     };
 
-    const createCheckbox = (text, key) => {
-        const lbl = document.createElement('label');
-        lbl.style.cssText = 'display: flex; align-items: center; gap: 4px; color: #94a3b8; font-size: 12px; font-family: sans-serif; cursor: pointer; margin-left: 12px; border-left: 1px solid #334155; padding-left: 12px;';
-        const cb = document.createElement('input');
-        cb.type = 'checkbox';
-        cb.checked = true;
-        cb.addEventListener('change', () => {
-            phaseControls[key] = cb.checked;
-            triggerRender(false);
+    const STAGES = [
+        { label: 'Baseline', value: 'baseline' },
+        { label: 'Branches', value: 'branches' },
+        { label: 'Lanes', value: 'lanes' }
+    ];
+
+    const pipelineContainer = document.createElement('div');
+    pipelineContainer.style.cssText = `
+        display: flex;
+        align-items: center;
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(8px);
+        padding: 2px;
+        border-radius: 8px;
+        border: 1px solid #334155;
+        margin-left: 12px;
+    `;
+    toolbar.appendChild(pipelineContainer);
+
+    const renderPipeline = () => {
+        pipelineContainer.innerHTML = '';
+        STAGES.forEach((stage, index) => {
+            const stageIndex = STAGES.findIndex(s => s.value === currentStage);
+            const isActive = index <= stageIndex;
+            const step = document.createElement('div');
+            step.style.cssText = `
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 4px 12px;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                user-select: none;
+                font-family: sans-serif;
+                font-size: 11px;
+                font-weight: 500;
+                position: relative;
+            `;
+
+            if (isActive) {
+                step.style.background = '#2563eb';
+                step.style.color = 'white';
+                step.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+            } else {
+                step.style.color = '#64748b';
+            }
+
+            step.onmouseover = () => {
+                if (!isActive) step.style.background = 'rgba(51, 65, 85, 0.5)';
+                else step.style.background = '#1d4ed8';
+            };
+            step.onmouseout = () => {
+                if (!isActive) step.style.background = 'transparent';
+                else step.style.background = '#2563eb';
+            };
+
+            step.onclick = () => {
+                currentStage = stage.value;
+                renderPipeline();
+                triggerRender(false);
+            };
+
+            const num = document.createElement('span');
+            num.textContent = index + 1;
+            num.style.cssText = `
+                width: 16px;
+                height: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                font-size: 9px;
+                background: ${isActive ? 'rgba(255,255,255,0.2)' : '#334155'};
+                color: ${isActive ? 'white' : '#94a3b8'};
+                font-weight: 800;
+            `;
+            step.appendChild(num);
+
+            const text = document.createElement('span');
+            text.textContent = stage.label;
+            step.appendChild(text);
+
+            pipelineContainer.appendChild(step);
+
+            // Add chevron between steps (except last)
+            if (index < STAGES.length - 1) {
+                const chevron = document.createElement('span');
+                chevron.innerHTML = '›';
+                chevron.style.cssText = `
+                    color: #475569;
+                    font-size: 14px;
+                    margin: 0 2px;
+                    font-weight: 300;
+                `;
+                pipelineContainer.appendChild(chevron);
+            }
         });
-        lbl.appendChild(cb);
-        lbl.appendChild(document.createTextNode(text));
-        toolbar.appendChild(lbl);
     };
 
-    createCheckbox('Phase 1 (Baseline)', 'enablePhase1');
-    createCheckbox('Phase 2 (Branches)', 'enablePhase2');
-    createCheckbox('Phase 3 (Connectors)', 'enablePhase3');
+    renderPipeline();
 
     container.appendChild(toolbar);
 
@@ -560,7 +643,7 @@ export default function initDemo(container, options = {}) {
     const bottomCanvas = createCard(diagramArea, 'Auto-generated Fluent API', 'BpmnToFluentConverter.convert(xml)', 'bottom-card-bar');
 
     // ── Initial render ──────────────────────────────────────────────────────
-    let currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[0].xml, { ...options, ...phaseControls, ...stateVars }, triggerRender);
+    let currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[0].xml, { ...options, stage: currentStage, ...stateVars }, triggerRender);
 
     // ── On file change, re-render both panels ───────────────────────────────
     select.addEventListener('change', () => triggerRender(true));
