@@ -411,6 +411,50 @@ function renderBothPanels(topCanvas, bottomCanvas, xmlString, options, triggerRe
     fluentDiagram.arrange();
     fluentDiagram.fitScreen();
 
+    // ── Overlap Detection & Highlighting ────────────────────────────────────
+    try {
+        const overlaps = fluentDiagram.highlightOverlaps();
+        const totalOverlaps = overlaps.connectorVsLabel.length + overlaps.connectorVsConnector.length;
+
+        console.groupCollapsed(`%c[Overlap Report] ${totalOverlaps} overlap(s) detected`, 'color: #f59e0b; font-weight: bold;');
+
+        if (overlaps.connectorVsLabel.length > 0) {
+            console.group(`%cCategory 1: Connector vs. Label (${overlaps.connectorVsLabel.length})`, 'color: #ef4444;');
+            console.table(overlaps.connectorVsLabel.map(o => ({
+                'Connector ID': o.connectorId,
+                'From': o.connectorFrom,
+                'To': o.connectorTo,
+                'Segment #': o.segmentIndex,
+                'Label of': o.labelOwner,
+                'Label Text': o.labelText
+            })));
+            console.groupEnd();
+        } else {
+            console.log('%c✓ No Connector vs. Label overlaps', 'color: #22c55e;');
+        }
+
+        if (overlaps.connectorVsConnector.length > 0) {
+            console.group(`%cCategory 2: Connector vs. Connector (${overlaps.connectorVsConnector.length})`, 'color: #ef4444;');
+            console.table(overlaps.connectorVsConnector.map(o => ({
+                'Connector A': o.connectorA,
+                'From A': o.fromA,
+                'To A': o.toA,
+                'Connector B': o.connectorB,
+                'From B': o.fromB,
+                'To B': o.toB,
+                'Segment A #': o.segmentA,
+                'Segment B #': o.segmentB
+            })));
+            console.groupEnd();
+        } else {
+            console.log('%c✓ No Connector vs. Connector overlaps', 'color: #22c55e;');
+        }
+
+        console.groupEnd();
+    } catch (err) {
+        console.warn('[Overlap Detection] Failed:', err);
+    }
+
     return fluentDiagram;
 }
 
