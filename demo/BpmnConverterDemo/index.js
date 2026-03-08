@@ -27,12 +27,12 @@ const DIAGRAM_FILES = [
 // ─────────────────────────────────────────────────────────────────────────────
 // Helper: create a labelled card wrapper
 // ─────────────────────────────────────────────────────────────────────────────
-function createCard(parentContainer, title, subtitle, barId) {
+function createCard(parentContainer, title, subtitle, barId, flexGrow = 1) {
     const card = document.createElement('div');
     card.style.cssText = `
         display: flex;
         flex-direction: column;
-        flex: 1 1 0;
+        flex: ${flexGrow} 1 0;
         min-height: 0;
         border-bottom: 1px solid #ddd;
         position: relative;
@@ -375,22 +375,24 @@ function renderBranchPanel(branches, elementsMap, barId, options, triggerRender)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Core render: build both panels from a given XML string
+// TOP panel: native XML import
 // ─────────────────────────────────────────────────────────────────────────────
-function renderBothPanels(topCanvas, bottomCanvas, xmlString, options, triggerRender) {
-    // Clear existing children and dispose any old Three.js context
-    [topCanvas, bottomCanvas].forEach(c => {
-        while (c.firstChild) c.removeChild(c.firstChild);
-    });
-
-    // TOP: native XML import
+function renderTopPanel(topCanvas, xmlString, options) {
+    while (topCanvas.firstChild) topCanvas.removeChild(topCanvas.firstChild);
     const nativeDiagram = new BpmnDiagram(topCanvas, options);
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
     nativeDiagram.buildDiagram(xmlDoc);
     nativeDiagram.fitScreen();
+    return nativeDiagram;
+}
 
-    // BOTTOM: fluent API via converter
+// ─────────────────────────────────────────────────────────────────────────────
+// BOTTOM panel: fluent API via converter
+// ─────────────────────────────────────────────────────────────────────────────
+function renderBottomPanel(bottomCanvas, xmlString, options, triggerRender) {
+    while (bottomCanvas.firstChild) bottomCanvas.removeChild(bottomCanvas.firstChild);
+
     const fluentDiagram = new BpmnDiagram(bottomCanvas, options);
     const diagram = fluentDiagram; // alias used in eval'd code
 
@@ -428,47 +430,42 @@ function renderBothPanels(topCanvas, bottomCanvas, xmlString, options, triggerRe
     try {
         const overlaps = fluentDiagram.highlightOverlaps();
         const totalOverlaps = overlaps.connectorVsLabel.length + overlaps.connectorVsConnector.length;
-
         console.groupCollapsed(`%c[Overlap Report] ${totalOverlaps} overlap(s) detected`, 'color: #f59e0b; font-weight: bold;');
-
         if (overlaps.connectorVsLabel.length > 0) {
             console.group(`%cCategory 1: Connector vs. Label (${overlaps.connectorVsLabel.length})`, 'color: #ef4444;');
             console.table(overlaps.connectorVsLabel.map(o => ({
-                'Connector ID': o.connectorId,
-                'From': o.connectorFrom,
-                'To': o.connectorTo,
-                'Segment #': o.segmentIndex,
-                'Label of': o.labelOwner,
-                'Label Text': o.labelText
+                'Connector ID': o.connectorId, 'From': o.connectorFrom, 'To': o.connectorTo,
+                'Segment #': o.segmentIndex, 'Label of': o.labelOwner, 'Label Text': o.labelText
             })));
             console.groupEnd();
         } else {
             console.log('%c✓ No Connector vs. Label overlaps', 'color: #22c55e;');
         }
-
         if (overlaps.connectorVsConnector.length > 0) {
             console.group(`%cCategory 2: Connector vs. Connector (${overlaps.connectorVsConnector.length})`, 'color: #ef4444;');
             console.table(overlaps.connectorVsConnector.map(o => ({
-                'Connector A': o.connectorA,
-                'From A': o.fromA,
-                'To A': o.toA,
-                'Connector B': o.connectorB,
-                'From B': o.fromB,
-                'To B': o.toB,
-                'Segment A #': o.segmentA,
-                'Segment B #': o.segmentB
+                'Connector A': o.connectorA, 'From A': o.fromA, 'To A': o.toA,
+                'Connector B': o.connectorB, 'From B': o.fromB, 'To B': o.toB,
+                'Segment A #': o.segmentA, 'Segment B #': o.segmentB
             })));
             console.groupEnd();
         } else {
             console.log('%c✓ No Connector vs. Connector overlaps', 'color: #22c55e;');
         }
-
         console.groupEnd();
     } catch (err) {
         console.warn('[Overlap Detection] Failed:', err);
     }
 
     return fluentDiagram;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Combined render (both panels) — used by triggerRender
+// ─────────────────────────────────────────────────────────────────────────────
+function renderBothPanels(topCanvas, bottomCanvas, xmlString, options, triggerRender) {
+    renderTopPanel(topCanvas, xmlString, options);
+    return renderBottomPanel(bottomCanvas, xmlString, options, triggerRender);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -698,11 +695,61 @@ export default function initDemo(container, options = {}) {
     `;
     container.appendChild(diagramArea);
 
-    const topCanvas = createCard(diagramArea, 'Native XML Import', 'BpmnDiagram.buildDiagram(xmlDoc)');
-    const bottomCanvas = createCard(diagramArea, 'Auto-generated Fluent API', 'BpmnToFluentConverter.convert(xml)', 'bottom-card-bar');
+    const topCanvas = createCard(diagramArea, 'Native XML Import', 'BpmnDiagram.buildDiagram(xmlDoc)', undefined, 1);
+    const bottomCanvas = createCard(diagramArea, 'Auto-generated Fluent API', 'BpmnToFluentConverter.convert(xml)', 'bottom-card-bar', 2);
 
     // ── Initial render ──────────────────────────────────────────────────────
     let currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[0].xml, { ...options, stage: currentStage, ...stateVars }, triggerRender);
+
+    // ── Auto Layout button (injected into bottom card bar) ──────────────────
+    const autoLayoutBtn = document.createElement('button');
+    autoLayoutBtn.textContent = '▶ Auto Layout';
+    autoLayoutBtn.style.cssText = `
+        font-size: 11px;
+        font-family: sans-serif;
+        padding: 3px 10px;
+        border-radius: 4px;
+        border: 1px solid #22c55e;
+        background: #16a34a;
+        color: white;
+        cursor: pointer;
+        outline: none;
+        transition: background 0.2s;
+        margin-left: 8px;
+        flex-shrink: 0;
+    `;
+    autoLayoutBtn.onmouseover = () => { if (!autoLayoutBtn.disabled) autoLayoutBtn.style.background = '#15803d'; };
+    autoLayoutBtn.onmouseout = () => { if (!autoLayoutBtn.disabled) autoLayoutBtn.style.background = '#16a34a'; };
+
+    const ANIM_DELAY = 1800; // ms between each stage
+
+    autoLayoutBtn.addEventListener('click', async () => {
+        autoLayoutBtn.disabled = true;
+        autoLayoutBtn.style.opacity = '0.5';
+        autoLayoutBtn.textContent = '⏳ Running…';
+
+        const idx = parseInt(select.value, 10);
+        const xmlString = DIAGRAM_FILES[idx].xml;
+
+        for (const stage of STAGES) {
+            currentStage = stage.value;
+            renderPipeline();
+            currentDiagram = renderBottomPanel(
+                bottomCanvas, xmlString,
+                { ...options, stage: stage.value, ...stateVars },
+                triggerRender
+            );
+            await new Promise(r => setTimeout(r, ANIM_DELAY));
+        }
+
+        autoLayoutBtn.disabled = false;
+        autoLayoutBtn.style.opacity = '1';
+        autoLayoutBtn.textContent = '▶ Auto Layout';
+    });
+
+    // Inject after the initial render so bottom-card-bar exists in the DOM
+    const bottomBar = document.getElementById('bottom-card-bar');
+    if (bottomBar) bottomBar.appendChild(autoLayoutBtn);
 
     // ── On file change, re-render both panels ───────────────────────────────
     select.addEventListener('change', () => triggerRender(true));
