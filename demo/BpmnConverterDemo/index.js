@@ -394,8 +394,10 @@ function renderBothPanels(topCanvas, bottomCanvas, xmlString, options, triggerRe
     const fluentDiagram = new BpmnDiagram(bottomCanvas, options);
     const diagram = fluentDiagram; // alias used in eval'd code
 
+    // stage 'resolve' is the same layout as 'lanes' + post-process
+    const converterOptions = { ...options, stage: options.stage === 'resolve' ? 'lanes' : options.stage };
     const converter = new BpmnToFluentConverter();
-    const generatedCode = converter.convert(xmlString, options);
+    const generatedCode = converter.convert(xmlString, converterOptions);
 
     try {
         // eslint-disable-next-line no-new-func
@@ -410,6 +412,16 @@ function renderBothPanels(topCanvas, bottomCanvas, xmlString, options, triggerRe
 
     fluentDiagram.arrange();
     fluentDiagram.fitScreen();
+
+    // ── Overlap Resolution (only when stage is 'resolve') ─────────────────────
+    if (options.stage === 'resolve') {
+        try {
+            fluentDiagram.resolveOverlaps();
+            fluentDiagram.fitScreen();
+        } catch (err) {
+            console.warn('[Overlap Resolution] Failed:', err);
+        }
+    }
 
     // ── Overlap Detection & Highlighting ────────────────────────────────────
     try {
@@ -557,7 +569,7 @@ export default function initDemo(container, options = {}) {
 
     toolbar.appendChild(exportBtn);
 
-    let currentStage = 'lanes';
+    let currentStage = 'resolve';
     const stateVars = { hiddenBranches: new Set() };
 
     const triggerRender = (resetState = false) => {
@@ -571,7 +583,8 @@ export default function initDemo(container, options = {}) {
     const STAGES = [
         { label: 'Baseline', value: 'baseline' },
         { label: 'Branches', value: 'branches' },
-        { label: 'Lanes', value: 'lanes' }
+        { label: 'Lanes', value: 'lanes' },
+        { label: 'Resolve Overlaps', value: 'resolve' }
     ];
 
     const pipelineContainer = document.createElement('div');
