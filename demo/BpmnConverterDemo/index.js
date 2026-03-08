@@ -394,8 +394,9 @@ function renderBothPanels(topCanvas, bottomCanvas, xmlString, options, triggerRe
     const fluentDiagram = new BpmnDiagram(bottomCanvas, options);
     const diagram = fluentDiagram; // alias used in eval'd code
 
-    // stage 'resolve' is the same layout as 'lanes' + post-process
-    const converterOptions = { ...options, stage: options.stage === 'resolve' ? 'lanes' : options.stage };
+    // stage 'resolve' passes 'lanes' to the converter; all others pass through unchanged
+    const converterStage = options.stage === 'resolve' ? 'lanes' : options.stage;
+    const converterOptions = { ...options, stage: converterStage };
     const converter = new BpmnToFluentConverter();
     const generatedCode = converter.convert(xmlString, converterOptions);
 
@@ -581,6 +582,7 @@ export default function initDemo(container, options = {}) {
     };
 
     const STAGES = [
+        { label: 'Topology', value: 'topology' },
         { label: 'Baseline', value: 'baseline' },
         { label: 'Branches', value: 'branches' },
         { label: 'Lanes', value: 'lanes' },
