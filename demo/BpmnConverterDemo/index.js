@@ -286,7 +286,7 @@ function renderBranchPanel(branches, elementsMap, barId, options, triggerRender)
     const panel = document.createElement('div');
     panel.className = 'branch-panel';
     panel.style.cssText = `
-        display: flex;
+        display: ${options && options.branchesExpanded === false ? 'none' : 'flex'};
         align-items: center;
         gap: 6px;
         flex-wrap: wrap;
@@ -396,8 +396,8 @@ function renderBottomPanel(bottomCanvas, xmlString, options, triggerRender) {
     const fluentDiagram = new BpmnDiagram(bottomCanvas, options);
     const diagram = fluentDiagram; // alias used in eval'd code
 
-    // stage 'resolve' passes 'lanes' to the converter; all others pass through unchanged
-    const converterStage = options.stage === 'resolve' ? 'lanes' : options.stage;
+    // stage 'overlaps' passes 'lanes' to the converter; all others pass through unchanged
+    const converterStage = options.stage === 'overlaps' ? 'lanes' : options.stage;
     const converterOptions = { ...options, stage: converterStage };
     const converter = new BpmnToFluentConverter();
     const generatedCode = converter.convert(xmlString, converterOptions);
@@ -416,8 +416,8 @@ function renderBottomPanel(bottomCanvas, xmlString, options, triggerRender) {
     fluentDiagram.arrange();
     fluentDiagram.fitScreen();
 
-    // ── Overlap Resolution (only when stage is 'resolve') ─────────────────────
-    if (options.stage === 'resolve') {
+    // ── Overlap Resolution (only when stage is 'overlaps') ─────────────────────
+    if (options.stage === 'overlaps') {
         try {
             fluentDiagram.resolveOverlaps();
             fluentDiagram.fitScreen();
@@ -475,7 +475,7 @@ import { BpmnExporter } from '../../lib/notations/bpmn/BpmnExporter.js';
 
 export default function initDemo(container, options = {}) {
 
-    // ── Outer layout: toolbar + two diagram panes ───────────────────────────
+    // ── Outer layout: two diagram panes ─────────────────────────────────────
     container.style.cssText = `
         display: flex;
         flex-direction: column;
@@ -483,35 +483,21 @@ export default function initDemo(container, options = {}) {
         overflow: hidden;
     `;
 
-    // ── Toolbar with file selector ──────────────────────────────────────────
-    const toolbar = document.createElement('div');
-    toolbar.style.cssText = `
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 6px 16px;
-        background: #1e293b;
-        flex-shrink: 0;
-        border-bottom: 2px solid #334155;
-    `;
-
-    const label = document.createElement('span');
-    label.textContent = 'BPMN Source:';
-    label.style.cssText = 'font-size: 12px; color: #94a3b8; font-family: sans-serif; white-space: nowrap;';
-    toolbar.appendChild(label);
-
+    // ── File selector (injected into top card bar after card creation) ───────
     const select = document.createElement('select');
     select.id = 'bpmn-file-selector';
     select.style.cssText = `
-        font-size: 13px;
+        font-size: 12px;
         font-family: sans-serif;
-        padding: 4px 8px;
+        padding: 3px 6px;
         border-radius: 4px;
-        border: 1px solid #475569;
-        background: #0f172a;
-        color: #e2e8f0;
+        border: 1px solid #cbd5e1;
+        background: white;
+        color: #334155;
         cursor: pointer;
         outline: none;
+        margin-left: auto;
+        flex-shrink: 0;
     `;
     DIAGRAM_FILES.forEach((f, i) => {
         const opt = document.createElement('option');
@@ -519,20 +505,14 @@ export default function initDemo(container, options = {}) {
         opt.textContent = f.label;
         select.appendChild(opt);
     });
-    toolbar.appendChild(select);
 
-    // Add spacer
-    const spacer = document.createElement('div');
-    spacer.style.flex = '1';
-    toolbar.appendChild(spacer);
-
-    // Export Button
+    // ── Export Button (injected into bottom card bar) ─────────────────────
     const exportBtn = document.createElement('button');
-    exportBtn.textContent = 'Export Auto-generated to BPMN';
+    exportBtn.textContent = 'Export BPMN';
     exportBtn.style.cssText = `
-        font-size: 12px;
+        font-size: 11px;
         font-family: sans-serif;
-        padding: 4px 12px;
+        padding: 3px 10px;
         border-radius: 4px;
         border: 1px solid #3b82f6;
         background: #2563eb;
@@ -540,17 +520,16 @@ export default function initDemo(container, options = {}) {
         cursor: pointer;
         outline: none;
         transition: background 0.2s;
+        flex-shrink: 0;
     `;
     exportBtn.onmouseover = () => exportBtn.style.background = '#1d4ed8';
     exportBtn.onmouseout = () => exportBtn.style.background = '#2563eb';
 
     exportBtn.addEventListener('click', async () => {
         if (!currentDiagram) return;
-
         try {
             const exporter = new BpmnExporter();
             const xmlString = await exporter.export(currentDiagram);
-
             const blob = new Blob([xmlString], { type: 'application/xml' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -565,10 +544,8 @@ export default function initDemo(container, options = {}) {
         }
     });
 
-    toolbar.appendChild(exportBtn);
-
-    let currentStage = 'resolve';
-    const stateVars = { hiddenBranches: new Set() };
+    let currentStage = 'overlaps';
+    const stateVars = { hiddenBranches: new Set(), branchesExpanded: false };
 
     const triggerRender = (resetState = false) => {
         if (resetState === true) {
@@ -583,21 +560,19 @@ export default function initDemo(container, options = {}) {
         { label: 'Baseline', value: 'baseline' },
         { label: 'Branches', value: 'branches' },
         { label: 'Lanes', value: 'lanes' },
-        { label: 'Resolve Overlaps', value: 'resolve' }
+        { label: 'Overlaps', value: 'overlaps' }
     ];
 
     const pipelineContainer = document.createElement('div');
     pipelineContainer.style.cssText = `
         display: flex;
         align-items: center;
-        background: rgba(15, 23, 42, 0.6);
-        backdrop-filter: blur(8px);
+        background: rgba(15, 23, 42, 0.06);
         padding: 2px;
         border-radius: 8px;
-        border: 1px solid #334155;
-        margin-left: 12px;
+        border: 1px solid #cbd5e1;
+        flex-shrink: 0;
     `;
-    toolbar.appendChild(pipelineContainer);
 
     const renderPipeline = () => {
         pipelineContainer.innerHTML = '';
@@ -682,8 +657,6 @@ export default function initDemo(container, options = {}) {
 
     renderPipeline();
 
-    container.appendChild(toolbar);
-
     // ── Diagrams area ───────────────────────────────────────────────────────
     const diagramArea = document.createElement('div');
     diagramArea.style.cssText = `
@@ -695,13 +668,20 @@ export default function initDemo(container, options = {}) {
     `;
     container.appendChild(diagramArea);
 
-    const topCanvas = createCard(diagramArea, 'Native XML Import', 'BpmnDiagram.buildDiagram(xmlDoc)', undefined, 1);
+    const topCanvas = createCard(diagramArea, 'Native XML Import', 'BpmnDiagram.buildDiagram(xmlDoc)', 'top-card-bar', 1);
     const bottomCanvas = createCard(diagramArea, 'Auto-generated Fluent API', 'BpmnToFluentConverter.convert(xml)', 'bottom-card-bar', 2);
 
-    // ── Initial render ──────────────────────────────────────────────────────
-    let currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[0].xml, { ...options, stage: currentStage, ...stateVars }, triggerRender);
+    // Inject BPMN Source selector into top card bar
+    const topBarEl = document.getElementById('top-card-bar');
+    if (topBarEl) {
+        const srcLabel = document.createElement('span');
+        srcLabel.textContent = 'Source:';
+        srcLabel.style.cssText = 'font-size: 11px; color: #94a3b8; font-family: sans-serif; white-space: nowrap; margin-left: auto; flex-shrink: 0;';
+        topBarEl.appendChild(srcLabel);
+        topBarEl.appendChild(select);
+    }
 
-    // ── Auto Layout button (injected into bottom card bar) ──────────────────
+    // ── Auto Layout button ───────────────────────────────────────────────────
     const autoLayoutBtn = document.createElement('button');
     autoLayoutBtn.textContent = '▶ Auto Layout';
     autoLayoutBtn.style.cssText = `
@@ -715,7 +695,6 @@ export default function initDemo(container, options = {}) {
         cursor: pointer;
         outline: none;
         transition: background 0.2s;
-        margin-left: 8px;
         flex-shrink: 0;
     `;
     autoLayoutBtn.onmouseover = () => { if (!autoLayoutBtn.disabled) autoLayoutBtn.style.background = '#15803d'; };
@@ -747,9 +726,62 @@ export default function initDemo(container, options = {}) {
         autoLayoutBtn.textContent = '▶ Auto Layout';
     });
 
-    // Inject after the initial render so bottom-card-bar exists in the DOM
-    const bottomBar = document.getElementById('bottom-card-bar');
-    if (bottomBar) bottomBar.appendChild(autoLayoutBtn);
+    // ── Branch toggle icon button ────────────────────────────────────────────
+    const branchToggleBtn = document.createElement('button');
+    const updateBranchToggleBtn = () => {
+        const expanded = stateVars.branchesExpanded;
+        branchToggleBtn.innerHTML = expanded
+            ? `<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                 <circle cx="4" cy="3" r="1.5"/>
+                 <circle cx="4" cy="13" r="1.5"/>
+                 <circle cx="12" cy="3" r="1.5"/>
+                 <path d="M4 4.5v4a2.5 2.5 0 0 0 2.5 2.5H10a2 2 0 0 1 2-2V4.5" stroke="currentColor" stroke-width="1.4" fill="none"/>
+               </svg>`
+            : `<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                 <circle cx="4" cy="3" r="1.5"/>
+                 <circle cx="4" cy="13" r="1.5"/>
+                 <circle cx="12" cy="3" r="1.5"/>
+                 <path d="M4 4.5v4a2.5 2.5 0 0 0 2.5 2.5H10a2 2 0 0 1 2-2V4.5" stroke="currentColor" stroke-width="1.4" fill="none" opacity="0.35"/>
+               </svg>`;
+        branchToggleBtn.title = expanded ? 'Collapse branches' : 'Expand branches';
+        branchToggleBtn.style.color = expanded ? '#3b82f6' : '#94a3b8';
+        branchToggleBtn.style.borderColor = expanded ? '#93c5fd' : '#cbd5e1';
+    };
+    branchToggleBtn.style.cssText = `
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 5px;
+        border: 1px solid #93c5fd;
+        background: transparent;
+        cursor: pointer;
+        outline: none;
+        transition: background 0.15s, color 0.15s;
+        flex-shrink: 0;
+        padding: 0;
+    `;
+    branchToggleBtn.onmouseover = () => branchToggleBtn.style.background = 'rgba(59,130,246,0.08)';
+    branchToggleBtn.onmouseout = () => branchToggleBtn.style.background = 'transparent';
+    updateBranchToggleBtn();
+    branchToggleBtn.addEventListener('click', () => {
+        stateVars.branchesExpanded = !stateVars.branchesExpanded;
+        updateBranchToggleBtn();
+        triggerRender();
+    });
+
+    // Inject pipeline + Export BPMN + Auto Layout + Branch toggle into bottom card bar
+    const bottomBarEl = document.getElementById('bottom-card-bar');
+    if (bottomBarEl) {
+        bottomBarEl.appendChild(pipelineContainer);
+        bottomBarEl.appendChild(branchToggleBtn);
+        bottomBarEl.appendChild(exportBtn);
+        bottomBarEl.appendChild(autoLayoutBtn);
+    }
+
+    // ── Initial render ──────────────────────────────────────────────────────
+    let currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[0].xml, { ...options, stage: currentStage, ...stateVars }, triggerRender);
 
     // ── On file change, re-render both panels ───────────────────────────────
     select.addEventListener('change', () => triggerRender(true));
