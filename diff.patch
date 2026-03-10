@@ -1,0 +1,249 @@
+diff --git a/lib/connectors/Connector.js b/lib/connectors/Connector.js
+index 4e6ee0d..0962ad3 100644
+--- a/lib/connectors/Connector.js
++++ b/lib/connectors/Connector.js
+@@ -44,11 +44,13 @@ class Connector extends THREE.Mesh {
+         if (!this.sourceElement || !this.targetElement) return;
+ 
+         // Use the static points determination logic
++        // Properties can pass 'waypoints' (array of {x, y}) which will force route through them
+         const points = Connector.determinePoints(
+             this.sourceElement,
+             this.targetElement,
+             this.sourcePosition,
+-            this.targetPosition
++            this.targetPosition,
++            this.properties?.waypoints
+         );
+ 
+         this.points = points;
+@@ -187,7 +189,62 @@ class Connector extends THREE.Mesh {
+         return this;
+     }
+ 
+-    static determinePoints(sourceElement, targetElement, sourcePosition, targetPosition) {
++    static determinePoints(sourceElement, targetElement, sourcePosition, targetPosition, waypointCoords = null) {
++
++        // --- WAYPOINT MERGING LOGIC ---
++        // If a waypoint is provided (e.g. from an absorbed AnchorPoint), we treat this 
++        // as two separate routes (Source -> Waypoint, and Waypoint -> Target) and splice them together.
++        if (waypointCoords && waypointCoords.length > 0) {
++            const anchor = waypointCoords[0];
++
++            // Create dummy Element objects for pathfinding to/from the anchor coordinate
++            const anchorSource = new Element('temp_AnchorSrc', new CircleShape(1, 1));
++            anchorSource.positionAt({ x: anchor.x, y: anchor.y, z: 0 });
++
++            const anchorTarget = new Element('temp_AnchorTgt', new CircleShape(1, 1));
++            anchorTarget.positionAt({ x: anchor.x, y: anchor.y, z: 0 });
++
++            // Path 1: Source to Anchor
++            // We force 'auto' as target side on the anchor to let the algorithm pick the best approach
++            const path1 = Connector.determinePoints(sourceElement, anchorTarget, sourcePosition, 'auto');
++
++            // Path 2: Anchor to Target
++            // We force 'auto' as source side on the anchor
++            const path2 = Connector.determinePoints(anchorSource, targetElement, 'auto', targetPosition);
++
++            // Merge paths, drop the overlapping exact anchor coordinate point from path2
++            const merged = [...path1, ...path2.slice(1)];
++
++            // Clean up: The two individual paths might have generated identical overlapping points
++            // at the handoff coordinate, or created a strictly collinear pass-through. 
++            // We must filter them or Shape curves will tear.
++            const filtered = [merged[0]];
++            for (let i = 1; i < merged.length - 1; i++) {
++                const prev = merged[i - 1];
++                const curr = merged[i];
++                const next = merged[i + 1];
++
++                const collinearH = (Math.abs(prev.y - curr.y) < 0.1 && Math.abs(curr.y - next.y) < 0.1);
++                const collinearV = (Math.abs(prev.x - curr.x) < 0.1 && Math.abs(curr.x - next.x) < 0.1);
++
++                // If the point is NOT collinear with its neighbours, it's a true corner. Keep it.
++                if (!collinearH && !collinearV) {
++                    // Also skip duplicate consecutive points
++                    if (Math.abs(curr.x - prev.x) > 0.1 || Math.abs(curr.y - prev.y) > 0.1) {
++                        filtered.push(curr);
++                    }
++                }
++            }
++            // Ensure the very last target point is included and not a duplicate
++            const lastMerged = merged[merged.length - 1];
++            const lastFiltered = filtered[filtered.length - 1];
++            if (Math.abs(lastFiltered.x - lastMerged.x) > 0.1 || Math.abs(lastFiltered.y - lastMerged.y) > 0.1) {
++                filtered.push(lastMerged);
++            }
++
++            return filtered;
++        }
++
+         let waypoints = [];
+ 
+         const sourcePoint = sourceElement.getPointPosition(sourcePosition);
+diff --git a/lib/diagrams/Diagram.js b/lib/diagrams/Diagram.js
+index cace176..55100c2 100644
+--- a/lib/diagrams/Diagram.js
++++ b/lib/diagrams/Diagram.js
+@@ -5,11 +5,13 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+ import { MapControls } from 'three/examples/jsm/controls/MapControls';
+ import { ArcballControls } from 'three/addons/controls/ArcballControls.js';
+ import { Element } from '../elements/Element.js';
++import { Connector } from '../connectors/Connector.js';
++import { StraightDottedConnectorShape } from '../shapes/connector/StraightDottedConnectorShape.js';
++import { RoundedCornerOrthogonalConnectorShape } from '../shapes/connector/RoundedCornerOrthogonalConnectorShape.js';
+ import { ValueBarShape } from '../shapes/bar/ValueBarShape.js';
+ import { getColorForValue, createRoundedBarSlotShape } from '../shapes/bar/ValueBarUtils.js';
+ import { Themes } from './DiagramConstants.js';
+ 
+-
+ /**
+  * Represents a 3D diagram using THREE.js.
+  */
+@@ -2007,9 +2009,100 @@ class Diagram {
+         // Apply current theme to new connector
+         this.applyThemeToConnector(connector);
+ 
++        // --- Anchor Point Merge Logic ---
++        // If the source or target is an anchor, check if it's fully connected (1 in, 1 out)
++        if (connector.sourceElement?.semanticType === 'anchor') {
++            this._checkAndResolveAnchorPoint(connector.sourceElement);
++        }
++        if (connector.targetElement?.semanticType === 'anchor') {
++            this._checkAndResolveAnchorPoint(connector.targetElement);
++        }
++
++        // Apply current theme to new connector
++        this.applyThemeToConnector(connector);
++
+         return connector;
+     }
+ 
++    /**
++     * Checks if an AnchorPoint has exactly 1 incoming and 1 outgoing connector.
++     * If so, merges them into a single connector passing through the anchor's coordinate,
++     * and deletes the physical anchor element from the diagram.
++     * @private
++     */
++    _checkAndResolveAnchorPoint(anchorElement) {
++        // Collect all connectors attached to this anchor
++        const attached = Array.from(this.elementConnectors.get(anchorElement.elementId) || []);
++
++        // We only care if there are exactly 2 connectors total
++        if (attached.length !== 2) return;
++
++        const incoming = attached.find(c => c.targetElement === anchorElement);
++        const outgoing = attached.find(c => c.sourceElement === anchorElement);
++
++        // It must have exactly 1 coming IN and 1 going OUT
++        if (!incoming || !outgoing) return;
++
++        // 1. Create a merged connector
++        const mergedId = `${incoming.elementId}_merged_${outgoing.elementId}`;
++        const mergedConnector = new Connector(
++            mergedId,
++            incoming.type === 'association'
++                ? new StraightDottedConnectorShape()
++                : new RoundedCornerOrthogonalConnectorShape(),
++            incoming.sourceElement,
++            outgoing.targetElement,
++            incoming.sourcePosition, // keep original source port
++            outgoing.targetPosition, // keep original target port
++            incoming.label || outgoing.label, // preserve label if any
++            incoming.type,
++            { waypoints: [{ x: anchorElement.position.x, y: anchorElement.position.y }] } // Force the anchor coord!
++        );
++
++        mergedConnector.setDiagram(this);
++
++        // 2. Remove the old connectors and the Anchor element from the diagram
++        this._removeConnector(incoming);
++        this._removeConnector(outgoing);
++        this._removeElement(anchorElement);
++
++        // 3. Add the new merged connector
++        this.addConnector(mergedConnector);
++
++        // Force an immediate update so the points array is generated using the new waypoint
++        mergedConnector.update();
++    }
++
++    /**
++     * Helper to safely remove an element and clean up its references
++     * @private
++     */
++    _removeElement(element) {
++        this.scene.remove(element);
++        this.elements = this.elements.filter(e => e !== element);
++        this.elementsMap = this.elementsMap || new Map();
++        this.elementsMap.delete(element.elementId);
++        this.elementConnectors.delete(element.elementId);
++    }
++
++    /**
++     * Helper to safely remove a connector and clean up its references
++     * @private
++     */
++    _removeConnector(connector) {
++        this.scene.remove(connector);
++        this.connectors = this.connectors.filter(c => c !== connector);
++
++        if (connector.sourceElement) {
++            const set = this.elementConnectors.get(connector.sourceElement.elementId);
++            if (set) set.delete(connector);
++        }
++        if (connector.targetElement) {
++            const set = this.elementConnectors.get(connector.targetElement.elementId);
++            if (set) set.delete(connector);
++        }
++    }
++
+     /**
+      * @private
+      */
+diff --git a/lib/elements/Element.js b/lib/elements/Element.js
+index 7ea7ecb..345634f 100644
+--- a/lib/elements/Element.js
++++ b/lib/elements/Element.js
+@@ -794,6 +794,9 @@ class Element extends THREE.Mesh {
+             case 'SWW':
+             case 'southwest':
+                 return this.getSouthWestWestPoint();
++            case 'auto':
++            case 'center':
++                return this.position.clone();
+             default:
+                 throw new Error(`Unknown position: ${position}`);
+         }
+diff --git a/lib/shapes/connector/RoundedCornerOrthogonalConnectorShape.js b/lib/shapes/connector/RoundedCornerOrthogonalConnectorShape.js
+index 57f089a..492d242 100644
+--- a/lib/shapes/connector/RoundedCornerOrthogonalConnectorShape.js
++++ b/lib/shapes/connector/RoundedCornerOrthogonalConnectorShape.js
+@@ -15,6 +15,12 @@ class RoundedCornerOrthogonalConnectorShape extends Shape {
+         const color = Colors.ELEMENT_STROKE;
+         const extrudeSettings = ExtrusionParameters;
+ 
++        if (!connectorPoints || connectorPoints.length < 2) {
++            super(new THREE.BufferGeometry(), new DiagramEditMaterial(color));
++            this.points = [];
++            return;
++        }
++
+         var connectorShape = new THREE.Shape();
+ 
+         // draw the end of the first segment
+diff --git a/lib/shapes/connector/StraightDottedConnectorShape.js b/lib/shapes/connector/StraightDottedConnectorShape.js
+index c215ae6..26e89a6 100644
+--- a/lib/shapes/connector/StraightDottedConnectorShape.js
++++ b/lib/shapes/connector/StraightDottedConnectorShape.js
+@@ -8,8 +8,8 @@ class StraightDottedConnectorShape extends Shape {
+     constructor(connectorPoints) {
+         if (!connectorPoints || connectorPoints.length < 2) {
+             console.error("StraightDottedConnectorShape requires at least 2 points.");
+-            // Return empty shape or handle error
+-            super(new THREE.BufferGeometry(), new DiagramEditMaterial(Colors.ELEMENT_STROKE));
++            super(new THREE.BufferGeometry(), new DiagramEditMaterial(Colors.SECONDARY_STROKE || Colors.ELEMENT_STROKE));
++            this.points = [];
+             return;
+         }
+ 
