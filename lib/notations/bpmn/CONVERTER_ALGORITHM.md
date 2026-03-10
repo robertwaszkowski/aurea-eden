@@ -1,102 +1,89 @@
 # BPMN to Fluent API Conversion Algorithm
 
-This document details the step-by-step algorithms, heuristics, and placement rules used by the `BpmnToFluentConverter` engine. The engine is designed to transition raw BPMN 2.0 XML graph data into robust, natively laid out Fluent API chains for the Aurea EDEN framework.
+This document provides a highly detailed, phase-by-phase and step-by-step breakdown of the `BpmnToFluentConverter` and `BpmnDiagram` layout engines. It covers the mathematical models, heuristic rules, and specific Aurea EDEN API features used to transition raw BPMN 2.0 XML graph data into natively drawn, perfectly aligned geometric vector graphics.
 
 ---
 
-## 1. Principles of Geometric Generation
+## 1. Core Principles & Aurea EDEN API Features
 
-Unlike traditional BPMN XML representations which rely on absolute Cartesian constraints (X, Y) bound to bounding boxes (`bpmndi:BPMNShape`), Aurea EDEN diagrams are generated structurally using relative geometric relationships. 
+Unlike standard BPMN modelers which rely on static `bpmndi:BPMNShape` absolute `[X, Y]` coordinates, the converter discards all XML visual data and dynamically recalculates the exact topology using pure graph theory and declarative **Aurea EDEN** positioning methods.
 
-### Positional API Primitives Tools
-Elements are placed into the scene graph relative to existing "anchor" elements. The primary topological anchors are:
-- `.positionRightOf(anchor)`: The primary tool for building linear sequences chronologically left-to-right.
-- `.positionLeftOf(anchor)`: Used for backward iteration sequences.
-- `.positionDownOf(anchor)`: Used to spawn parallel structures or diverge branches beneath the main logical flow.
-- `.positionUpOf(anchor)`: Used for structural overrides and upward iteration routing.
-
-**Single-Axis Composable Primitives:**
-To support tight multi-lane layouts, the engine relies on single-axis primitive methods. These resolve orthogonal coordinates independently:
-- **Structural Alignment:** `.alignXWith(anchor)` and `.alignYWith(anchor)`. These align center points without adjusting the intersecting axis, maintaining true columns and rows.
-- **Offset Shifting:** `.shiftRightOf(anchor)`, `.shiftDownOf(anchor)`, etc. These adjust the non-aligned axis outward by a mathematically predefined padding factor (`DiagramDimensions.DISTANCE_BETWEEN_ELEMENTS`), preventing visual overlap without breaking the structural grid.
-
-### Port Resolution and Orthogonal Routing 
-Connection geometry evaluates the entry and exit boundaries via Ports (`N`, `S`, `E`, `W`, or `auto`). The `resolvePorts` logic governs edge routing preferences, defaulting to orthogonal 1-elbow L-Curves. Passing parameters such as `('S', 'auto')` forces emission from the South face while dynamically adapting the target approach face to avoid diagonal S-Curves.
+### Aurea EDEN Geometric API Features Utilized:
+- **Sequential Primitives**: `.positionRightOf(anchor)`, `.positionLeftOf(anchor)`, `.positionDownOf(anchor)`, `.positionUpOf(anchor)`. These resolve coordinates to place a shape adjacent to an anchor, respecting `DiagramDimensions.DISTANCE_BETWEEN_ELEMENTS`.
+- **Compositional Primitives (Cross-Axis)**: 
+  - `.alignXWith(anchor)` / `.alignYWith(anchor)`: Locks the X or Y center to perfectly match a target element without moving the perpendicular axis.
+  - `.shiftDownOf(anchor)` / `.shiftUpOf(anchor)`: Translates an element along the Y-axis by exactly its combined height plus uniform padding, without disrupting the X-axis alignment.
+- **Port-Based Routing**: `.connect(sourceId, targetId, sourcePort, targetPort)`. Defines precise orthogonal entry/exit faces via cardinality (`'N'`, `'S'`, `'E'`, `'W'`, or `'auto'`).
+- **Waypoints Interpolation**: Extracts the internal geometric waypoint computation from `Connector.determinePoints()` to snap logical arrays directly to orthogonal 20-unit grids (`Math.round()`).
+- **Hidden Render Graph**: `.hide()`. Elements can be processed mathematically and topologically but excluded from the final drawn canvas.
+- **Dynamic Branch Marking**: `.branchType='primary'|'parallel'|'iterative'`. Custom node tagging allows the post-placement engine to identify overlapping priority.
 
 ---
 
-## 2. Stage 1: The Baseline Spine
+## 2. Phase-by-Phase Execution Algorithm
 
-BPMN diagrams intrinsically feature complex topological combinations of branching, looping, and parallel executions. Generating dynamic code requires establishing a strong structural **Baseline Spine** that acts as the core horizontal stratum.
+The conversion process is divided into logical phases, transforming raw XML strings to a topological graph, mapping an execution baseline, resolving branches to lanes, hooking orthogonal vectors, and performing physical overlap sweeping.
 
-The algorithm establishes the baseline via topological graph traversal:
-1. **Adjacency Mapping**: The converter parses sequence flows to construct a directed graph.
-2. **Critical Path Selection**: Uses DFS pathfinding to identify the "Longest Critical Path" (Happy Path) from Start to End.
-3. **Primary Serialization**: Every element on the Baseline is rendered sequentially using `.positionRightOf()`, establishing a true horizontal horizon.
-4. **Persistent Connectors**: All sequence flows between baseline elements are immediately drawn.
+### Phase 1: Parsing and Graph Construction
+1. **XML Ingestion**: The standard DOMParser reads the BPMN string. It identifies core node types (`startEvent`, `task`, `exclusiveGateway`, `endEvent`) regardless of XML namespace prefixes.
+2. **Adjacency Mapping**: Sequence flows are evaluated to populate `elements` (Map) and `adjacencyList` (Map of node -> outgoing edges). No geometry is calculated yet; this is a purely abstract mathematical graph.
+3. **Primary Path Extraction (BFS)**: Uses Breadth-First Search from the `StartEvent` evaluating all possible paths. The *longest* path leading to a standard `EndEvent` (excluding `TerminateEndEvent`) is classified as the **Primary Path** (or "Happy Path").
 
----
+### Phase 2: Cycle Detection and Back-Edge Mathematics
+Traditional reachability checks fail on nested loops. The engine uses a mathematical **Depth-First Search (DFS) Back-Edge Classifier**.
+1. **Trunk Prioritization**: The `adjacencyList` is sorted so that nodes belonging to the `Primary Path` are traversed first. This forces the DFS Tree trunk to represent forward progress.
+2. **Recursive Stack Tracking**: The DFS algorithm maintains a `visited` set and an `active Stack` set. 
+3. **Loop Rule**: If a sequence flow edge points to a node *currently in the active DFS stack*, that edge is mathematically proven to be a **Back-Edge** (iterative loop). All nested branches inside global loops are safely preserved as forward paths.
 
-## 3. Stage 2: Branch Discovery and Rendering
+### Phase 3: Stage 1 - The Baseline Spine
+The Primary Path is explicitly mapped as the foundational horizontal structure of the diagram.
+1. The first node (StartEvent) is placed at `[0, 0]` natively.
+2. Iterating sequentially through the `Primary Path` array, each subsequent element is appended using `Aurea EDEN`'s `.positionRightOf(previousNode)`.
+3. The geometric math places the left edge of `Node B` at `Node A.right + padding`. Over the entire pass, this guarantees a perfect mathematical X-axis positive progression along the `Y=0` baseline.
 
-Once the horizon is established, the remaining graph vertices are processed as **Branches**.
+### Phase 4: Stage 2 - Branch Discovery
+Nodes omitted from the baseline belong to secondary pathways.
+1. **Branch Sweeping**: Iterates through unprocessed elements. If an element has an incoming sequence flow from an already processed node (an anchor), a new `Branch` object is initiated.
+2. **Trace Branch**: Traces forward recursively following sequence flows until it re-merges into the processed group.
+3. **Classification**: 
+   - Uses the DFS `back-edges` lookup table. If the traced subgraph strictly flows backward in the topology, it is marked as an **Iterative Branch**.
+   - If it flows outward and merges structurally further down the X-axis, it is marked as a **Parallel Branch**.
+   - **Shortcut Detection**: Edges that bypass nodes entirely along the baseline are injected with an invisible `bpmn:AnchorPoint`. The sequence flow is split into two physical connectors merging at the anchor, defining an empty **Shortcut Branch**.
 
-1. **Discovery**: Recursive tracing of all off-path elements starting from gateways or event triggers.
-2. **Categorization**: Branches are identified as *Parallel* (forward) or *Iterative* (backward).
-3. **Raw Rendering**: Branch elements are added to the diagram using basic anchor-based positioning (e.g., `.positionDownOf()` or `.positionUpOf()`). This provides a functional but "flat" layout.
-4. **Persistent Connectors**: Connectors for branch elements are generated and linked dynamically as they are processed.
+### Phase 5: Stage 3 - Optimal Sorting and Multi-Lane Assignment
+To prevent parallel branches from printing over each other in the Y-axis, an allocation grid allocates lanes mathematically.
+1. **Span Math**: Each branch derives a `span = abs(mergeColumnIndex - startColumnIndex)`. 
+2. **Sorting Rule**: Branches are processed ascending by `span`. Smaller, tightly nested branches are allocated first to keep them physically closer to the trunk.
+3. **Overlap Algorithm (Column-Range)**:
+   - For a given lane `L` (starting at `lane=1`), the system checks if the new branch's logical X-axis span `[branchStart, branchMerge]` intersects with any branch already assigned to lane `L`.
+   - **Intersection Math**: Two spans overlap if `Math.max(start1, start2) <= Math.min(end1, end2)`. Note: `<= ` enforces strict segregation even if two branches share a perfect single gateway coordinate to ensure routing margins.
+   - If an overlap is detected, `lane++`. This loop terminates when an empty vertical slot is found.
+4. **Lane-Aware Positioning**:
+   - The first node (head) of the branch evaluates its Lane `L`.
+   - **Parallel Branch**: `element.alignXWith(anchor).shiftDownOf(laneAnchor)`. The shape's specific Y offset is pushed logarithmically downward correlating to the overlap count in the X-column.
+   - **Iterative Branch**: `element.alignXWith(anchor).shiftUpOf(laneAnchor)`. Iterations loop backwards across the top (Negative Y quadrant) of the baseline.
+   - Subsequent branch nodes simply call `.positionRightOf(previous)` or `.positionLeftOf(previous)`, filling the length of the horizontal lane perfectly parallel to the baseline.
 
----
+### Phase 6: Stage 4 - Target Routing and Connector Ports
+Once layout coordinates are locked, the topological edge vectors must be mapped statically to prevent the line-router from inventing intersecting diagonal paths.
+1. **Cardinal Routing Gateway Mathematical Rules**: 
+   - **Rule 1 (Terminators)**: If `target` is End/Terminate -> Port `N` (up).
+   - **Rule 2 (Iterations)**: If the edge is a DFS `Back-Edge` or the target is an Iterative Branch Head -> Port `N` (up).
+   - **Rule 3 (Primary Path)**: If traversing forward to the main critical path -> Port `E` (Right).
+   - **Rule 4 (Parallel Branch)**: Diverging parallel forward flow -> Port `S` (Down).
+2. **Port Spreading Algorithm**:
+   - If > 1 flow enters identical port faces (e.g., three arrows merging into the West side of a Gateway), they overlap in a collinear line.
+   - The port spreader grabs actual `[X, Y]` geometric origins for the arrows.
+   - Using comparative math against the target `[X, Y]`:
+     - If origin `Y < target Y` -> Placed in `bucketNegative` (sorted by closest).
+     - If origin `Y > target Y` -> Placed in `bucketPositive` (sorted by closest).
+   - The spreader maps 3 lines into specific edge fractions (e.g., `WNW`, `W`, `WSW`). The Negative bucket takes the northern offsets; the Positive bucket maps to the southern offsets ensuring zero crossing lines at the boundary edge.
 
-## 4. Stage 3: Optimal Sorting and Lanes
-
-The final stage organizes the raw branches into a readable, multi-lane structure.
-
-1. **Strategic Sorting**: Branches are sorted by "span length" (shortest first) to minimize lane crossings and optimize space.
-2. **Lane Assignment**: A column-range overlap algorithm assigns vertical lane indices to each branch, preventing visual collisions.
-3. **Lane-Aware Positioning**: elements are placed using single-axis compositional APIs:
-    - `element.alignXWith(anchor).shiftDownOf(occludingNode)`
-    - Result: Parallel sequences generate horizontally readable ribbons, flawlessly nesting downwards matching structural origins.
-4. **Reactive Connections**: As elements are shifted into their optimal lanes, the reactive connector system automatically updates all paths to maintain perfect connectivity.
-
----
-
-## 5. Pure Graph Topology and Cycle Detection
-
-Aurea EDEN evaluates BPMN graphs via strict topological logic, completely ignoring any explicit (`BPMNShape`) positional data stored in the XML. By relying purely on nodes and edges, the converter adapts intelligently to structurally sound logic regardless of the visual layout applied by the user in the modeler canvas.
-
-### The Problem of Loops (Global Cycles vs Iterations)
-A common problem in automated layout generation is correctly identifying a backward loop (iteration). Simple graph reachability checks (`BFS` looking for the source node) fail in complex BPMN diagrams. 
-For instance, if a diagram has a large global loop at the very end leading back to the beginning, every forward branch inside that loop can "technically" reach previous gateway nodes. Relying on simple reachability would misclassify every forward branch as a backward iteration.
-
-### Depth-First Search (DFS) Back-Edge Classifier
-To mathematically prove whether an edge is a true "backward" iteration vs. a normal forward branch, the algorithm employs a **DFS Back-Edge Classifier**:
-1. It builds a recursive DFS tree spanning the process graph.
-2. It prioritizes visiting nodes along the pre-identified "Primary Path" first, forming a solid central "Trunk" of the logic tree.
-3. Any sequence flow that points back to a node currently in the `Active Recursive Stack` (an active ancestor in the DFS tree) is definitively flagged as a mathematical **Back-Edge**.
-
-*Result: Forward side-branches flowing inside global cycles are correctly parsed as 'forward', while only logic truly circling back over itself is flagged as an iteration.*
-
----
-
-## 6. Mathematical Gateway Routing & Port Selection
-
-Once the topological role of each branch is proven by the DFS analysis, the `BpmnToFluentConverter` establishes the precise exiting `Port` for every sequence flow leaving a Branching Node (like an Exclusive Gateway). The rules applied are entirely topological and executed strictly in order:
-
-### Rule 1: Terminating Exits
-- If the target node is an `EndEvent` or a `TerminateEndEvent`, the flow is routed out of the **North (N)** port. 
-- *Why:* End events are cleanly separated and raised off the primary workflow baseline.
-
-### Rule 2: Topologically Backward Iterations
-- If the specific sequence flow matches a mathematically proven **Back-Edge**, it is an iteration traversing backward across the diagram.
-- **Backward Branch Roots (`backwardBranchRoots`)**: Sometimes a backward loop starts with a small intermediate task (e.g. "Fix Application") before the actual structural back-edge appears. If an entire multi-node branch sequence strictly resolves to a back-edge, the algorithm flags the first node of that branch as a _Branch Root_.
-- Any gateway connector exiting into a Back-Edge *or* a `Backward Branch Root` is routed out of the **North (N)** port.
-- *Why:* The N port gracefully forces the arrow to arc above the baseline sequence toward earlier points in the topological timeline.
-
-### Rule 3: Forward and Parallel Side-Branches
-- If the flow doesn't hit a terminator or loop backward, it must be moving forward.
-- **Single Forward Edge:** If there's only one forward path (e.g. after stripping out back-edges above), route out of the **East (E)** port to continue the linear flow.
-- **Primary Forward Edge:** If there are multiple forward branches, identify which one represents the topological "Primary Path" (the longest happy path). The primary branch gets the **East (E)** port to maintain the central baseline horizon.
-- **Secondary Forward Edges:** All secondary or parallel forward branches get routed out of the **South (S)** port. 
-- *Why:* The S port pushes alternative forward logic linearly *downwards* into new horizontal lanes beneath the main timeline horizon, fulfilling the lane algorithm's structure.
-- **Fallback Rule:** In tiebreaker scenarios where multiple non-primary forward branches diverge, the algorithm uses deterministic alphabetical ID sorting to predictably drop all but the first node downward (S-port).
+### Phase 7: Post-Layout Physics and Overlap Resolution
+BPMN Diagrams trigger an internal physical "anti-overlap" sweep invoked dynamically from `BpmnDiagram.js`.
+1. **AABB Interference Math**: Uses `Element.getBoundingClientRect()` representing standard box geometry data points `(x, y, width, height)`. Intersection is proven if:
+   - `rect1.right > rect2.left && rect1.left < rect2.right && rect1.bottom > rect2.top && rect1.top < rect2.bottom`
+2. **Heuristic Priority Pushing**:
+   - If overlap is detected, an Aurea EDEN `.translate(dx, dy)` operation is mathematically injected to separate conflicting node bounds dynamically by evaluating graph roles.
+   - e.g., Resolving overlapping tasks checks the `branchType`. Parallel tasks always yield to primary tasks, meaning the parallel task physically gets translated outward (`Y + padding`).
+3. **Waypoint Precise Snapping**: The geometric intersection bounds (`Connector.determinePoints`) dynamically generate line corners. The exporter strictly translates these arrays with perfect `Math.round()` values. The arbitrary coordinate rounding limits have been removed, creating a 1:1 match natively binding `di:waypoints` straight to orthogonal `SVG` corners exported natively in Aurea EDEN.
