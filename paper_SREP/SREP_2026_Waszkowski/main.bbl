@@ -1,0 +1,44 @@
+\begin{thebibliography}{1}
+\urlstyle{rm}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname doiprefix\endcsname\relax\def\doiprefix{DOI: }\fi
+\providecommand{\bibinfo}[2]{#2}
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem{Sugiyama1981}
+\bibinfo{author}{Sugiyama, K.}, \bibinfo{author}{Tagawa, S.} \&
+  \bibinfo{author}{Toda, M.}
+\newblock \bibinfo{journal}{\bibinfo{title}{Methods for visual understanding of
+  hierarchical system structures}}.
+\newblock {\emph{\JournalTitle{IEEE Transactions on Systems, Man, and
+  Cybernetics}}} \textbf{\bibinfo{volume}{11}}, \bibinfo{pages}{109--125}
+  (\bibinfo{year}{1981}).
+
+\bibitem{Kitzmann2009}
+\bibinfo{author}{Kitzmann, I.}, \bibinfo{author}{Christoph, D.},
+  \bibinfo{author}{Hinze, A.} \emph{et~al.}
+\newblock \bibinfo{title}{A simple algorithm for automatic layout of bpmn
+  processes}.
+\newblock In \emph{\bibinfo{booktitle}{2009 IEEE International Conference on
+  e-Business Engineering}}, \bibinfo{pages}{391--398}
+  (\bibinfo{organization}{IEEE}, \bibinfo{year}{2009}).
+
+\bibitem{Fruchterman1991}
+\bibinfo{author}{Fruchterman, T.~M.} \& \bibinfo{author}{Reingold, E.~M.}
+\newblock \bibinfo{journal}{\bibinfo{title}{Graph drawing by force-directed
+  placement}}.
+\newblock {\emph{\JournalTitle{Software: Practice and experience}}}
+  \textbf{\bibinfo{volume}{21}}, \bibinfo{pages}{1129--1164}
+  (\bibinfo{year}{1991}).
+
+\bibitem{Tamassia1987}
+\bibinfo{author}{Tamassia, R.}
+\newblock \bibinfo{journal}{\bibinfo{title}{On embedding a graph in the grid
+  with the minimum number of bends}}.
+\newblock {\emph{\JournalTitle{SIAM Journal on Computing}}}
+  \textbf{\bibinfo{volume}{16}}, \bibinfo{pages}{421--444}
+  (\bibinfo{year}{1987}).
+
+\end{thebibliography}
