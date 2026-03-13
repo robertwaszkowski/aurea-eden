@@ -173,7 +173,7 @@ To unequivocally formalize sequence loops, the core memory tracks the topologica
     \draw [->, thick] (checkColor) -- node {Yes} (foundLoop);
     \draw [->, thick] (checkColor) -- node {No} (recursive);
     \draw [->, thick] (foundLoop) |- (checkAdj);
-    \draw [->, thick] (recursive) -| ++(-2,0) |- (checkAdj);
+    \draw [->, thick] (recursive.west) -| ([xshift=-0.6cm]markBlack.west) |- ([yshift=0.5cm]checkAdj.north) -- (checkAdj.north);
     \draw [->, thick] (checkAdj) -- node {No} (markBlack);
 \end{tikzpicture}
 \caption{UML Activity Diagram illustrating the mathematical Depth-First Search (DFS) topological back-edge cycle detection logic navigating execution arrays.}
