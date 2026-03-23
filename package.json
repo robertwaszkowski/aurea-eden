@@ -1,7 +1,7 @@
 {
   "name": "aurea-eden",
   "type": "module",
-  "version": "1.42.2",
+  "version": "1.42.3",
   "description": "A Three.js-based framework for creating custom 3D diagramming notations.",
   "main": "dist/bpmn-diagram.umd.js",
   "module": "dist/bpmn-diagram.es.js",
@@ -34,7 +34,7 @@
   "scripts": {
     "dev": "vite",
     "// --- BUILD TASKS ---": "",
-    "build:lib": "vite build",
+    "build:lib": "vite build --mode lib",
     "build:site": "vite build --mode site",
     "// --- DEPLOY TASKS ---": "",
     "deploy:pages": "gh-pages -d dist-site",
