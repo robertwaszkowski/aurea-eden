@@ -60421,7 +60421,7 @@ SPREAD LOG: Target ${nodeId} Port ${basePort}`);
     return text.replace(/\n/g, "\\n").replace(/'/g, "\\'");
   }
 }
-const version = "1.44.0";
+const version = "1.44.1";
 var Easing = Object.freeze({
   Linear: Object.freeze({
     None: function(amount) {
