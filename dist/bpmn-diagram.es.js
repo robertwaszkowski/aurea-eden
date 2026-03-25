@@ -64618,9 +64618,17 @@ class RoundedCornerOrthogonalConnectorShape extends Shape2 {
     const width = lineWidth / 2;
     const color = Colors.ELEMENT_STROKE;
     const extrudeSettings = ExtrusionParameters$1;
-    if (!connectorPoints || connectorPoints.length < 2) {
+    let pathLength = 0;
+    if (connectorPoints && connectorPoints.length >= 2) {
+      for (let i3 = 1; i3 < connectorPoints.length; i3++) {
+        pathLength += Math.sqrt(
+          Math.pow(connectorPoints[i3].x - connectorPoints[i3 - 1].x, 2) + Math.pow(connectorPoints[i3].y - connectorPoints[i3 - 1].y, 2)
+        );
+      }
+    }
+    if (!connectorPoints || connectorPoints.length < 2 || pathLength < 1e-3) {
       super(new BufferGeometry(), new DiagramEditMaterial(color));
-      this.points = [];
+      this.points = connectorPoints || [];
       return;
     }
     var connectorShape = new Shape$1();
@@ -65320,6 +65328,11 @@ class StraightDottedConnectorShape extends Shape2 {
     const gapLength = radius * 6;
     const direction = new Vector2().subVectors(p2, p1);
     const totalLength = direction.length();
+    if (totalLength < 1e-3) {
+      super(new BufferGeometry(), new DiagramEditMaterial(color));
+      this.points = connectorPoints || [];
+      return;
+    }
     direction.normalize();
     const shapes = [];
     let currentDist = 0;

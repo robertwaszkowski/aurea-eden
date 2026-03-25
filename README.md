@@ -72,6 +72,8 @@ Aurea EDEN addresses this gap.
 | **Value Bars** | Animate 3D data columns atop elements in ANALYZE mode — color-coded per slot |
 | **Multiple Bars** | Elements can carry 1–N side-by-side bars, independently normalized per slot |
 | **Active Task Badges** | Gold/silver animated 3D star badges for my-task / other-task process states |
+| **Native Auto-Layout** | Robust 2-pass BFS topology engine with support for geometric user overrides |
+| **Headless Graphs** | Decoupled semantics allow instantiating and exporting zero-coordinate edges natively |
 | **Method Chaining API** | Fluent, composable API: `.addTask().positionRightOf().addValueBar()...` |
 | **BPMN Import** | Parse BPMN 2.0 XML and render it as a live 3D diagram |
 | **Vue Component** | Drop-in `<AureaEdenBpmnDiagram>` component for Vue 3 / Vuetify apps |
@@ -291,6 +293,25 @@ diagram.addAssociationConnector('assoc1', waypoints);
 ```
 
 Connection point identifiers: `'N'`, `'S'`, `'E'`, `'W'` (and their full-name equivalents).
+
+---
+
+### Auto-Layout (Topology Engine)
+
+Aurea EDEN features a powerful, fully-native multi-pass rendering engine that eliminates the need for manual `.positionRightOf()` boilerplate when handling complex logical graphs. 
+
+```javascript
+// 1. Pass the unpositioned, arbitrary topology
+// 2. Provide an optional array of manual visual overrides
+diagram.autoLayout([
+    { elementId: 'task_3', placementCommand: 'positionUpOf', relativeToId: 'task_2' }
+]);
+```
+* **Pass 1:** Cleanses manual alignment drift and reorganizes the logical graph using a mathematically pure Breadth-First-Search (BFS) parallel lane strategy.
+* **Pass 2:** Automatically executes a Topological Depth-First-Search (DFS) sort across your explicit visual `overrides` array, safely applying them without creating dependency cycles.
+* **Pass 3:** Scans the finished scene and resolves any remaining physical AABB overlaps through geometric physics sweeps.
+
+> **Note:** The semantic connection framework is fully decoupled from visual geometry. This means you can flawlessly instantiate hundreds of zero-coordinate sequence edges "headlessly" without breaking the engine, and then perfectly reorganize them later with a single `.autoLayout()` call!
 
 ---
 
