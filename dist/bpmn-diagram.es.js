@@ -69157,6 +69157,18 @@ class BpmnDiagram extends Diagram {
    * @returns {Promise<void>}
    */
   async autoLayout(overrides = []) {
+    if (this.pendingConnections && this.pendingConnections.length > 0) {
+      this.arrange();
+    }
+    let staggerIndex = 1;
+    for (const el of this.elements) {
+      if (el.position.x === 0 && el.position.y === 0) {
+        el.position.x = staggerIndex * 150;
+        el.position.y = staggerIndex * 120;
+        el.updateMatrixWorld(true);
+        staggerIndex++;
+      }
+    }
     const exporter = new BpmnExporter();
     const xmlContent = await exporter.export(this);
     const converter = new BpmnToFluentConverter();
