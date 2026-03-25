@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.44.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.44.0...v1.44.1) (2026-03-25)
+
+
+### Bug Fixes
+
+* **layout:** resolve headless auto-layout XML exporter failures ([a28256a](https://github.com/robertwaszkowski/aurea-eden/commit/a28256a89e07b4a5122483338a9e440ece448c73))
+
 ## [1.44.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.43.1...v1.44.0) (2026-03-25)
 
 
