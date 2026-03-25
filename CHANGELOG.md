@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.43.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.42.3...v1.43.0) (2026-03-25)
+
+
+### Features
+
+* **bpmn:** implement native autoLayout engine with override constraints ([e320e54](https://github.com/robertwaszkowski/aurea-eden/commit/e320e54b2e704a69fb3590f3a9fc9dd28b1e5a4b))
+
 ### [1.42.3](https://github.com/robertwaszkowski/aurea-eden/compare/v1.42.2...v1.42.3) (2026-03-23)
 
 ### [1.42.2](https://github.com/robertwaszkowski/aurea-eden/compare/v1.42.1...v1.42.2) (2026-03-23)
