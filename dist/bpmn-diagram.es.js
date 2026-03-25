@@ -59419,7 +59419,8 @@ class BpmnExporter {
           id: el.elementId,
           type: bpmnType,
           width,
-          height
+          height,
+          businessObject: bpmnFactory.create(bpmnType, { id: el.elementId })
         });
         let labelText = "";
         if (el.texts && el.texts.length > 0) {
@@ -60421,7 +60422,7 @@ SPREAD LOG: Target ${nodeId} Port ${basePort}`);
     return text.replace(/\n/g, "\\n").replace(/'/g, "\\'");
   }
 }
-const version = "1.44.1";
+const version = "1.44.2";
 var Easing = Object.freeze({
   Linear: Object.freeze({
     None: function(amount) {
