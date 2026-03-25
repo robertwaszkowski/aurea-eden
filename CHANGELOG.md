@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.44.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.43.1...v1.44.0) (2026-03-25)
+
+
+### Features
+
+* **layout:** native auto-layout engine and decoupled headless topology ([c4d6ea2](https://github.com/robertwaszkowski/aurea-eden/commit/c4d6ea298423c30aba89cd511e852e08c7550332))
+
 ### [1.43.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.43.0...v1.43.1) (2026-03-25)
 
 ## [1.43.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.42.3...v1.43.0) (2026-03-25)
