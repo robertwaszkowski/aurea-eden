@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.45.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.44.2...v1.45.0) (2026-03-26)
+
+
+### Features
+
+* **layout:** overhaul bpmn headless generation and auto-port tracing ([7202088](https://github.com/robertwaszkowski/aurea-eden/commit/720208840a89431ff6158de2d46daf9f446e064c))
+
 ### [1.44.2](https://github.com/robertwaszkowski/aurea-eden/compare/v1.44.1...v1.44.2) (2026-03-25)
 
 ### [1.44.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.44.0...v1.44.1) (2026-03-25)
