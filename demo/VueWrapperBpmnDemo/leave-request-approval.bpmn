@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:startEvent id="Start_Leave" name="Leave&#10;Request&#10;Submitted">
+      <bpmn:outgoing>Flow_03fuesh</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Task_Review" name="Review Leave&#10;Request">
+      <bpmn:incoming>Flow_03fuesh</bpmn:incoming>
+      <bpmn:outgoing>Flow_1sdw1ke</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_Decision" name="Request&#10;Approved?">
+      <bpmn:incoming>Flow_1sdw1ke</bpmn:incoming>
+      <bpmn:outgoing>Flow_0dcj32f</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0foth5o</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="Task_UpdateHR" name="Update HR&#10;System">
+      <bpmn:incoming>Flow_0dcj32f</bpmn:incoming>
+      <bpmn:outgoing>Flow_1tesksy</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sendTask id="Task_NotifyEmployee" name="Notify Employee">
+      <bpmn:incoming>Flow_1tesksy</bpmn:incoming>
+      <bpmn:incoming>Flow_0foth5o</bpmn:incoming>
+      <bpmn:outgoing>Flow_10zgwls</bpmn:outgoing>
+      <bpmn:outgoing>Flow_033g775</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="End_Approved" name="Request&#10;Approved">
+      <bpmn:incoming>Flow_10zgwls</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_Rejected" name="Request&#10;Rejected">
+      <bpmn:incoming>Flow_033g775</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_03fuesh" sourceRef="Start_Leave" targetRef="Task_Review" />
+    <bpmn:sequenceFlow id="Flow_1sdw1ke" sourceRef="Task_Review" targetRef="Gateway_Decision" />
+    <bpmn:sequenceFlow id="Flow_0dcj32f" sourceRef="Gateway_Decision" targetRef="Task_UpdateHR" />
+    <bpmn:sequenceFlow id="Flow_1tesksy" sourceRef="Task_UpdateHR" targetRef="Task_NotifyEmployee" />
+    <bpmn:sequenceFlow id="Flow_10zgwls" sourceRef="Task_NotifyEmployee" targetRef="End_Approved" />
+    <bpmn:sequenceFlow id="Flow_033g775" sourceRef="Task_NotifyEmployee" targetRef="End_Rejected" />
+    <bpmn:sequenceFlow id="Flow_0foth5o" sourceRef="Gateway_Decision" targetRef="Task_NotifyEmployee" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="Start_Leave_di" bpmnElement="Start_Leave">
+        <dc:Bounds x="100" y="122" width="36.80180740356445" height="36.80180740356445" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="94" y="166" width="50" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Review_di" bpmnElement="Task_Review">
+        <dc:Bounds x="217" y="100" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Decision_di" bpmnElement="Gateway_Decision" isMarkerVisible="true">
+        <dc:Bounds x="397" y="114" width="51.131370544433594" height="51.131370544433594" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="396" y="76.5" width="53" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_UpdateHR_di" bpmnElement="Task_UpdateHR">
+        <dc:Bounds x="529" y="100" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_NotifyEmployee_di" bpmnElement="Task_NotifyEmployee">
+        <dc:Bounds x="710" y="100" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Approved_di" bpmnElement="End_Approved">
+        <dc:Bounds x="891" y="122" width="36.80180740356445" height="36.80180740356445" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="886" y="166" width="47" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Rejected_di" bpmnElement="End_Rejected">
+        <dc:Bounds x="891" y="354" width="36.80180740356445" height="36.80180740356445" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="888" y="398" width="44" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_03fuesh_di" bpmnElement="Flow_03fuesh">
+        <di:waypoint x="137" y="140" />
+        <di:waypoint x="217" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1sdw1ke_di" bpmnElement="Flow_1sdw1ke">
+        <di:waypoint x="318" y="140" />
+        <di:waypoint x="398" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dcj32f_di" bpmnElement="Flow_0dcj32f">
+        <di:waypoint x="449" y="140" />
+        <di:waypoint x="529" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tesksy_di" bpmnElement="Flow_1tesksy">
+        <di:waypoint x="630" y="140" />
+        <di:waypoint x="710" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10zgwls_di" bpmnElement="Flow_10zgwls">
+        <di:waypoint x="785" y="100" />
+        <di:waypoint x="785" y="70" />
+        <di:waypoint x="860" y="70" />
+        <di:waypoint x="860" y="140" />
+        <di:waypoint x="890" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_033g775_di" bpmnElement="Flow_033g775">
+        <di:waypoint x="735" y="100" />
+        <di:waypoint x="735" y="70" />
+        <di:waypoint x="860" y="70" />
+        <di:waypoint x="860" y="372" />
+        <di:waypoint x="890" y="372" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0foth5o_di" bpmnElement="Flow_0foth5o">
+        <di:waypoint x="423" y="166" />
+        <di:waypoint x="423" y="267" />
+        <di:waypoint x="760" y="267" />
+        <di:waypoint x="760" y="181" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

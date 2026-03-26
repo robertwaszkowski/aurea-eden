@@ -16,12 +16,14 @@ import xmlSimple from '../VueWrapperBpmnDemo/simple-process-template.bpmn?raw';
 import xmlHardware from '../VueWrapperBpmnDemo/hardware-retailer-template.bpmn?raw';
 import xmlWniosek from '../VueWrapperBpmnDemo/wniosek-o-wsparcie.bpmn?raw';
 import xmlIncident from '../VueWrapperBpmnDemo/incident-management-template.bpmn?raw';
+import xmlLeaveRequest from '../VueWrapperBpmnDemo/leave-request-approval.bpmn?raw';
 
 const DIAGRAM_FILES = [
     { label: 'Simple Process', xml: xmlSimple },
     { label: 'Hardware Retailer', xml: xmlHardware },
     { label: 'Wniosek o Wsparcie', xml: xmlWniosek },
     { label: 'Incident Management', xml: xmlIncident },
+    { label: 'Leave Request Approval', xml: xmlLeaveRequest },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────

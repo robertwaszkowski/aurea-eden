@@ -59644,17 +59644,15 @@ class BpmnToFluentConverter {
   // - Right (E) and down (S) ports for parallel/forward paths.
   // ─────────────────────────────────────────────────────────────
   _sourcePort(srcEl, tgtEl, srcOutgoingIds, primaryPathSet) {
-    const isEndEvent = tgtEl.type === "bpmn:endEvent" || tgtEl.type === "bpmn:terminateEndEvent";
     const isIteration = this.backEdges && this.backEdges.has(`${srcEl.id}->${tgtEl.id}`) || this.backwardBranchRoots && this.backwardBranchRoots.has(tgtEl.id);
-    if (isEndEvent || isIteration) {
+    if (isIteration) {
       return "N";
     }
     if (!srcOutgoingIds) return "E";
     const forwardTargets = srcOutgoingIds.map((id) => this.elements.get(id)).filter((t2) => {
       if (!t2) return false;
-      const tIsEnd = t2.type === "bpmn:endEvent" || t2.type === "bpmn:terminateEndEvent";
       const tIsIter = this.backEdges && this.backEdges.has(`${srcEl.id}->${t2.id}`) || this.backwardBranchRoots && this.backwardBranchRoots.has(t2.id);
-      return !tIsEnd && !tIsIter;
+      return !tIsIter;
     });
     if (forwardTargets.length <= 1) {
       return "E";
@@ -59662,7 +59660,7 @@ class BpmnToFluentConverter {
     const mainTarget = forwardTargets.find((t2) => primaryPathSet && primaryPathSet.has(t2.id));
     if (mainTarget) {
       if (mainTarget.id === tgtEl.id) return "E";
-      return "S";
+      return "auto";
     }
     const sorted = forwardTargets.slice().sort((a2, b) => {
       return a2.id.localeCompare(b.id);
@@ -59872,12 +59870,17 @@ class BpmnToFluentConverter {
     if (detectedBranches.length > 0) {
       generatedLines.push(`
 // --- Stage ${stage === "lanes" ? "3" : "2"}: ${stage === "lanes" ? "Sorting and Lanes" : "Unsorted Branches"} ---`);
+      for (const b of detectedBranches) {
+        const firstEl = this.elements.get(b.nodes[0]);
+        const isFirstElEndEvent = firstEl && (firstEl.type === "bpmn:endEvent" || firstEl.type === "bpmn:terminateEndEvent");
+        b.isUpward = b.isBackward || isFirstElEndEvent;
+      }
       if (stage === "lanes") {
         detectedBranches.sort((a2, b) => a2.span - b.span);
-        const forwardBranches = detectedBranches.filter((b) => !b.isBackward);
-        const backwardBranches = detectedBranches.filter((b) => b.isBackward);
-        if (forwardBranches.length > 0) this._assignLanes(forwardBranches, primaryPath, outgoingFlows, false);
-        if (backwardBranches.length > 0) this._assignLanes(backwardBranches, primaryPath, outgoingFlows, true);
+        const downwardBranches = detectedBranches.filter((b) => !b.isUpward);
+        const upwardBranches = detectedBranches.filter((b) => b.isUpward);
+        if (downwardBranches.length > 0) this._assignLanes(downwardBranches, primaryPath, outgoingFlows, false);
+        if (upwardBranches.length > 0) this._assignLanes(upwardBranches, primaryPath, outgoingFlows, true);
       }
       for (const branch of detectedBranches) {
         const anchorEl = this.elements.get(branch.anchor);
@@ -59890,12 +59893,7 @@ class BpmnToFluentConverter {
           let useShiftAndAlign = false;
           if (i2 === 0) {
             let baseAnchorId = anchorEl.id;
-            const isElementEndEvent = branchEl.type === "bpmn:endEvent" || branchEl.type === "bpmn:terminateEndEvent";
-            const isAnchorGateway = anchorEl.type.toLowerCase().includes("gateway");
-            if (isElementEndEvent && isAnchorGateway) {
-              positionMethod = "positionUpOf";
-              placementAnchorId = anchorEl.id;
-            } else if (branch.isBackward) {
+            if (branch.isUpward) {
               placementAnchorId = anchorEl.id;
               if (stage === "lanes" && branch.lane > 0 && branch.laneAnchorId) {
                 useShiftAndAlign = true;
@@ -60265,7 +60263,22 @@ SPREAD LOG: Target ${nodeId} Port ${basePort}`);
       }
     }
     if (allPaths.length === 0) return null;
-    return allPaths.reduce((longest, current) => current.length > longest.length ? current : longest, []);
+    const scorePath = (path) => {
+      let score = path.length * 100;
+      const endNodeId = path[path.length - 1];
+      const endNode = this.elements.get(endNodeId);
+      if (endNode && endNode.hasName) {
+        const name2 = endNode.name.toLowerCase();
+        if (name2.includes("approve") || name2.includes("success") || name2.includes("complete") || name2.includes("accept") || name2.includes("yes")) {
+          score += 50;
+        }
+        if (name2.includes("reject") || name2.includes("fail") || name2.includes("cancel") || name2.includes("error") || name2.includes("no")) {
+          score -= 50;
+        }
+      }
+      return score;
+    };
+    return allPaths.reduce((best, current) => scorePath(current) > scorePath(best) ? current : best, allPaths[0]);
   }
   /**
    * Traces a continuous branch of unplaced elements starting from a specific node.
@@ -60415,7 +60428,10 @@ SPREAD LOG: Target ${nodeId} Port ${basePort}`);
     const dy = tgtPos.y - srcPos.y;
     if (Math.abs(dy) < 10) return dx > 0 ? { srcPort: "E", tgtPort: "W" } : { srcPort: "W", tgtPort: "E" };
     if (Math.abs(dx) < 10) return dy > 0 ? { srcPort: "N", tgtPort: "S" } : { srcPort: "S", tgtPort: "N" };
-    return { srcPort: dx > 0 ? "E" : "W", tgtPort: dy > 0 ? "S" : "N" };
+    if (dy > 0 && dx > 0) return { srcPort: "E", tgtPort: "S" };
+    if (dy < 0 && dx > 0) return { srcPort: "S", tgtPort: "W" };
+    if (dy > 0 && dx < 0) return { srcPort: "N", tgtPort: "E" };
+    return { srcPort: "W", tgtPort: "N" };
   }
   _cleanText(text) {
     if (!text) return "";
@@ -66877,8 +66893,19 @@ class Element extends Mesh {
         finalSrc = dy > 0 ? "N" : "S";
         finalTgt = dy > 0 ? "S" : "N";
       } else {
-        finalSrc = dx > 0 ? "E" : "W";
-        finalTgt = dy > 0 ? "S" : "N";
+        if (dy > 0 && dx > 0) {
+          finalSrc = "E";
+          finalTgt = "S";
+        } else if (dy < 0 && dx > 0) {
+          finalSrc = "S";
+          finalTgt = "W";
+        } else if (dy > 0 && dx < 0) {
+          finalSrc = "N";
+          finalTgt = "E";
+        } else {
+          finalSrc = "W";
+          finalTgt = "N";
+        }
       }
       return { sourcePort: finalSrc, targetPort: finalTgt };
     }
