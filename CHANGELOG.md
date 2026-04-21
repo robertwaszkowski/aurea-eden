@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.46.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.45.1...v1.46.0) (2026-04-21)
+
+
+### Features
+
+* rename and restructure BPMN layout paper files and update bibliography references ([be77555](https://github.com/robertwaszkowski/aurea-eden/commit/be77555381e0b569a938c31c974df85e2cf8c4f3))
+
 ### [1.45.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.45.0...v1.45.1) (2026-03-26)
 
 ## [1.45.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.44.2...v1.45.0) (2026-03-26)
