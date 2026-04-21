@@ -576,81 +576,94 @@ export default function initDemo(container, options = {}) {
     testCounter++;
 
     // --------------------------------------------------------------------------------
-    // Category 6: Auto-resolving Ports
+    // Category 6: Auto-resolving Ports (Aligned)
     // --------------------------------------------------------------------------------
-    diagram.addTextAnnotation('cat-6-title', 'Category 6: Auto-resolving Ports\nProximity-based automatic port selection', 350)
+    diagram.addTextAnnotation('cat-6-title', 'Category 6: Auto-resolving Ports (Aligned)\nProximity-based straight lines for aligned elements', 350)
         .positionDownOf(`tgt-${testCounter - 2}`);
 
-    let centerSrc = `src-${testCounter}`;
-    let tlTgt = `tgt-${testCounter}`;
-
-    // 1. Top-Left Task B
-    diagram.addTask(tlTgt)
+    // 1. Top Task B
+    let tgtTop = `tgt-${testCounter}`;
+    diagram.addTask(tgtTop)
         .addWrappedText('Task B')
         .positionDownOf('cat-6-title');
+    testCounter++;
 
     // Central Task A
+    let centerSrc = `src-${testCounter}`;
     diagram.addTask(centerSrc)
         .addWrappedText('Task A')
-        .positionDownRightOf(tlTgt)
-        .connectTo(tlTgt, 'auto', 'auto', 'Auto (Top-Left)');
-
+        .positionDownOf(tgtTop)
+        .connectTo(tgtTop, 'auto', 'auto', 'Auto (Top)');
     testCounter++;
 
-    // 2. Top Task B
-    diagram.addTask(`tgt-${testCounter}`)
-        .addWrappedText('Task B')
-        .setPosition(diagram.getElementById(centerSrc).position.x, diagram.getElementById(tlTgt).position.y)
-        .connectFrom(centerSrc, 'auto', 'auto', 'Auto (Top)');
-
-    testCounter++;
-
-    // 3. Top-Right Task B
-    diagram.addTask(`tgt-${testCounter}`)
-        .addWrappedText('Task B')
-        .positionUpRightOf(centerSrc)
-        .connectFrom(centerSrc, 'auto', 'auto', 'Auto (Top-Right)');
-
-    testCounter++;
-
-    // 4. Left Task B
-    diagram.addTask(`tgt-${testCounter}`)
-        .addWrappedText('Task B')
-        .positionLeftOf(centerSrc)
-        .connectFrom(centerSrc, 'auto', 'auto', 'Auto (Left)');
-
-    testCounter++;
-
-    // 5. Right Task B
-    diagram.addTask(`tgt-${testCounter}`)
-        .addWrappedText('Task B')
-        .positionRightOf(centerSrc)
-        .connectFrom(centerSrc, 'auto', 'auto', 'Auto (Right)');
-
-    testCounter++;
-
-    // 6. Bottom-Left Task B
-    diagram.addTask(`tgt-${testCounter}`)
-        .addWrappedText('Task B')
-        .positionDownLeftOf(centerSrc)
-        .connectFrom(centerSrc, 'auto', 'auto', 'Auto (Bottom-Left)');
-
-    testCounter++;
-
-    // 7. Bottom Task B
-    diagram.addTask(`tgt-${testCounter}`)
+    // 2. Bottom Task B
+    let tgtBottom = `tgt-${testCounter}`;
+    diagram.addTask(tgtBottom)
         .addWrappedText('Task B')
         .positionDownOf(centerSrc)
         .connectFrom(centerSrc, 'auto', 'auto', 'Auto (Bottom)');
-
     testCounter++;
 
-    // 8. Bottom-Right Task B
-    diagram.addTask(`tgt-${testCounter}`)
+    // 3. Left Task B
+    let tgtLeft = `tgt-${testCounter}`;
+    diagram.addTask(tgtLeft)
         .addWrappedText('Task B')
-        .positionDownRightOf(centerSrc)
-        .connectFrom(centerSrc, 'auto', 'auto', 'Auto (Bottom-Right)');
+        .positionLeftOf(centerSrc)
+        .connectFrom(centerSrc, 'auto', 'auto', 'Auto (Left)');
+    testCounter++;
 
+    // 4. Right Task B
+    let tgtRight = `tgt-${testCounter}`;
+    diagram.addTask(tgtRight)
+        .addWrappedText('Task B')
+        .positionRightOf(centerSrc)
+        .connectFrom(centerSrc, 'auto', 'auto', 'Auto (Right)');
+    testCounter++;
+
+
+    // --------------------------------------------------------------------------------
+    // Category 7: Auto-resolving Ports (Diagonal Offset)
+    // --------------------------------------------------------------------------------
+    diagram.addTextAnnotation('cat-7-title', 'Category 7: Auto-resolving Ports (Diagonal)\nProximity-based orthogonal L-curves for offset elements', 350)
+        .positionDownOf(tgtBottom);
+
+    // To cleanly layout 5 nodes (Center + 4 corners) without overlap, start with Top-Left
+    let tgtTL = `tgt-${testCounter}`;
+    diagram.addTask(tgtTL)
+        .addWrappedText('Task B')
+        .positionDownOf('cat-7-title');
+    testCounter++;
+
+    // Center Task A Down-Right of Top-Left
+    let centerSrcDiag = `src-${testCounter}`;
+    diagram.addTask(centerSrcDiag)
+        .addWrappedText('Task A')
+        .positionDownRightOf(tgtTL)
+        .connectTo(tgtTL, 'auto', 'auto', 'Auto (Top-Left)');
+    testCounter++;
+
+    // 2. Top-Right Task B
+    let tgtTR = `tgt-${testCounter}`;
+    diagram.addTask(tgtTR)
+        .addWrappedText('Task B')
+        .positionUpRightOf(centerSrcDiag)
+        .connectFrom(centerSrcDiag, 'auto', 'auto', 'Auto (Top-Right)');
+    testCounter++;
+
+    // 3. Bottom-Left Task B
+    let tgtBL = `tgt-${testCounter}`;
+    diagram.addTask(tgtBL)
+        .addWrappedText('Task B')
+        .positionDownLeftOf(centerSrcDiag)
+        .connectFrom(centerSrcDiag, 'auto', 'auto', 'Auto (Bottom-Left)');
+    testCounter++;
+
+    // 4. Bottom-Right Task B
+    let tgtBR = `tgt-${testCounter}`;
+    diagram.addTask(tgtBR)
+        .addWrappedText('Task B')
+        .positionDownRightOf(centerSrcDiag)
+        .connectFrom(centerSrcDiag, 'auto', 'auto', 'Auto (Bottom-Right)');
     testCounter++;
 
     return diagram;

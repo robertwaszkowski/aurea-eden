@@ -2,6 +2,89 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.45.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.45.0...v1.45.1) (2026-03-26)
+
+## [1.45.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.44.2...v1.45.0) (2026-03-26)
+
+
+### Features
+
+* **layout:** overhaul bpmn headless generation and auto-port tracing ([7202088](https://github.com/robertwaszkowski/aurea-eden/commit/720208840a89431ff6158de2d46daf9f446e064c))
+
+### [1.44.2](https://github.com/robertwaszkowski/aurea-eden/compare/v1.44.1...v1.44.2) (2026-03-25)
+
+### [1.44.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.44.0...v1.44.1) (2026-03-25)
+
+
+### Bug Fixes
+
+* **layout:** resolve headless auto-layout XML exporter failures ([a28256a](https://github.com/robertwaszkowski/aurea-eden/commit/a28256a89e07b4a5122483338a9e440ece448c73))
+
+## [1.44.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.43.1...v1.44.0) (2026-03-25)
+
+
+### Features
+
+* **layout:** native auto-layout engine and decoupled headless topology ([c4d6ea2](https://github.com/robertwaszkowski/aurea-eden/commit/c4d6ea298423c30aba89cd511e852e08c7550332))
+
+### [1.43.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.43.0...v1.43.1) (2026-03-25)
+
+## [1.43.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.42.3...v1.43.0) (2026-03-25)
+
+
+### Features
+
+* **bpmn:** implement native autoLayout engine with override constraints ([e320e54](https://github.com/robertwaszkowski/aurea-eden/commit/e320e54b2e704a69fb3590f3a9fc9dd28b1e5a4b))
+
+### [1.42.3](https://github.com/robertwaszkowski/aurea-eden/compare/v1.42.2...v1.42.3) (2026-03-23)
+
+### [1.42.2](https://github.com/robertwaszkowski/aurea-eden/compare/v1.42.1...v1.42.2) (2026-03-23)
+
+### [1.42.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.42.0...v1.42.1) (2026-03-23)
+
+## [1.42.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.41.1...v1.42.0) (2026-03-23)
+
+
+### Features
+
+* Add `BpmnToFluentConverter` class, its conversion algorithm documentation, and a usage demo. ([b902735](https://github.com/robertwaszkowski/aurea-eden/commit/b902735bca97f17242f725a3835e2484834c45ac))
+* Add initial LaTeX and PDF files for the "Dynamic Topological Layout and Orthogonal Routing Algorithm for BPMN Diagrams" paper. ([0f985c4](https://github.com/robertwaszkowski/aurea-eden/commit/0f985c40b009e6fd22800b1cbb5cb8bb73f9df4f))
+* AnchorPoint merging to invisible waypoints ([0980e02](https://github.com/robertwaszkowski/aurea-eden/commit/0980e026f66c3f11d1ba28b3683e945f6ed84b43))
+* **bpmn-converter:** Implement DFS topological back-edge routing for Gateways ([a6d589a](https://github.com/robertwaszkowski/aurea-eden/commit/a6d589a6f96c0daea0703e89f9cb47355276064b))
+* **bpmn-converter:** implement two-pass multi-lane branch layout ([fc61767](https://github.com/robertwaszkowski/aurea-eden/commit/fc61767eb543d7110272debe260465caa9c1002b))
+* **bpmn-demo:** add 1:2 panel ratio, Auto Layout button and animated pipeline playback ([e7356d2](https://github.com/robertwaszkowski/aurea-eden/commit/e7356d2050552155260d3b702daa5ee27a9f5806))
+* **bpmn-demo:** add Phase 0 Topology pipeline stage with BFS level layout ([7189a7e](https://github.com/robertwaszkowski/aurea-eden/commit/7189a7ebc03d5e53a9691ea914cf36545eae53dc))
+* **bpmn-demo:** add Resolve Overlaps as a proper 4th pipeline stage ([a32ad3e](https://github.com/robertwaszkowski/aurea-eden/commit/a32ad3e3321643a90811ef9ccf9442da11fd6646))
+* **bpmn-diagram:** Add overlap detection, visual highlighting, and fix connector point staleness ([0cbba13](https://github.com/robertwaszkowski/aurea-eden/commit/0cbba135657aa36966b796eba529ac08de1113bc))
+* **bpmn:** add export dependency and demo interface ([72832ad](https://github.com/robertwaszkowski/aurea-eden/commit/72832ad54de51fe048a7f5048daf40a973fe4b38))
+* **bpmn:** implement native semantic tagging for diagram elements ([a6810f4](https://github.com/robertwaszkowski/aurea-eden/commit/a6810f40303690dc50abe1e80677cf2cc360880e))
+* **bpmn:** unify and fix label spacing for elements and sequence flows ([ea10eee](https://github.com/robertwaszkowski/aurea-eden/commit/ea10eee2d98d67b1ad94b6177b16e20c506c4443))
+* **converter:** compute cardinal source port (N/E/S/W) for multi-output elements ([ec0f31a](https://github.com/robertwaszkowski/aurea-eden/commit/ec0f31acb21fe628d698a6d86154fd8fc8067bc6))
+* **converter:** enforce strict gateway exit port rules (N/E/S) ([03a1042](https://github.com/robertwaszkowski/aurea-eden/commit/03a104285f1611963ee54925833388c47fdd66e2))
+* **converter:** enforce Upward placement rule for End Events attached to Gateways ([ed9dac5](https://github.com/robertwaszkowski/aurea-eden/commit/ed9dac5dd4c10cc86e27e410e34a2d8b1fb2ff12))
+* **converter:** explicit port selection and smarter branch placement for 2-output elements ([468ffba](https://github.com/robertwaszkowski/aurea-eden/commit/468ffba42f8d4484a70692a488066d88db88a82a))
+* **converter:** implement BpmnToFluentConverter to output fluent API syntax automatically ([8f27f88](https://github.com/robertwaszkowski/aurea-eden/commit/8f27f884c31c8222f048645bc16563b990993d09))
+* **converter:** use 'explicit' source port for gateways with 2+ outgoing flows ([cbb7a2e](https://github.com/robertwaszkowski/aurea-eden/commit/cbb7a2e493d3ceb6ea6be0d8ebeb322d9508fddf))
+* **demo:** add BpmnConverterDemo showing native XML vs auto-generated fluent API side-by-side ([00cfda5](https://github.com/robertwaszkowski/aurea-eden/commit/00cfda5db230e087c9f5df9effd87fab6b405763))
+* **demo:** add phase toggles to bpmn converter ui ([73b744e](https://github.com/robertwaszkowski/aurea-eden/commit/73b744e3f53ee610eea8640a269a3e633dae9edc))
+* **demo:** add phase toggles to BpmnConverterDemo ([2e70a90](https://github.com/robertwaszkowski/aurea-eden/commit/2e70a9087f135e11157aafd4329d3ae4051c5ffd))
+* **demo:** BpmnConverterDemo as default; add BPMN file picker with 4 diagrams ([19ee1f9](https://github.com/robertwaszkowski/aurea-eden/commit/19ee1f9192d651f1076d0e5163ef612df7e9d073))
+* **elements:** intelligent auto port resolution for L-curves ([c97a6a1](https://github.com/robertwaszkowski/aurea-eden/commit/c97a6a1fa16e86e29aeebfb879ecd5921c64d6cd))
+* Introduce core diagram Element class and initial BPMN to Fluent converter. ([d9e4467](https://github.com/robertwaszkowski/aurea-eden/commit/d9e4467e6bcaf1f0320b7648c2b745da71795134))
+* **routing:** implement advanced multi-segment orthagonal routing & layout demos ([ec3a0df](https://github.com/robertwaszkowski/aurea-eden/commit/ec3a0df942ac01cd6ebd2a42145ec722f4fc0e12))
+
+
+### Bug Fixes
+
+* **bpmn-converter:** port-spreading to prevent collinear connector overlaps ([b530aeb](https://github.com/robertwaszkowski/aurea-eden/commit/b530aebab5a4f706340944de27e6faff4a8dc912))
+* **connector:** Silently defer label creation when connector has no points yet ([0eaf278](https://github.com/robertwaszkowski/aurea-eden/commit/0eaf2780af13d9b114a73d5200e0f3b0d9ba1039))
+* **converter:** skip labels for unnamed elements; map terminateEndEvent correctly ([4d4da90](https://github.com/robertwaszkowski/aurea-eden/commit/4d4da902e6adfc2d47d3f7a1b13a46844b7af79a))
+* **converter:** use positionRightOf for same-row branch elements ([fff33bb](https://github.com/robertwaszkowski/aurea-eden/commit/fff33bb24711ab9c7e0d3d9ebfb4b7e67b3e0712))
+* correct bpmn export coordinate mapping and overlap markers ([e23670f](https://github.com/robertwaszkowski/aurea-eden/commit/e23670f1542780aa04881b6baead8bb65bdc7168))
+* **elements:** generate L-curves for diagonal auto-to-auto connections ([b765479](https://github.com/robertwaszkowski/aurea-eden/commit/b765479523fafbe9cd0c560e9ab4b2313aa2e951))
+* Improve connector routing and port spreading mechanics ([30f62ac](https://github.com/robertwaszkowski/aurea-eden/commit/30f62ac495a0b759ea51b8bfa1fa380fb4d0b021))
+* **notations:** update relative import paths after moving to per-notation subfolders ([e509929](https://github.com/robertwaszkowski/aurea-eden/commit/e5099298bef56161eda43144d55d2dd66502eb0c))
+
 ### [1.41.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.41.0...v1.41.1) (2026-02-28)
 
 ## [1.41.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.40.2...v1.41.0) (2026-02-28)

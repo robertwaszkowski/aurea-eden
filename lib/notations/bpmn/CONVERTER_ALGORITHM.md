@@ -27,7 +27,7 @@ The conversion process is divided into logical phases, transforming raw XML stri
 ### Phase 1: Parsing and Graph Construction
 1. **XML Ingestion**: The standard DOMParser reads the BPMN string. It identifies core node types (`startEvent`, `task`, `exclusiveGateway`, `endEvent`) regardless of XML namespace prefixes.
 2. **Adjacency Mapping**: Sequence flows are evaluated to populate `elements` (Map) and `adjacencyList` (Map of node -> outgoing edges). No geometry is calculated yet; this is a purely abstract mathematical graph.
-3. **Primary Path Extraction (BFS)**: Uses Breadth-First Search from the `StartEvent` evaluating all possible paths. The *longest* path leading to a standard `EndEvent` (excluding `TerminateEndEvent`) is classified as the **Primary Path** (or "Happy Path").
+3. **Primary Path Extraction (BFS)**: Uses Breadth-First Search from the `StartEvent` evaluating all possible paths. The *longest* path leading to a standard `EndEvent` is classified as the **Primary Path** (or "Happy Path"). When parallel branches tie in depth, a **Lexical Heuristic Scoring** system assigns `+50`/`-50` weights based on terminal node titles (e.g., favoring *Approve* over *Reject*), mathematically guaranteeing the optimal structural trunk.
 
 ### Phase 2: Cycle Detection and Back-Edge Mathematics
 Traditional reachability checks fail on nested loops. The engine uses a mathematical **Depth-First Search (DFS) Back-Edge Classifier**.
@@ -49,6 +49,7 @@ Nodes omitted from the baseline belong to secondary pathways.
    - Uses the DFS `back-edges` lookup table. If the traced subgraph strictly flows backward in the topology, it is marked as an **Iterative Branch**.
    - If it flows outward and merges structurally further down the X-axis, it is marked as a **Parallel Branch**.
    - **Shortcut Detection**: Edges that bypass nodes entirely along the baseline are injected with an invisible `bpmn:AnchorPoint`. The sequence flow is split into two physical connectors merging at the anchor, defining an empty **Shortcut Branch**.
+   - **Upward End Events**: All off-path `EndEvent` branches are natively classified as Upward branches (alongside Iterations). This strictly routes them `positionUpOf()`, preserving infinite clean horizontal real estate for parallel downstream logic.
 
 ### Phase 5: Stage 3 - Optimal Sorting and Multi-Lane Assignment
 To prevent parallel branches from printing over each other in the Y-axis, an allocation grid allocates lanes mathematically.
@@ -66,11 +67,14 @@ To prevent parallel branches from printing over each other in the Y-axis, an all
 
 ### Phase 6: Stage 4 - Target Routing and Connector Ports
 Once layout coordinates are locked, the topological edge vectors must be mapped statically to prevent the line-router from inventing intersecting diagonal paths.
-1. **Cardinal Routing Gateway Mathematical Rules**: 
-   - **Rule 1 (Terminators)**: If `target` is End/Terminate -> Port `N` (up).
-   - **Rule 2 (Iterations)**: If the edge is a DFS `Back-Edge` or the target is an Iterative Branch Head -> Port `N` (up).
-   - **Rule 3 (Primary Path)**: If traversing forward to the main critical path -> Port `E` (Right).
-   - **Rule 4 (Parallel Branch)**: Diverging parallel forward flow -> Port `S` (Down).
+1. **Geometric Pinwheel Auto-Port Physics**: 
+   - Non-primary branches rely on runtime geometric `'auto'` mapping decoupled from strict type assertions.
+   - Using Cartesian physics (`+Y` is UP), structurally aligned lines route purely (Target Above mathematically forces Source `N` ➔ Target `S`).
+   - Diagonal connections route using a cyclic **4-quadrant pinwheel matrix** that inherently forces a zero-overlap symmetric L-Curve exiting purely from vertical source faces (Target Up-Left exclusively maps `N`➔`E`, Target Down-Right maps `S`➔`W`, etc.).
+2. **Cardinal Routing Primary Rules**: 
+   - **Rule 1 (Iterations)**: If the edge is a DFS `Back-Edge` or the target is an Iterative Branch Head -> Port `N` (up).
+   - **Rule 2 (Primary Path)**: If traversing forward to the main critical path -> Port `E` (Right).
+   - **Rule 3 (Parallel Branch)**: Diverging parallel forward flow -> Port `S` (Down) or dynamically resolves via `'auto'`.
 2. **Port Spreading Algorithm**:
    - If > 1 flow enters identical port faces (e.g., three arrows merging into the West side of a Gateway), they overlap in a collinear line.
    - The port spreader grabs actual `[X, Y]` geometric origins for the arrows.
@@ -81,7 +85,8 @@ Once layout coordinates are locked, the topological edge vectors must be mapped 
 
 ### Phase 7: Post-Layout Physics and Overlap Resolution
 BPMN Diagrams trigger an internal physical "anti-overlap" sweep invoked dynamically from `BpmnDiagram.js`.
-1. **AABB Interference Math**: Uses `Element.getBoundingClientRect()` representing standard box geometry data points `(x, y, width, height)`. Intersection is proven if:
+1. **Headless Node Staggering**: If the XML was instantiated programmatically without geometry (`width/height=0`), the engine mathematically injects minimum spatial coordinate padding sequentially to structurally bypass identical `[0,0]` overlapping XML exceptions.
+2. **AABB Interference Math**: Uses `Element.getBoundingClientRect()` representing standard box geometry data points `(x, y, width, height)`. Intersection is proven if:
    - `rect1.right > rect2.left && rect1.left < rect2.right && rect1.bottom > rect2.top && rect1.top < rect2.bottom`
 2. **Heuristic Priority Pushing**:
    - If overlap is detected, an Aurea EDEN `.translate(dx, dy)` operation is mathematically injected to separate conflicting node bounds dynamically by evaluating graph roles.
