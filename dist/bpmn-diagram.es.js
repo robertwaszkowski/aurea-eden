@@ -60440,7 +60440,7 @@ SPREAD LOG: Target ${nodeId} Port ${basePort}`);
     return text.replace(/\n/g, "\\n").replace(/'/g, "\\'");
   }
 }
-const version = "1.45.1";
+const version = "1.46.0";
 var Easing = Object.freeze({
   Linear: Object.freeze({
     None: function(amount) {
@@ -69705,6 +69705,7 @@ class BpmnDiagram extends Diagram {
     const endEvents = xmlDoc.getElementsByTagNameNS(bpmnNamespace, "endEvent");
     for (let i2 = 0; i2 < endEvents.length; i2++) {
       const endEventId = endEvents[i2].getAttribute("id");
+      if (!layoutMap[endEventId]) continue;
       endEvents[i2].getAttribute("name");
       endEvents[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       endEvents[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
@@ -69772,9 +69773,16 @@ class BpmnDiagram extends Diagram {
       subProcesses[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
       const layout = getRawLayout(subProcessId);
       const isExpanded2 = layout.isExpanded || false;
-      const align = isExpanded2 ? "top-left" : BPMN_DIMS.TEXT_ALIGN_TASK;
-      const offset = isExpanded2 ? { x: 5, y: -5, z: 0 } : BPMN_DIMS.TEXT_OFFSET_DEFAULT;
-      this.addSubProcess(subProcessId, layout.width, layout.height, isExpanded2).addWrappedText(name2, offset, BPMN_DIMS.FONT_SIZE_TASK, align);
+      if (!layoutMap[subProcessId]) continue;
+      let align = BPMN_DIMS.TEXT_ALIGN_TASK;
+      let offset = BPMN_DIMS.TEXT_OFFSET_DEFAULT;
+      let vAlign = "center";
+      if (isExpanded2) {
+        align = "center";
+        vAlign = "top";
+        offset = new Vector3(0, -10, 0);
+      }
+      this.addSubProcess(subProcessId, layout.width, layout.height, isExpanded2).addWrappedText(name2, offset, BPMN_DIMS.FONT_SIZE_TASK, align, layout.width * 0.9, layout.height, vAlign);
     }
     const callActivities = xmlDoc.getElementsByTagNameNS(bpmnNamespace, "callActivity");
     for (let i2 = 0; i2 < callActivities.length; i2++) {
