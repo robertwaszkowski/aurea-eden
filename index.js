@@ -10,6 +10,7 @@ import simpleBpmnTemplate from './demo/VueWrapperBpmnDemo/simple-process-templat
 import wniosekOWsparcieBpmn from './demo/VueWrapperBpmnDemo/wniosek-o-wsparcie.bpmn?raw';
 import hardwareRetailerBpmn from './demo/VueWrapperBpmnDemo/hardware-retailer-template.bpmn?raw';
 import incidentManagementBpmn from './demo/VueWrapperBpmnDemo/incident-management-template.bpmn?raw';
+import subprocessBpmn from './demo/VueWrapperBpmnDemo/subprocess-demo.bpmn?raw';
 
 const vuetify = createVuetify({
   components,
@@ -229,8 +230,9 @@ const App = {
   },
   data() {
     return {
-      selectedDemo: 'BpmnConverterDemo',
+      selectedDemo: 'SubprocessDemo',
       demos: [
+        { title: 'Subprocess Demo', value: 'SubprocessDemo' },
         { title: 'BPMN Converter Demo', value: 'BpmnConverterDemo' },
         { title: 'Connection Variants Demo', value: 'ConnectionVariantsDemo' },
         { title: 'Vue Wrapper BPMN Demo', value: 'VueWrapperBpmnDemo' },
@@ -306,7 +308,20 @@ const App = {
         }
       }
 
-      if (this.selectedDemo === 'VueWrapperBpmnDemo') {
+      if (this.selectedDemo === 'SubprocessDemo') {
+        this.isVueDemo = true;
+        await nextTick();
+        this.bpmnXml = subprocessBpmn;
+        this.barValues = {
+          'Activity_1nxl47v': 75,
+          'Activity_011ww05': 45
+        };
+        this.myActiveTasks = ['Activity_1nxl47v']; 
+        this.otherActiveTasks = ['Activity_011ww05']; 
+        if (this.$refs.diagramRef) {
+          this.diagramInstance = this.$refs.diagramRef.diagramInstance;
+        }
+      } else if (this.selectedDemo === 'VueWrapperBpmnDemo') {
         this.isVueDemo = true;
         // Defer logic until component is mounted via v-if
         await nextTick();

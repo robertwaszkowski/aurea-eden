@@ -60171,7 +60171,9 @@ SPREAD LOG: Target ${nodeId} Port ${basePort}`);
       "parallelGateway",
       "eventBasedGateway",
       "complexGateway",
-      "endEvent"
+      "endEvent",
+      "subProcess",
+      "callActivity"
     ];
     for (let i2 = 0; i2 < allNodes.length; i2++) {
       const node2 = allNodes[i2];
@@ -69105,6 +69107,7 @@ class DashedOrthogonalConnectorShape extends Shape2 {
     this.name = "DashedOrthogonalConnectorShape";
   }
 }
+const subProcessMarker = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<svg\n   xmlns:dc="http://purl.org/dc/elements/1.1/"\n   xmlns:cc="http://creativecommons.org/ns#"\n   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n   xmlns:svg="http://www.w3.org/2000/svg"\n   xmlns="http://www.w3.org/2000/svg"\n   version="1.1"\n   id="svg2"\n   viewBox="0 0 2000 2000"\n   height="2000"\n   width="2000">\n  <defs\n     id="defs4" />\n  <metadata\n     id="metadata7">\n    <rdf:RDF>\n      <cc:Work\n         rdf:about="">\n        <dc:format>image/svg+xml</dc:format>\n        <dc:type\n           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />\n        <dc:title></dc:title>\n        <cc:license\n           rdf:resource="https://github.com/bpmn-io/bpmn-font/blob/master/LICENSE" />\n        <dc:creator>\n          <cc:Agent>\n            <dc:title>Jörg Dotzki</dc:title>\n          </cc:Agent>\n        </dc:creator>\n        <dc:subject>\n          <rdf:Bag>\n            <rdf:li>BPMN</rdf:li>\n            <rdf:li>bpmn-io</rdf:li>\n            <rdf:li>bpmn.io</rdf:li>\n            <rdf:li>Font</rdf:li>\n          </rdf:Bag>\n        </dc:subject>\n      </cc:Work>\n    </rdf:RDF>\n  </metadata>\n  <g\n     transform="translate(0,947.63784)"\n     id="layer1">\n    <path\n       id="rect4136-1"\n       transform="translate(0,-947.63784)"\n       d="m 300,300 0,50 0,1350 1400,0 0,-1400 z m 88,88 1224,0 0,1224 -1224,0 z m 522,212 0,310 -310,0 0,180 310,0 0,310 180,0 0,-310 310,0 0,-180 -310,0 0,-310 z"\n       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;white-space:normal;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:200;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />\n  </g>\n</svg>\n';
 const inclusive = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!-- Created with Inkscape (http://www.inkscape.org/) -->\n\n<svg\n   width="13.758311mm"\n   height="13.758311mm"\n   viewBox="0 0 13.758311 13.758311"\n   version="1.1"\n   id="svg1"\n   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"\n   sodipodi:docname="inclusive.svg"\n   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"\n   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"\n   xmlns="http://www.w3.org/2000/svg"\n   xmlns:svg="http://www.w3.org/2000/svg">\n  <sodipodi:namedview\n     id="namedview1"\n     pagecolor="#ffffff"\n     bordercolor="#000000"\n     borderopacity="0.25"\n     inkscape:showpageshadow="2"\n     inkscape:pageopacity="0.0"\n     inkscape:pagecheckerboard="0"\n     inkscape:deskcolor="#d1d1d1"\n     inkscape:document-units="mm"\n     inkscape:zoom="8.8470394"\n     inkscape:cx="30.349136"\n     inkscape:cy="27.636364"\n     inkscape:window-width="1104"\n     inkscape:window-height="784"\n     inkscape:window-x="0"\n     inkscape:window-y="38"\n     inkscape:window-maximized="0"\n     inkscape:current-layer="layer1" />\n  <defs\n     id="defs1" />\n  <g\n     inkscape:label="Layer 1"\n     inkscape:groupmode="layer"\n     id="layer1"\n     transform="translate(-101.73231,-141.68439)">\n    <path\n       style="display:inline;fill:#22242a;stroke-linecap:round;stroke-linejoin:round;stroke-width:0;stroke-dasharray:none;stroke:none"\n       d="m 25,10.75 c -7.855252,0 -14.25,6.394748 -14.25,14.25 0,7.855252 6.394748,14.25 14.25,14.25 7.855252,0 14.25,-6.394748 14.25,-14.25 0,-7.855252 -6.394748,-14.25 -14.25,-14.25 z m 0,2.5 c 6.504152,0 11.75,5.245848 11.75,11.75 0,6.504152 -5.245848,11.75 -11.75,11.75 -6.504152,0 -11.75,-5.245848 -11.75,-11.75 0,-6.504152 5.245848,-11.75 11.75,-11.75 z"\n       id="path2"\n       transform="matrix(0.26458333,0,0,0.26458333,101.99688,141.94896)" />\n    <rect\n       x="102.52605"\n       y="142.47813"\n       rx="1.0583333"\n       width="12.170834"\n       height="12.170834"\n       class="djs-outline"\n       style="fill:none;stroke-width:0.264583"\n       id="rect105" />\n  </g>\n</svg>\n';
 const exclusive = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!-- Created with Inkscape (http://www.inkscape.org/) -->\n\n<svg\n   width="13.758311mm"\n   height="13.758311mm"\n   viewBox="0 0 13.758311 13.758311"\n   version="1.1"\n   id="svg1"\n   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"\n   sodipodi:docname="exclusive.svg"\n   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"\n   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"\n   xmlns="http://www.w3.org/2000/svg"\n   xmlns:svg="http://www.w3.org/2000/svg">\n  <sodipodi:namedview\n     id="namedview1"\n     pagecolor="#ffffff"\n     bordercolor="#000000"\n     borderopacity="0.25"\n     inkscape:showpageshadow="2"\n     inkscape:pageopacity="0.0"\n     inkscape:pagecheckerboard="0"\n     inkscape:deskcolor="#d1d1d1"\n     inkscape:document-units="mm"\n     inkscape:zoom="4.1672912"\n     inkscape:cx="41.63376"\n     inkscape:cy="36.714497"\n     inkscape:window-width="1104"\n     inkscape:window-height="719"\n     inkscape:window-x="0"\n     inkscape:window-y="38"\n     inkscape:window-maximized="0"\n     inkscape:current-layer="layer1" />\n  <defs\n     id="defs1" />\n  <g\n     inkscape:label="Layer 1"\n     inkscape:groupmode="layer"\n     id="layer1"\n     transform="translate(-101.7323,-141.68439)">\n    <path\n       style="display:inline;fill:#22242a;stroke-linecap:round;stroke-linejoin:round"\n       d="M 16,15 23.428571,24.714286 16,34.428571 h 3.428571 l 5.714286,-7.464228 5.714286,7.464228 h 3.428571 L 26.857143,24.714286 34.285714,15 H 30.857143 L 25.142857,22.464229 19.428571,15 Z"\n       id="path1"\n       transform="matrix(0.26458333,0,0,0.26458333,101.99687,141.94896)" />\n    <rect\n       x="102.52604"\n       y="142.47813"\n       rx="1.0583333"\n       width="12.170834"\n       height="12.170834"\n       class="djs-outline"\n       style="fill:none;stroke-width:0.264583"\n       id="rect108" />\n  </g>\n</svg>\n';
 const parallel = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!-- Created with Inkscape (http://www.inkscape.org/) -->\n\n<svg\n   width="13.758311mm"\n   height="13.758311mm"\n   viewBox="0 0 13.758311 13.758311"\n   version="1.1"\n   id="svg1"\n   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"\n   sodipodi:docname="parallel.svg"\n   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"\n   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"\n   xmlns="http://www.w3.org/2000/svg"\n   xmlns:svg="http://www.w3.org/2000/svg">\n  <sodipodi:namedview\n     id="namedview1"\n     pagecolor="#ffffff"\n     bordercolor="#000000"\n     borderopacity="0.25"\n     inkscape:showpageshadow="2"\n     inkscape:pageopacity="0.0"\n     inkscape:pagecheckerboard="0"\n     inkscape:deskcolor="#d1d1d1"\n     inkscape:document-units="mm"\n     inkscape:zoom="2.5054948"\n     inkscape:cx="-2.1951752"\n     inkscape:cy="20.155699"\n     inkscape:window-width="1104"\n     inkscape:window-height="788"\n     inkscape:window-x="0"\n     inkscape:window-y="38"\n     inkscape:window-maximized="0"\n     inkscape:current-layer="layer1" />\n  <defs\n     id="defs1" />\n  <g\n     inkscape:label="Layer 1"\n     inkscape:groupmode="layer"\n     id="layer1"\n     transform="translate(-101.7323,-141.68439)">\n    <path\n       d="m 108.08229,144.59479 v 3.30729 h -3.3073 v 1.32292 h 3.3073 v 3.30729 h 1.32291 V 149.225 h 3.30729 v -1.32292 h -3.30729 v -3.30729 z"\n       style="fill:#22242a;stroke:#22242a;stroke-width:0.264583px;stroke-linecap:round;stroke-linejoin:round"\n       id="path109" />\n    <rect\n       x="102.52604"\n       y="142.47813"\n       rx="1.0583333"\n       width="12.170834"\n       height="12.170834"\n       class="djs-outline"\n       style="fill:none;stroke-width:0.264583"\n       id="rect111" />\n  </g>\n</svg>\n';
@@ -69432,6 +69435,25 @@ class BpmnDiagram extends Diagram {
     return _el;
   }
   // Tasks
+  addSubProcess(elementId, width = BPMN_DIMS.TASK_WIDTH, height = BPMN_DIMS.TASK_HEIGHT, isExpanded2 = false) {
+    const _el = this.addElement(new Element(elementId, new RoundedRectangleShape(width, height)));
+    _el.semanticType = "subprocess";
+    _el.bpmnType = "bpmn:SubProcess";
+    if (isExpanded2) {
+      _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_TASK, align: "top-left", offset: { x: 5, y: -5, z: 0 }, faceCamera: false };
+    } else {
+      _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_TASK, align: BPMN_DIMS.TEXT_ALIGN_TASK, offset: BPMN_DIMS.TEXT_OFFSET_DEFAULT, faceCamera: BPMN_DIMS.FACE_CAMERA_TASK };
+      _el.addIcon(subProcessMarker, "bottom", BPMN_DIMS.ICON_SIZE_SMALL);
+    }
+    return _el;
+  }
+  addCallActivity(elementId, width = BPMN_DIMS.TASK_WIDTH, height = BPMN_DIMS.TASK_HEIGHT) {
+    const _el = this.addElement(new Element(elementId, new RoundedRectangleShape(width, height, 10, 3)));
+    _el.semanticType = "callactivity";
+    _el.bpmnType = "bpmn:CallActivity";
+    _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_TASK, align: BPMN_DIMS.TEXT_ALIGN_TASK, offset: BPMN_DIMS.TEXT_OFFSET_DEFAULT, faceCamera: BPMN_DIMS.FACE_CAMERA_TASK };
+    return _el;
+  }
   addTask(elementId, width = BPMN_DIMS.TASK_WIDTH, height = BPMN_DIMS.TASK_HEIGHT) {
     const _el = this.addElement(new Element(elementId, new RoundedRectangleShape(width, height)));
     _el.semanticType = "task";
@@ -69595,16 +69617,20 @@ class BpmnDiagram extends Diagram {
     const dcNamespace = "http://www.omg.org/spec/DD/20100524/DC";
     const diNamespace = "http://www.omg.org/spec/DD/20100524/DI";
     const layoutMap = {};
-    const bpmnShapes = xmlDoc.getElementsByTagNameNS(bpmndiNamespace, "BPMNShape");
+    const bpmnDiagrams = xmlDoc.getElementsByTagNameNS(bpmndiNamespace, "BPMNDiagram");
+    const mainDiagram = bpmnDiagrams.length > 0 ? bpmnDiagrams[0] : xmlDoc;
+    const bpmnShapes = mainDiagram.getElementsByTagNameNS(bpmndiNamespace, "BPMNShape");
     for (let i2 = 0; i2 < bpmnShapes.length; i2++) {
       const bpmnElementId = bpmnShapes[i2].getAttribute("bpmnElement");
+      const isExpanded2 = bpmnShapes[i2].getAttribute("isExpanded") === "true";
       const bounds = bpmnShapes[i2].getElementsByTagNameNS(dcNamespace, "Bounds")[0];
       if (bounds) {
         layoutMap[bpmnElementId] = {
           width: parseFloat(bounds.getAttribute("width")),
           height: parseFloat(bounds.getAttribute("height")),
           x: parseFloat(bounds.getAttribute("x")),
-          y: parseFloat(bounds.getAttribute("y")) * -1
+          y: parseFloat(bounds.getAttribute("y")) * -1,
+          isExpanded: isExpanded2
         };
       }
     }
@@ -69662,6 +69688,7 @@ class BpmnDiagram extends Diagram {
     const startEvents = xmlDoc.getElementsByTagNameNS(bpmnNamespace, "startEvent");
     for (let i2 = 0; i2 < startEvents.length; i2++) {
       const startEventId = startEvents[i2].getAttribute("id");
+      if (!layoutMap[startEventId]) continue;
       const { width, height } = getDims(startEventId);
       if (startEvents[i2].getElementsByTagNameNS(bpmnNamespace, "messageEventDefinition").length > 0) {
         this.addMessageStartEvent(startEventId, width, height);
@@ -69701,6 +69728,7 @@ class BpmnDiagram extends Diagram {
     for (let i2 = 0; i2 < intermediateCatchEvents.length; i2++) {
       const intermediateCatchEventId = intermediateCatchEvents[i2].getAttribute("id");
       intermediateCatchEvents[i2].getAttribute("name");
+      if (!layoutMap[intermediateCatchEventId]) continue;
       getDims(intermediateCatchEventId);
       if (intermediateCatchEvents[i2].getElementsByTagNameNS(bpmnNamespace, "messageEventDefinition").length > 0) {
         this.addIntermediateMessageCatchEvent(intermediateCatchEventId);
@@ -69720,6 +69748,7 @@ class BpmnDiagram extends Diagram {
     for (let i2 = 0; i2 < intermediateThrowEvents.length; i2++) {
       const intermediateThrowEventId = intermediateThrowEvents[i2].getAttribute("id");
       intermediateThrowEvents[i2].getAttribute("name");
+      if (!layoutMap[intermediateThrowEventId]) continue;
       getDims(intermediateThrowEventId);
       if (intermediateThrowEvents[i2].getElementsByTagNameNS(bpmnNamespace, "messageEventDefinition").length > 0) {
         this.addIntermediateMessageThrowEvent(intermediateThrowEventId);
@@ -69735,12 +69764,35 @@ class BpmnDiagram extends Diagram {
         this.addIntermediateEvent(intermediateThrowEventId);
       }
     }
+    const subProcesses = xmlDoc.getElementsByTagNameNS(bpmnNamespace, "subProcess");
+    for (let i2 = 0; i2 < subProcesses.length; i2++) {
+      const subProcessId = subProcesses[i2].getAttribute("id");
+      const name2 = subProcesses[i2].getAttribute("name");
+      subProcesses[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
+      subProcesses[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      const layout = getRawLayout(subProcessId);
+      const isExpanded2 = layout.isExpanded || false;
+      const align = isExpanded2 ? "top-left" : BPMN_DIMS.TEXT_ALIGN_TASK;
+      const offset = isExpanded2 ? { x: 5, y: -5, z: 0 } : BPMN_DIMS.TEXT_OFFSET_DEFAULT;
+      this.addSubProcess(subProcessId, layout.width, layout.height, isExpanded2).addWrappedText(name2, offset, BPMN_DIMS.FONT_SIZE_TASK, align);
+    }
+    const callActivities = xmlDoc.getElementsByTagNameNS(bpmnNamespace, "callActivity");
+    for (let i2 = 0; i2 < callActivities.length; i2++) {
+      const callActivityId = callActivities[i2].getAttribute("id");
+      const name2 = callActivities[i2].getAttribute("name");
+      callActivities[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
+      callActivities[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[callActivityId]) continue;
+      const { width, height } = getDims(callActivityId);
+      this.addCallActivity(callActivityId, width, height).addWrappedText(name2, BPMN_DIMS.TEXT_OFFSET_DEFAULT, BPMN_DIMS.FONT_SIZE_TASK, BPMN_DIMS.TEXT_ALIGN_TASK);
+    }
     const tasks = xmlDoc.getElementsByTagNameNS(bpmnNamespace, "task");
     for (let i2 = 0; i2 < tasks.length; i2++) {
       const taskId = tasks[i2].getAttribute("id");
       const name2 = tasks[i2].getAttribute("name");
       tasks[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       tasks[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[taskId]) continue;
       const { width, height } = getDims(taskId);
       this.addTask(taskId, width, height).addWrappedText(name2, BPMN_DIMS.TEXT_OFFSET_DEFAULT, BPMN_DIMS.FONT_SIZE_TASK, BPMN_DIMS.TEXT_ALIGN_TASK);
     }
@@ -69750,6 +69802,7 @@ class BpmnDiagram extends Diagram {
       const name2 = manualTasks[i2].getAttribute("name");
       manualTasks[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       manualTasks[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[manualTaskId]) continue;
       const { width, height } = getDims(manualTaskId);
       this.addManualTask(manualTaskId, width, height).addWrappedText(name2, BPMN_DIMS.TEXT_OFFSET_DEFAULT, BPMN_DIMS.FONT_SIZE_TASK, BPMN_DIMS.TEXT_ALIGN_TASK);
     }
@@ -69759,6 +69812,7 @@ class BpmnDiagram extends Diagram {
       const name2 = userTasks[i2].getAttribute("name");
       userTasks[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       userTasks[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[userTaskId]) continue;
       const { width, height } = getDims(userTaskId);
       this.addUserTask(userTaskId, width, height).addWrappedText(name2, BPMN_DIMS.TEXT_OFFSET_DEFAULT, BPMN_DIMS.FONT_SIZE_TASK, BPMN_DIMS.TEXT_ALIGN_TASK);
     }
@@ -69768,6 +69822,7 @@ class BpmnDiagram extends Diagram {
       const name2 = scriptTasks[i2].getAttribute("name");
       scriptTasks[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       scriptTasks[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[scriptTaskId]) continue;
       const { width, height } = getDims(scriptTaskId);
       this.addScriptTask(scriptTaskId, width, height).addWrappedText(name2, BPMN_DIMS.TEXT_OFFSET_DEFAULT, BPMN_DIMS.FONT_SIZE_TASK, BPMN_DIMS.TEXT_ALIGN_TASK);
     }
@@ -69777,6 +69832,7 @@ class BpmnDiagram extends Diagram {
       const name2 = businessRuleTasks[i2].getAttribute("name");
       businessRuleTasks[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       businessRuleTasks[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[businessRuleTaskId]) continue;
       const { width, height } = getDims(businessRuleTaskId);
       this.addBusinessRuleTask(businessRuleTaskId, width, height).addWrappedText(name2, BPMN_DIMS.TEXT_OFFSET_DEFAULT, BPMN_DIMS.FONT_SIZE_TASK, BPMN_DIMS.TEXT_ALIGN_TASK);
     }
@@ -69786,6 +69842,7 @@ class BpmnDiagram extends Diagram {
       const name2 = serviceTasks[i2].getAttribute("name");
       serviceTasks[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       serviceTasks[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[serviceTaskId]) continue;
       const { width, height } = getDims(serviceTaskId);
       this.addServiceTask(serviceTaskId, width, height).addWrappedText(name2, BPMN_DIMS.TEXT_OFFSET_DEFAULT, BPMN_DIMS.FONT_SIZE_TASK, BPMN_DIMS.TEXT_ALIGN_TASK);
     }
@@ -69795,6 +69852,7 @@ class BpmnDiagram extends Diagram {
       const name2 = sendTasks[i2].getAttribute("name");
       sendTasks[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       sendTasks[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[sendTaskId]) continue;
       const { width, height } = getDims(sendTaskId);
       this.addSendTask(sendTaskId, width, height).addWrappedText(name2, BPMN_DIMS.TEXT_OFFSET_DEFAULT, BPMN_DIMS.FONT_SIZE_TASK, BPMN_DIMS.TEXT_ALIGN_TASK);
     }
@@ -69804,6 +69862,7 @@ class BpmnDiagram extends Diagram {
       const name2 = receiveTasks[i2].getAttribute("name");
       receiveTasks[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       receiveTasks[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[receiveTaskId]) continue;
       const { width, height } = getDims(receiveTaskId);
       this.addReceiveTask(receiveTaskId, width, height).addWrappedText(name2, BPMN_DIMS.TEXT_OFFSET_DEFAULT, BPMN_DIMS.FONT_SIZE_TASK, BPMN_DIMS.TEXT_ALIGN_TASK);
     }
@@ -69813,6 +69872,7 @@ class BpmnDiagram extends Diagram {
       inclusiveGateways[i2].getAttribute("name");
       inclusiveGateways[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       inclusiveGateways[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[gatewayId]) continue;
       const { width, height } = getDims(gatewayId);
       this.addInclusiveGateway(gatewayId, width, height);
     }
@@ -69822,6 +69882,7 @@ class BpmnDiagram extends Diagram {
       exclusiveGateways[i2].getAttribute("name");
       exclusiveGateways[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       exclusiveGateways[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[gatewayId]) continue;
       const { width, height } = getDims(gatewayId);
       this.addExclusiveGateway(gatewayId, width, height);
     }
@@ -69831,6 +69892,7 @@ class BpmnDiagram extends Diagram {
       parallelGateways[i2].getAttribute("name");
       parallelGateways[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       parallelGateways[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[gatewayId]) continue;
       const { width, height } = getDims(gatewayId);
       this.addParallelGateway(gatewayId, width, height);
     }
@@ -69840,6 +69902,7 @@ class BpmnDiagram extends Diagram {
       eventBasedGateways[i2].getAttribute("name");
       eventBasedGateways[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       eventBasedGateways[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[gatewayId]) continue;
       const { width, height } = getDims(gatewayId);
       this.addEventBasedGateway(gatewayId, width, height);
     }
@@ -69849,6 +69912,7 @@ class BpmnDiagram extends Diagram {
       complexGateways[i2].getAttribute("name");
       complexGateways[i2].getElementsByTagNameNS(bpmnNamespace, "incoming");
       complexGateways[i2].getElementsByTagNameNS(bpmnNamespace, "outgoing");
+      if (!layoutMap[gatewayId]) continue;
       const { width, height } = getDims(gatewayId);
       this.addComplexGateway(gatewayId, width, height);
     }
@@ -69864,10 +69928,11 @@ class BpmnDiagram extends Diagram {
       const id = textAnnotations[i2].getAttribute("id");
       const textNode = textAnnotations[i2].getElementsByTagNameNS(bpmnNamespace, "text")[0];
       const text = textNode ? textNode.textContent : "";
+      if (!layoutMap[id]) continue;
       const { width, height } = getDims(id);
       this.addTextAnnotation(id, text, width, height);
     }
-    const bpmnShapesToPosition = xmlDoc.getElementsByTagNameNS(bpmndiNamespace, "BPMNShape");
+    const bpmnShapesToPosition = mainDiagram.getElementsByTagNameNS(bpmndiNamespace, "BPMNShape");
     for (let i2 = 0; i2 < bpmnShapesToPosition.length; i2++) {
       const bpmnShape = bpmnShapesToPosition[i2];
       bpmnShape.getAttribute("id");
@@ -69938,7 +70003,7 @@ class BpmnDiagram extends Diagram {
         }
       }
     }
-    const bpmnEdges = xmlDoc.getElementsByTagNameNS(bpmndiNamespace, "BPMNEdge");
+    const bpmnEdges = mainDiagram.getElementsByTagNameNS(bpmndiNamespace, "BPMNEdge");
     for (let i2 = 0; i2 < bpmnEdges.length; i2++) {
       const bpmnEdge = bpmnEdges[i2];
       const bpmnEdgeId = bpmnEdge.getAttribute("id");

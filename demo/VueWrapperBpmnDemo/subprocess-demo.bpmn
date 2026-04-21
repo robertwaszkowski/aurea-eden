@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<semantic:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:semantic="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:aurea="http://aurea.software/schema/2024/bpmn" id="_1275486223307" targetNamespace="http://www.trisotech.com/definitions/_1275486223307" exporter="Camunda Modeler" exporterVersion="1.8.0">
+  <semantic:process id="_6" isExecutable="false">
+    <semantic:extensionElements>
+      <aurea:i18nResourcesPath>/api/v1/translations</aurea:i18nResourcesPath>
+      <aurea:role id="Role_iiy0z28" code="Rola 1" assignmentMode="predefined" />
+      <aurea:role id="Role_02wgims" code="Rola 2" assignmentMode="predefined" />
+    </semantic:extensionElements>
+    <semantic:startEvent id="Event_0bntz1p" name="Zdarzenie początkowe">
+      <semantic:extensionElements>
+        <aurea:form>/Formularz zadania.form</aurea:form>
+      </semantic:extensionElements>
+      <semantic:outgoing>Flow_09qrlae</semantic:outgoing>
+    </semantic:startEvent>
+    <semantic:task id="Activity_1nxl47v" name="Zadanie 1" aurea:responsibleRef="Role_iiy0z28" aurea:cancelable="false">
+      <semantic:extensionElements>
+        <aurea:accountable>Role_iiy0z28</aurea:accountable>
+        <aurea:form>/Formularz zadania.form</aurea:form>
+      </semantic:extensionElements>
+      <semantic:incoming>Flow_09qrlae</semantic:incoming>
+      <semantic:outgoing>Flow_08zcg8b</semantic:outgoing>
+    </semantic:task>
+    <semantic:sequenceFlow id="Flow_09qrlae" sourceRef="Event_0bntz1p" targetRef="Activity_1nxl47v" />
+    <semantic:sequenceFlow id="Flow_08zcg8b" sourceRef="Activity_1nxl47v" targetRef="Activity_1xqa2wd" />
+    <semantic:sequenceFlow id="Flow_1ka0xm0" sourceRef="Activity_1xqa2wd" targetRef="Activity_1kc5dtp" />
+    <semantic:endEvent id="Event_0r1cgdi" name="Zdarzenie końcowe">
+      <semantic:incoming>Flow_1od13jm</semantic:incoming>
+    </semantic:endEvent>
+    <semantic:sequenceFlow id="Flow_1kfxbee" sourceRef="Activity_1kc5dtp" targetRef="Activity_0vx6r8w" />
+    <semantic:subProcess id="Activity_1xqa2wd" name="Podproces 2">
+      <semantic:incoming>Flow_08zcg8b</semantic:incoming>
+      <semantic:outgoing>Flow_1ka0xm0</semantic:outgoing>
+      <semantic:startEvent id="Event_08lx02f" name="Start podprocesu 2">
+        <semantic:outgoing>Flow_1fe0ks9</semantic:outgoing>
+      </semantic:startEvent>
+      <semantic:task id="Activity_02g32ks" name="Zadanie 2.1" aurea:responsibleRef="Role_02wgims" aurea:cancelable="false">
+        <semantic:extensionElements>
+          <aurea:accountable>Role_02wgims</aurea:accountable>
+          <aurea:form>/Formularz zadania.form</aurea:form>
+        </semantic:extensionElements>
+        <semantic:incoming>Flow_1fe0ks9</semantic:incoming>
+        <semantic:outgoing>Flow_0rryn0x</semantic:outgoing>
+      </semantic:task>
+      <semantic:sequenceFlow id="Flow_1fe0ks9" sourceRef="Event_08lx02f" targetRef="Activity_02g32ks" />
+      <semantic:task id="Activity_1960d1f" name="Zadanie 2.2" aurea:responsibleRef="Role_iiy0z28" aurea:cancelable="false">
+        <semantic:extensionElements>
+          <aurea:accountable>Role_iiy0z28</aurea:accountable>
+          <aurea:form>/Formularz zadania.form</aurea:form>
+        </semantic:extensionElements>
+        <semantic:incoming>Flow_0rryn0x</semantic:incoming>
+        <semantic:outgoing>Flow_149zvhj</semantic:outgoing>
+      </semantic:task>
+      <semantic:sequenceFlow id="Flow_0rryn0x" sourceRef="Activity_02g32ks" targetRef="Activity_1960d1f" />
+      <semantic:endEvent id="Event_1vsnisr" name="Koniec podprocesu 2">
+        <semantic:incoming>Flow_149zvhj</semantic:incoming>
+      </semantic:endEvent>
+      <semantic:sequenceFlow id="Flow_149zvhj" sourceRef="Activity_1960d1f" targetRef="Event_1vsnisr" />
+    </semantic:subProcess>
+    <semantic:subProcess id="Activity_1kc5dtp" name="Podproces 3">
+      <semantic:incoming>Flow_1ka0xm0</semantic:incoming>
+      <semantic:outgoing>Flow_1kfxbee</semantic:outgoing>
+      <semantic:startEvent id="Event_016sdke" name="Start podprocesu 3">
+        <semantic:outgoing>Flow_0ywa75i</semantic:outgoing>
+      </semantic:startEvent>
+      <semantic:task id="Activity_0u96em2" name="Zadanie 3.1" aurea:responsibleRef="Role_02wgims" aurea:cancelable="false">
+        <semantic:extensionElements>
+          <aurea:accountable>Role_02wgims</aurea:accountable>
+          <aurea:form>/Formularz zadania.form</aurea:form>
+        </semantic:extensionElements>
+        <semantic:incoming>Flow_0ywa75i</semantic:incoming>
+        <semantic:outgoing>Flow_1vs7fu3</semantic:outgoing>
+      </semantic:task>
+      <semantic:sequenceFlow id="Flow_0ywa75i" sourceRef="Event_016sdke" targetRef="Activity_0u96em2" />
+      <semantic:task id="Activity_011ww05" name="Zadanie 3.2" aurea:responsibleRef="Role_iiy0z28" aurea:cancelable="false">
+        <semantic:extensionElements>
+          <aurea:accountable>Role_iiy0z28</aurea:accountable>
+          <aurea:form>/Formularz zadania.form</aurea:form>
+        </semantic:extensionElements>
+        <semantic:incoming>Flow_1vs7fu3</semantic:incoming>
+        <semantic:outgoing>Flow_07dm1q9</semantic:outgoing>
+      </semantic:task>
+      <semantic:sequenceFlow id="Flow_1vs7fu3" sourceRef="Activity_0u96em2" targetRef="Activity_011ww05" />
+      <semantic:endEvent id="Event_1hc3bv8" name="Koniec procesu 3">
+        <semantic:incoming>Flow_07dm1q9</semantic:incoming>
+      </semantic:endEvent>
+      <semantic:sequenceFlow id="Flow_07dm1q9" sourceRef="Activity_011ww05" targetRef="Event_1hc3bv8" />
+    </semantic:subProcess>
+    <semantic:task id="Activity_0vx6r8w" name="Zadanie 4" aurea:responsibleRef="Role_02wgims" aurea:cancelable="false">
+      <semantic:extensionElements>
+        <aurea:accountable>Role_02wgims</aurea:accountable>
+        <aurea:form>/Formularz zadania.form</aurea:form>
+      </semantic:extensionElements>
+      <semantic:incoming>Flow_1kfxbee</semantic:incoming>
+      <semantic:outgoing>Flow_1od13jm</semantic:outgoing>
+    </semantic:task>
+    <semantic:sequenceFlow id="Flow_1od13jm" sourceRef="Activity_0vx6r8w" targetRef="Event_0r1cgdi" />
+  </semantic:process>
+  <bpmndi:BPMNDiagram id="Trisotech.Visio-_6" name="Order Process" documentation="" resolution="96.00000267028808">
+    <bpmndi:BPMNPlane bpmnElement="_6">
+      <bpmndi:BPMNShape id="Event_0bntz1p_di" bpmnElement="Event_0bntz1p">
+        <dc:Bounds x="-138" y="402" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-149" y="445" width="59" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1nxl47v_di" bpmnElement="Activity_1nxl47v">
+        <dc:Bounds x="-50" y="380" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0r1cgdi_di" bpmnElement="Event_0r1cgdi">
+        <dc:Bounds x="1098" y="402" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1091" y="365" width="49" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ow4ufn_di" bpmnElement="Activity_1xqa2wd">
+        <dc:Bounds x="110" y="380" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1k1y9x9_di" bpmnElement="Activity_1kc5dtp" isExpanded="true">
+        <dc:Bounds x="280" y="320" width="590" height="200" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_016sdke_di" bpmnElement="Event_016sdke">
+        <dc:Bounds x="320.33333333333337" y="402" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="296" y="445" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0u96em2_di" bpmnElement="Activity_0u96em2">
+        <dc:Bounds x="410" y="380" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_011ww05_di" bpmnElement="Activity_011ww05">
+        <dc:Bounds x="570" y="380" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1hc3bv8_di" bpmnElement="Event_1hc3bv8">
+        <dc:Bounds x="732" y="402" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="709" y="445" width="85" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0ywa75i_di" bpmnElement="Flow_0ywa75i">
+        <di:waypoint x="356" y="420" />
+        <di:waypoint x="410" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vs7fu3_di" bpmnElement="Flow_1vs7fu3">
+        <di:waypoint x="510" y="420" />
+        <di:waypoint x="570" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07dm1q9_di" bpmnElement="Flow_07dm1q9">
+        <di:waypoint x="670" y="420" />
+        <di:waypoint x="732" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_0vx6r8w_di" bpmnElement="Activity_0vx6r8w">
+        <dc:Bounds x="950" y="380" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_09qrlae_di" bpmnElement="Flow_09qrlae">
+        <di:waypoint x="-102" y="420" />
+        <di:waypoint x="-50" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08zcg8b_di" bpmnElement="Flow_08zcg8b">
+        <di:waypoint x="50" y="420" />
+        <di:waypoint x="110" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ka0xm0_di" bpmnElement="Flow_1ka0xm0">
+        <di:waypoint x="210" y="420" />
+        <di:waypoint x="280" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1kfxbee_di" bpmnElement="Flow_1kfxbee">
+        <di:waypoint x="870" y="420" />
+        <di:waypoint x="950" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1od13jm_di" bpmnElement="Flow_1od13jm">
+        <di:waypoint x="1050" y="420" />
+        <di:waypoint x="1098" y="420" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_00w26jg">
+    <bpmndi:BPMNPlane id="BPMNPlane_02fbeol" bpmnElement="Activity_1xqa2wd">
+      <bpmndi:BPMNShape id="Event_08lx02f_di" bpmnElement="Event_08lx02f">
+        <dc:Bounds x="262" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="239" y="375" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02g32ks_di" bpmnElement="Activity_02g32ks">
+        <dc:Bounds x="350" y="310" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1960d1f_di" bpmnElement="Activity_1960d1f">
+        <dc:Bounds x="510" y="310" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1vsnisr_di" bpmnElement="Event_1vsnisr">
+        <dc:Bounds x="672" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="657" y="375" width="67" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1fe0ks9_di" bpmnElement="Flow_1fe0ks9">
+        <di:waypoint x="298" y="350" />
+        <di:waypoint x="350" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rryn0x_di" bpmnElement="Flow_0rryn0x">
+        <di:waypoint x="450" y="350" />
+        <di:waypoint x="510" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_149zvhj_di" bpmnElement="Flow_149zvhj">
+        <di:waypoint x="610" y="350" />
+        <di:waypoint x="672" y="350" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</semantic:definitions>
