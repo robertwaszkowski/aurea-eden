@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.46.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.46.0...v1.46.1) (2026-04-27)
+
+
+### Bug Fixes
+
+* resolve zero-height bar crashes, missing reset logic, and diagram clear memory leaks ([3015abe](https://github.com/robertwaszkowski/aurea-eden/commit/3015abe0026554e794ba3af83b5d8e35cc7b6bb6))
+
 ## [1.46.0](https://github.com/robertwaszkowski/aurea-eden/compare/v1.45.1...v1.46.0) (2026-04-21)
 
 
