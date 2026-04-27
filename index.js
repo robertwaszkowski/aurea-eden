@@ -243,7 +243,8 @@ const App = {
         { title: 'Simple BPMN', value: 'SimpleBPMN' },
         { title: 'Shapes Demo', value: 'ShapesDemo' },
         { title: 'Badges Demo', value: 'BadgesDemo' },
-        { title: 'Custom Notation Demo', value: 'CustomNotationDemo' }
+        { title: 'Custom Notation Demo', value: 'CustomNotationDemo' },
+        { title: 'Vue Zero-Height Test Demo', value: 'VueZeroHeightDemo' }
       ],
       diagramInstance: shallowRef(null), // Use shallowRef for non-reactive diagram object
       drawer: true, // For v-navigation-drawer
@@ -259,7 +260,8 @@ const App = {
       wrapperTheme: 'LIGHT',
 
       // Legacy support
-      isVueDemo: false
+      isVueDemo: false,
+      testTimeoutId: null
     };
   },
   mounted() {
@@ -292,6 +294,11 @@ const App = {
         window.history.pushState({}, '', `/demo/${this.selectedDemo}/`);
       }
 
+      if (this.testTimeoutId) {
+        clearTimeout(this.testTimeoutId);
+        this.testTimeoutId = null;
+      }
+
       // Cleanup previous state
       this.isVueDemo = false;
       this.diagramInstance = null;
@@ -299,6 +306,7 @@ const App = {
       this.barValues = {};
       this.myActiveTasks = [];
       this.otherActiveTasks = [];
+      this.wrapperMode = 'VIEW';
 
       const container = document.getElementById('diagram-container');
       if (container) {
@@ -398,6 +406,48 @@ const App = {
         this.bpmnXml = incidentManagementBpmn;
         if (this.$refs.diagramRef) {
           this.diagramInstance = this.$refs.diagramRef.diagramInstance;
+        }
+      } else if (this.selectedDemo === 'VueZeroHeightDemo') {
+        this.isVueDemo = true;
+        await nextTick();
+        this.bpmnXml = simpleBpmnTemplate;
+        
+        let toggle = false;
+        const updateValues = () => {
+           if (this.selectedDemo !== 'VueZeroHeightDemo') return;
+           if (toggle) {
+               // Test zero-height conditions and omitting IDs
+               this.barValues = {
+                   'TaskQuotationHandling': 0,                 // Explicit 0
+                   'TaskApproveOrder': { heightValue: 0 },     // Zero in object
+                   '_6-190': [],                               // Empty array
+                   // '_6-241' is completely omitted
+                   'TaskReviewOrder': 90                       // This one stays
+               };
+           } else {
+               // Normal valid values
+               this.barValues = {
+                   'TaskQuotationHandling': 50,
+                   'TaskApproveOrder': 80,
+                   '_6-190': 50,
+                   '_6-241': 40,
+                   'TaskReviewOrder': 90
+               };
+           }
+           toggle = !toggle;
+           this.testTimeoutId = setTimeout(updateValues, 3000);
+        };
+        
+        updateValues();
+
+        if (this.$refs.diagramRef) {
+          this.diagramInstance = this.$refs.diagramRef.diagramInstance;
+          // Force ANALYZE mode for testing
+          setTimeout(() => {
+              if (this.selectedDemo === 'VueZeroHeightDemo') {
+                  this.wrapperMode = 'ANALYZE';
+              }
+          }, 500);
         }
       } else {
         await nextTick(async () => {

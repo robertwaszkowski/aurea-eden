@@ -163,11 +163,26 @@ export default {
         };
 
         let updated = false;
+
+        // Reset all active elements first
+        diagramInstance.value.elements.forEach(el => {
+            if (el.parameters && el.parameters.bars && el.parameters.bars.length > 0) {
+                el.parameters.bars = [];
+                el.parameters.value = 0;
+                updated = true;
+            }
+        });
+
         Object.entries(values).forEach(([id, val]) => {
             const el = diagramInstance.value.getElementById(id);
             if (el) {
+                if (!el.parameters) el.parameters = {};
                 const bars = normalizeBars(val);
-                if (bars && bars.length > 0) {
+                if (!bars || bars.length === 0 || (bars.length === 1 && bars[0].heightValue === 0)) {
+                    el.parameters.bars = [];
+                    el.parameters.value = 0;
+                    updated = true;
+                } else {
                     el.parameters.bars = bars;
                     // Keep backward-compat alias
                     el.parameters.value = bars[0].heightValue;
@@ -178,7 +193,14 @@ export default {
 
         // If in ANALYZE mode and we updated values, refresh visualization
         if (updated && props.mode === 'ANALYZE') {
-            diagramInstance.value.setMode('ANALYZE');
+            if (diagramInstance.value.isTransitioning) {
+                // If it's currently transitioning to ANALYZE, it will pick up the new values automatically
+            } else {
+                // Explicitly refresh the bars without changing the camera
+                diagramInstance.value.removeValueBars();
+                diagramInstance.value._initAnalyzeBars();
+                diagramInstance.value._applyAnalyzeModeTheming();
+            }
         }
     };
 

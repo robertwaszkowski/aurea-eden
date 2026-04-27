@@ -214,7 +214,10 @@ const barValues = {
   'Task_4': [
     { heightValue: 42, colorValue: 70 },
     { heightValue: 30, colorValue: 90, colorsInverted: true }
-  ]
+  ],
+
+  // Clear bars explicitly (omitting the ID entirely also works)
+  'Task_5': 0
 };
 </script>
 ```
@@ -356,6 +359,14 @@ diagram.addTask('a1')
 #### Color normalization
 
 Colors are normalized **per slot** across all elements. All elements' first bars are normalized together, all second bars separately — so each slot independently represents a different KPI dimension.
+
+#### Clearing Bars
+
+To remove a value bar from an element that previously displayed one, you can either:
+1. Completely omit the element's ID from the `values` object in your next reactive update.
+2. Explicitly set the value to `0` or an empty array `[]`.
+
+The Vue wrapper will automatically clean up the 3D meshes without crashing the WebGL context.
 
 #### Badge labels in ANALYZE mode
 
