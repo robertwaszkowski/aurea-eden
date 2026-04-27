@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.46.2](https://github.com/robertwaszkowski/aurea-eden/compare/v1.46.1...v1.46.2) (2026-04-27)
+
+
+### Bug Fixes
+
+* recreate canvas texture on resize to prevent WebGL GL_INVALID_VALUE overflow ([32fc9c6](https://github.com/robertwaszkowski/aurea-eden/commit/32fc9c63b38aa510c0bb12773d0c0a18a2eff3cc))
+
 ### [1.46.1](https://github.com/robertwaszkowski/aurea-eden/compare/v1.46.0...v1.46.1) (2026-04-27)
 
 
