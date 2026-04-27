@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.46.4](https://github.com/robertwaszkowski/aurea-eden/compare/v1.46.3...v1.46.4) (2026-04-27)
+
+
+### Bug Fixes
+
+* recreate html canvas element entirely on sprite label resize to prevent WebGL overflow ([e59dfec](https://github.com/robertwaszkowski/aurea-eden/commit/e59dfec77f0153a5eb04ca5470b97ff453d25ac0))
+
 ### [1.46.3](https://github.com/robertwaszkowski/aurea-eden/compare/v1.46.2...v1.46.3) (2026-04-27)
 
 
