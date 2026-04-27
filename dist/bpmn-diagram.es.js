@@ -60443,7 +60443,7 @@ SPREAD LOG: Target ${nodeId} Port ${basePort}`);
     return text.replace(/\n/g, "\\n").replace(/'/g, "\\'");
   }
 }
-const version = "1.46.1";
+const version = "1.46.2";
 var Easing = Object.freeze({
   Linear: Object.freeze({
     None: function(amount) {
@@ -66406,6 +66406,11 @@ class Element extends Mesh {
       context.font = `Bold ${scaledFontSize}px Arial`;
       const worldScale = 0.4 / resolutionScale;
       sprite.scale.set(canvas.width * worldScale, (mainHeight + tailHeight) * worldScale, 1);
+      if (sprite.material && sprite.material.map) {
+        sprite.material.map.dispose();
+        sprite.material.map = new CanvasTexture(canvas);
+        sprite.material.map.minFilter = LinearFilter;
+      }
     }
     context.clearRect(0, 0, canvas.width, canvas.height);
     this._drawBubblePath(context, canvas.width, mainHeight, tailHeight, scaledBorderRadius);
