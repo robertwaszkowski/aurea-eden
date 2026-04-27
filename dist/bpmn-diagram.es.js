@@ -60443,7 +60443,7 @@ SPREAD LOG: Target ${nodeId} Port ${basePort}`);
     return text.replace(/\n/g, "\\n").replace(/'/g, "\\'");
   }
 }
-const version = "1.46.2";
+const version = "1.46.3";
 var Easing = Object.freeze({
   Linear: Object.freeze({
     None: function(amount) {
@@ -66410,6 +66410,7 @@ class Element extends Mesh {
         sprite.material.map.dispose();
         sprite.material.map = new CanvasTexture(canvas);
         sprite.material.map.minFilter = LinearFilter;
+        sprite.material.needsUpdate = true;
       }
     }
     context.clearRect(0, 0, canvas.width, canvas.height);
