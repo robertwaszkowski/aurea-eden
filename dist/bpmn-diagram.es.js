@@ -60443,7 +60443,7 @@ SPREAD LOG: Target ${nodeId} Port ${basePort}`);
     return text.replace(/\n/g, "\\n").replace(/'/g, "\\'");
   }
 }
-const version = "1.46.3";
+const version = "1.46.4";
 var Easing = Object.freeze({
   Linear: Object.freeze({
     None: function(amount) {
@@ -66393,7 +66393,7 @@ class Element extends Mesh {
    */
   updateSpriteLabel(sprite, text, color = null) {
     if (!sprite || !sprite.userData || !sprite.userData.context) return;
-    const { canvas, context, parameters } = sprite.userData;
+    let { canvas, context, parameters } = sprite.userData;
     const { scaledFontSize, scaledPadding, scaledBorderRadius, bgColor, taskType, color: defaultColor, borderColor, borderWidth, resolutionScale, mainHeight, tailHeight } = parameters;
     const horizontalPadding = scaledPadding * 3.5;
     context.font = `Bold ${scaledFontSize}px Arial`;
@@ -66402,7 +66402,14 @@ class Element extends Mesh {
     const iconSize = taskType ? scaledFontSize : 0;
     const requiredWidth = textWidth + horizontalPadding * 2 + (taskType ? iconSize + scaledPadding : 0);
     if (requiredWidth > canvas.width) {
-      canvas.width = requiredWidth;
+      const newCanvas = document.createElement("canvas");
+      newCanvas.width = requiredWidth;
+      newCanvas.height = canvas.height;
+      const newContext = newCanvas.getContext("2d");
+      canvas = newCanvas;
+      context = newContext;
+      sprite.userData.canvas = canvas;
+      sprite.userData.context = context;
       context.font = `Bold ${scaledFontSize}px Arial`;
       const worldScale = 0.4 / resolutionScale;
       sprite.scale.set(canvas.width * worldScale, (mainHeight + tailHeight) * worldScale, 1);
