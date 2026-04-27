@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.46.3](https://github.com/robertwaszkowski/aurea-eden/compare/v1.46.2...v1.46.3) (2026-04-27)
+
+
+### Bug Fixes
+
+* update material map and mark as needing update to prevent WebGL texture dimension issues ([5d92dd6](https://github.com/robertwaszkowski/aurea-eden/commit/5d92dd6319ce60430c917b27173050024e02c38b))
+
 ### [1.46.2](https://github.com/robertwaszkowski/aurea-eden/compare/v1.46.1...v1.46.2) (2026-04-27)
 
 
