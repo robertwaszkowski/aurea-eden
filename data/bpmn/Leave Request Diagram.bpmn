@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_ApplicationSubmitted" name="Leave&#10;Request&#10;Submitted">
+      <bpmn:outgoing>Flow_1787ujs</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Task_ReviewAndForward_HeadOU" name="Review and&#10;Approve (Head&#10;of O.U.)">
+      <bpmn:incoming>Flow_1787ujs</bpmn:incoming>
+      <bpmn:outgoing>Flow_1au58d7</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ReviewApplication_PD" name="Review&#10;Entitlement (PD)">
+      <bpmn:incoming>Flow_1au58d7</bpmn:incoming>
+      <bpmn:outgoing>Flow_0677cqu</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_IsAcademicTeacher" name="Academic&#10;Teacher?">
+      <bpmn:incoming>Flow_0677cqu</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rnkxfp</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0byxf8o</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_Review_PRK" name="Review&#10;(Vice-Rector&#10;Education)">
+      <bpmn:incoming>Flow_0byxf8o</bpmn:incoming>
+      <bpmn:outgoing>Flow_03w7elb</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Review_PRN" name="Review&#10;(Vice-Rector&#10;Scientific)">
+      <bpmn:incoming>Flow_03w7elb</bpmn:incoming>
+      <bpmn:outgoing>Flow_1x73kg3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_MakeDecision_RKR" name="Decide (Rector)">
+      <bpmn:incoming>Flow_1x73kg3</bpmn:incoming>
+      <bpmn:outgoing>Flow_1rrzx3g</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_JoinDecision" name="Join&#10;Decision">
+      <bpmn:incoming>Flow_0x26bi4</bpmn:incoming>
+      <bpmn:incoming>Flow_1rrzx3g</bpmn:incoming>
+      <bpmn:outgoing>Flow_0013b99</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_InformHeadOU" name="Inform Head of&#10;O.U.">
+      <bpmn:incoming>Flow_0013b99</bpmn:incoming>
+      <bpmn:outgoing>Flow_08xly4g</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ImplementChanges" name="Register in HR&#10;System">
+      <bpmn:incoming>Flow_08xly4g</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hkh3bj</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_ProcessEnded" name="Process&#10;Ended">
+      <bpmn:incoming>Flow_1hkh3bj</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Task_MakeDecision_Chancellor" name="Decide&#10;(Chancellor)">
+      <bpmn:incoming>Flow_0rnkxfp</bpmn:incoming>
+      <bpmn:outgoing>Flow_0x26bi4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1787ujs" sourceRef="StartEvent_ApplicationSubmitted" targetRef="Task_ReviewAndForward_HeadOU" />
+    <bpmn:sequenceFlow id="Flow_1au58d7" sourceRef="Task_ReviewAndForward_HeadOU" targetRef="Task_ReviewApplication_PD" />
+    <bpmn:sequenceFlow id="Flow_0677cqu" sourceRef="Task_ReviewApplication_PD" targetRef="Gateway_IsAcademicTeacher" />
+    <bpmn:sequenceFlow id="Flow_0rnkxfp" sourceRef="Gateway_IsAcademicTeacher" targetRef="Task_MakeDecision_Chancellor" />
+    <bpmn:sequenceFlow id="Flow_0byxf8o" sourceRef="Gateway_IsAcademicTeacher" targetRef="Task_Review_PRK" />
+    <bpmn:sequenceFlow id="Flow_03w7elb" sourceRef="Task_Review_PRK" targetRef="Task_Review_PRN" />
+    <bpmn:sequenceFlow id="Flow_1x73kg3" sourceRef="Task_Review_PRN" targetRef="Task_MakeDecision_RKR" />
+    <bpmn:sequenceFlow id="Flow_0x26bi4" sourceRef="Task_MakeDecision_Chancellor" targetRef="Gateway_JoinDecision" />
+    <bpmn:sequenceFlow id="Flow_1rrzx3g" sourceRef="Task_MakeDecision_RKR" targetRef="Gateway_JoinDecision" />
+    <bpmn:sequenceFlow id="Flow_0013b99" sourceRef="Gateway_JoinDecision" targetRef="Task_InformHeadOU" />
+    <bpmn:sequenceFlow id="Flow_08xly4g" sourceRef="Task_InformHeadOU" targetRef="Task_ImplementChanges" />
+    <bpmn:sequenceFlow id="Flow_1hkh3bj" sourceRef="Task_ImplementChanges" targetRef="EndEvent_ProcessEnded" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="StartEvent_ApplicationSubmitted_di" bpmnElement="StartEvent_ApplicationSubmitted">
+        <dc:Bounds x="100" y="122" width="36.80180740356445" height="36.80180740356445" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="94" y="166" width="50" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ReviewAndForward_HeadOU_di" bpmnElement="Task_ReviewAndForward_HeadOU">
+        <dc:Bounds x="217" y="100" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ReviewApplication_PD_di" bpmnElement="Task_ReviewApplication_PD">
+        <dc:Bounds x="398" y="100" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_IsAcademicTeacher_di" bpmnElement="Gateway_IsAcademicTeacher" isMarkerVisible="true">
+        <dc:Bounds x="578" y="114" width="51.131370544433594" height="51.131370544433594" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="580" y="76.5" width="48" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Review_PRK_di" bpmnElement="Task_Review_PRK">
+        <dc:Bounds x="710" y="100" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Review_PRN_di" bpmnElement="Task_Review_PRN">
+        <dc:Bounds x="891" y="100" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_MakeDecision_RKR_di" bpmnElement="Task_MakeDecision_RKR">
+        <dc:Bounds x="1072" y="100" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_JoinDecision_di" bpmnElement="Gateway_JoinDecision" isMarkerVisible="true">
+        <dc:Bounds x="1251" y="114" width="51.131370544433594" height="51.131370544433594" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1255" y="76.5" width="43" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_InformHeadOU_di" bpmnElement="Task_InformHeadOU">
+        <dc:Bounds x="1383" y="100" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ImplementChanges_di" bpmnElement="Task_ImplementChanges">
+        <dc:Bounds x="1564" y="100" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_ProcessEnded_di" bpmnElement="EndEvent_ProcessEnded">
+        <dc:Bounds x="1745" y="122" width="36.80180740356445" height="36.80180740356445" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1743" y="166" width="41" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_MakeDecision_Chancellor_di" bpmnElement="Task_MakeDecision_Chancellor">
+        <dc:Bounds x="710" y="261" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1787ujs_di" bpmnElement="Flow_1787ujs">
+        <di:waypoint x="137" y="140" />
+        <di:waypoint x="217" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1au58d7_di" bpmnElement="Flow_1au58d7">
+        <di:waypoint x="318" y="140" />
+        <di:waypoint x="398" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0677cqu_di" bpmnElement="Flow_0677cqu">
+        <di:waypoint x="498" y="140" />
+        <di:waypoint x="578" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rnkxfp_di" bpmnElement="Flow_0rnkxfp">
+        <di:waypoint x="604" y="166" />
+        <di:waypoint x="604" y="301" />
+        <di:waypoint x="710" y="301" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0byxf8o_di" bpmnElement="Flow_0byxf8o">
+        <di:waypoint x="630" y="140" />
+        <di:waypoint x="710" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03w7elb_di" bpmnElement="Flow_03w7elb">
+        <di:waypoint x="810" y="140" />
+        <di:waypoint x="890" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1x73kg3_di" bpmnElement="Flow_1x73kg3">
+        <di:waypoint x="991" y="140" />
+        <di:waypoint x="1071" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0x26bi4_di" bpmnElement="Flow_0x26bi4">
+        <di:waypoint x="810" y="301" />
+        <di:waypoint x="1277" y="301" />
+        <di:waypoint x="1277" y="166" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rrzx3g_di" bpmnElement="Flow_1rrzx3g">
+        <di:waypoint x="1172" y="140" />
+        <di:waypoint x="1252" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0013b99_di" bpmnElement="Flow_0013b99">
+        <di:waypoint x="1303" y="140" />
+        <di:waypoint x="1383" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08xly4g_di" bpmnElement="Flow_08xly4g">
+        <di:waypoint x="1484" y="140" />
+        <di:waypoint x="1564" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hkh3bj_di" bpmnElement="Flow_1hkh3bj">
+        <di:waypoint x="1665" y="140" />
+        <di:waypoint x="1745" y="140" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

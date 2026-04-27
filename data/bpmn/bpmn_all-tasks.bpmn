@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="_JWom4K3kEeSZlev3lUeCxQ" targetNamespace="http://camunda.org/schema/1.0/bpmn" exporter="Camunda Modeler" exporterVersion="5.28.0" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:process id="Process_1" isExecutable="false">
+    <bpmn2:ioSpecification id="InputOutputSpecification_1">
+      <bpmn2:dataInput id="DataInput_1" />
+      <bpmn2:dataOutput id="DataOutput_1" />
+    </bpmn2:ioSpecification>
+    <bpmn2:task id="Activity_1iraj1o" />
+    <bpmn2:manualTask id="Activity_1mrcjut" />
+    <bpmn2:userTask id="Activity_04rkh2i" />
+    <bpmn2:scriptTask id="Activity_14kin8g" />
+    <bpmn2:businessRuleTask id="Activity_0xzj8ry" />
+    <bpmn2:serviceTask id="Activity_0z4lxkj" />
+    <bpmn2:sendTask id="Activity_0skyj30" />
+    <bpmn2:receiveTask id="Activity_0xb99jh" />
+    <bpmn2:choreographyTask id="ChoreographyTask_1" />
+  </bpmn2:process>
+  <bpmn2:dataStore id="DataStore_1" name="Data Store 1" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="_BPMNShape_ChoreographyTask_2" bpmnElement="ChoreographyTask_1">
+        <dc:Bounds x="1357" y="77" width="150" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1o0frs7" bpmnElement="Activity_1iraj1o">
+        <dc:Bounds x="158" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_17wbogw" bpmnElement="Activity_1mrcjut">
+        <dc:Bounds x="290" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1xfj7ef" bpmnElement="Activity_04rkh2i">
+        <dc:Bounds x="420" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0h4ioot" bpmnElement="Activity_14kin8g">
+        <dc:Bounds x="550" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_07i01jq" bpmnElement="Activity_0xzj8ry">
+        <dc:Bounds x="158" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1q8nnyh" bpmnElement="Activity_0z4lxkj">
+        <dc:Bounds x="290" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1gaazof" bpmnElement="Activity_0skyj30">
+        <dc:Bounds x="420" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0jjoi8p" bpmnElement="Activity_0xb99jh">
+        <dc:Bounds x="550" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ChoreographyTask_2" bpmnElement="ChoreographyTask_1">
+        <dc:Bounds x="1357" y="77" width="150" height="150" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

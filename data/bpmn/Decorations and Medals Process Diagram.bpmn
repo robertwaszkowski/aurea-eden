@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_ProcessInitiated" name="Process&#10;initiated">
+      <bpmn:outgoing>Flow_1mxejfh</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Task_SubmitApplication" name="Submit&#10;application for&#10;distinction">
+      <bpmn:incoming>Flow_1mxejfh</bpmn:incoming>
+      <bpmn:outgoing>Flow_0clrtcl</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_PresentApplicationsForAcceptance" name="Present&#10;applications for&#10;acceptance">
+      <bpmn:incoming>Flow_0clrtcl</bpmn:incoming>
+      <bpmn:outgoing>Flow_1eud9h6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ReviewApplications" name="Review&#10;applications and&#10;forward to PD">
+      <bpmn:incoming>Flow_1eud9h6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1pc0l1q</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_PresentApplicationsToRKR" name="Present&#10;reviewed&#10;applications to&#10;Rector">
+      <bpmn:incoming>Flow_1pc0l1q</bpmn:incoming>
+      <bpmn:outgoing>Flow_1lj32e5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_MakeDecision" name="Make decision">
+      <bpmn:incoming>Flow_1lj32e5</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ehrxho</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_RKRDecision" name="Application&#10;accepted?">
+      <bpmn:incoming>Flow_1ehrxho</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hzv4qt</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1r3x3sq</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_ForwardApplicationsToMPD" name="Forward&#10;accepted&#10;applications to&#10;MPD">
+      <bpmn:incoming>Flow_1hzv4qt</bpmn:incoming>
+      <bpmn:outgoing>Flow_017ojgf</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_HandleApplicationsExternal" name="Handle&#10;applications&#10;(external)">
+      <bpmn:incoming>Flow_017ojgf</bpmn:incoming>
+      <bpmn:outgoing>Flow_1a8hymj</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ReceiveDecision" name="Receive&#10;decision on&#10;award">
+      <bpmn:incoming>Flow_1a8hymj</bpmn:incoming>
+      <bpmn:outgoing>Flow_091zjdv</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_EnterToRegister" name="Enter decoration&#10;into register">
+      <bpmn:incoming>Flow_091zjdv</bpmn:incoming>
+      <bpmn:outgoing>Flow_13q605b</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_Completed" name="Process&#10;ended">
+      <bpmn:incoming>Flow_13q605b</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="EndEvent_Rejected" name="Application&#10;rejected">
+      <bpmn:incoming>Flow_1r3x3sq</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1mxejfh" sourceRef="StartEvent_ProcessInitiated" targetRef="Task_SubmitApplication" />
+    <bpmn:sequenceFlow id="Flow_0clrtcl" sourceRef="Task_SubmitApplication" targetRef="Task_PresentApplicationsForAcceptance" />
+    <bpmn:sequenceFlow id="Flow_1eud9h6" sourceRef="Task_PresentApplicationsForAcceptance" targetRef="Task_ReviewApplications" />
+    <bpmn:sequenceFlow id="Flow_1pc0l1q" sourceRef="Task_ReviewApplications" targetRef="Task_PresentApplicationsToRKR" />
+    <bpmn:sequenceFlow id="Flow_1lj32e5" sourceRef="Task_PresentApplicationsToRKR" targetRef="Task_MakeDecision" />
+    <bpmn:sequenceFlow id="Flow_1ehrxho" sourceRef="Task_MakeDecision" targetRef="Gateway_RKRDecision" />
+    <bpmn:sequenceFlow id="Flow_1hzv4qt" sourceRef="Gateway_RKRDecision" targetRef="Task_ForwardApplicationsToMPD" />
+    <bpmn:sequenceFlow id="Flow_1r3x3sq" sourceRef="Gateway_RKRDecision" targetRef="EndEvent_Rejected" />
+    <bpmn:sequenceFlow id="Flow_017ojgf" sourceRef="Task_ForwardApplicationsToMPD" targetRef="Task_HandleApplicationsExternal" />
+    <bpmn:sequenceFlow id="Flow_1a8hymj" sourceRef="Task_HandleApplicationsExternal" targetRef="Task_ReceiveDecision" />
+    <bpmn:sequenceFlow id="Flow_091zjdv" sourceRef="Task_ReceiveDecision" targetRef="Task_EnterToRegister" />
+    <bpmn:sequenceFlow id="Flow_13q605b" sourceRef="Task_EnterToRegister" targetRef="EndEvent_Completed" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="StartEvent_ProcessInitiated_di" bpmnElement="StartEvent_ProcessInitiated">
+        <dc:Bounds x="100" y="224" width="36.80180740356445" height="36.80180740356445" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="98" y="268" width="41" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SubmitApplication_di" bpmnElement="Task_SubmitApplication">
+        <dc:Bounds x="217" y="202" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PresentApplicationsForAcceptance_di" bpmnElement="Task_PresentApplicationsForAcceptance">
+        <dc:Bounds x="398" y="202" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ReviewApplications_di" bpmnElement="Task_ReviewApplications">
+        <dc:Bounds x="579" y="202" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PresentApplicationsToRKR_di" bpmnElement="Task_PresentApplicationsToRKR">
+        <dc:Bounds x="760" y="202" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_MakeDecision_di" bpmnElement="Task_MakeDecision">
+        <dc:Bounds x="940" y="202" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_RKRDecision_di" bpmnElement="Gateway_RKRDecision" isMarkerVisible="true">
+        <dc:Bounds x="1120" y="216" width="51.131370544433594" height="51.131370544433594" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1119" y="274" width="53" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ForwardApplicationsToMPD_di" bpmnElement="Task_ForwardApplicationsToMPD">
+        <dc:Bounds x="1252" y="202" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_HandleApplicationsExternal_di" bpmnElement="Task_HandleApplicationsExternal">
+        <dc:Bounds x="1433" y="202" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ReceiveDecision_di" bpmnElement="Task_ReceiveDecision">
+        <dc:Bounds x="1614" y="202" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_EnterToRegister_di" bpmnElement="Task_EnterToRegister">
+        <dc:Bounds x="1795" y="202" width="100.80000305175781" height="80.80000305175781" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Completed_di" bpmnElement="EndEvent_Completed">
+        <dc:Bounds x="1976" y="224" width="36.80180740356445" height="36.80180740356445" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1974" y="268" width="41" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Rejected_di" bpmnElement="EndEvent_Rejected">
+        <dc:Bounds x="1128" y="100" width="36.80180740356445" height="36.80180740356445" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1119" y="62.5" width="53" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1mxejfh_di" bpmnElement="Flow_1mxejfh">
+        <di:waypoint x="137" y="242" />
+        <di:waypoint x="217" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0clrtcl_di" bpmnElement="Flow_0clrtcl">
+        <di:waypoint x="318" y="242" />
+        <di:waypoint x="398" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1eud9h6_di" bpmnElement="Flow_1eud9h6">
+        <di:waypoint x="498" y="242" />
+        <di:waypoint x="578" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pc0l1q_di" bpmnElement="Flow_1pc0l1q">
+        <di:waypoint x="679" y="242" />
+        <di:waypoint x="759" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1lj32e5_di" bpmnElement="Flow_1lj32e5">
+        <di:waypoint x="860" y="242" />
+        <di:waypoint x="940" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ehrxho_di" bpmnElement="Flow_1ehrxho">
+        <di:waypoint x="1041" y="242" />
+        <di:waypoint x="1121" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hzv4qt_di" bpmnElement="Flow_1hzv4qt">
+        <di:waypoint x="1172" y="242" />
+        <di:waypoint x="1252" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1r3x3sq_di" bpmnElement="Flow_1r3x3sq">
+        <di:waypoint x="1146" y="217" />
+        <di:waypoint x="1146" y="137" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_017ojgf_di" bpmnElement="Flow_017ojgf">
+        <di:waypoint x="1353" y="242" />
+        <di:waypoint x="1433" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1a8hymj_di" bpmnElement="Flow_1a8hymj">
+        <di:waypoint x="1534" y="242" />
+        <di:waypoint x="1614" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_091zjdv_di" bpmnElement="Flow_091zjdv">
+        <di:waypoint x="1714" y="242" />
+        <di:waypoint x="1794" y="242" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13q605b_di" bpmnElement="Flow_13q605b">
+        <di:waypoint x="1895" y="242" />
+        <di:waypoint x="1975" y="242" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

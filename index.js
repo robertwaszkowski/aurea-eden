@@ -6,11 +6,11 @@ import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.css';
 import AureaEdenBpmnDiagram from './lib/components/AureaEdenBpmnDiagram.vue';
-import simpleBpmnTemplate from './demo/VueWrapperBpmnDemo/simple-process-template.bpmn?raw';
-import wniosekOWsparcieBpmn from './demo/VueWrapperBpmnDemo/wniosek-o-wsparcie.bpmn?raw';
-import hardwareRetailerBpmn from './demo/VueWrapperBpmnDemo/hardware-retailer-template.bpmn?raw';
-import incidentManagementBpmn from './demo/VueWrapperBpmnDemo/incident-management-template.bpmn?raw';
-import subprocessBpmn from './demo/VueWrapperBpmnDemo/subprocess-demo.bpmn?raw';
+import simpleBpmnTemplate from './data/bpmn/simple-process-template.bpmn?raw';
+import wniosekOWsparcieBpmn from './data/bpmn/wniosek-o-wsparcie.bpmn?raw';
+import hardwareRetailerBpmn from './data/bpmn/hardware-retailer-template.bpmn?raw';
+import incidentManagementBpmn from './data/bpmn/incident-management-template.bpmn?raw';
+import subprocessBpmn from './data/bpmn/subprocess-demo.bpmn?raw';
 
 const vuetify = createVuetify({
   components,
@@ -253,7 +253,6 @@ const App = {
       wrapperHelpers: false,
       bpmnXml: '',
       barValues: {},
-      myActiveTasks: [],
       myActiveTasks: [],
       otherActiveTasks: [],
       legacyStars: false,

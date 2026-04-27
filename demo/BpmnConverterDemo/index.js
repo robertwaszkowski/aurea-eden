@@ -11,20 +11,25 @@
 import { BpmnDiagram } from '../../lib/notations/bpmn/BpmnDiagram.js';
 import { BpmnToFluentConverter } from '../../lib/notations/bpmn/BpmnToFluentConverter.js';
 
-// All available BPMN sources — imported as raw XML strings at build time
-import xmlSimple from '../VueWrapperBpmnDemo/simple-process-template.bpmn?raw';
-import xmlHardware from '../VueWrapperBpmnDemo/hardware-retailer-template.bpmn?raw';
-import xmlWniosek from '../VueWrapperBpmnDemo/wniosek-o-wsparcie.bpmn?raw';
-import xmlIncident from '../VueWrapperBpmnDemo/incident-management-template.bpmn?raw';
-import xmlLeaveRequest from '../VueWrapperBpmnDemo/leave-request-approval.bpmn?raw';
+// ─────────────────────────────────────────────────────────────────────────────
+// Dynamic BPMN source discovery
+// ─────────────────────────────────────────────────────────────────────────────
+const bpmnModules = import.meta.glob('../../data/bpmn/*.bpmn', { query: '?raw', eager: true });
 
-const DIAGRAM_FILES = [
-    { label: 'Simple Process', xml: xmlSimple },
-    { label: 'Hardware Retailer', xml: xmlHardware },
-    { label: 'Wniosek o Wsparcie', xml: xmlWniosek },
-    { label: 'Incident Management', xml: xmlIncident },
-    { label: 'Leave Request Approval', xml: xmlLeaveRequest },
-];
+const DIAGRAM_FILES = Object.keys(bpmnModules)
+    .map(path => {
+        const filename = path.split('/').pop();
+        const label = filename
+            .replace('.bpmn', '')
+            .replace(/[_-]/g, ' ')
+            .replace(/\b[a-z]/g, match => match.toUpperCase());
+        
+        return {
+            label,
+            xml: bpmnModules[path].default || bpmnModules[path]
+        };
+    })
+    .sort((a, b) => a.label.localeCompare(b.label));
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helper: create a labelled card wrapper
@@ -554,7 +559,9 @@ export default function initDemo(container, options = {}) {
             stateVars.hiddenBranches.clear();
         }
         const idx = parseInt(select.value, 10);
-        currentDiagram = renderBothPanels(topCanvas, bottomCanvas, DIAGRAM_FILES[idx].xml, { ...options, stage: currentStage, ...stateVars }, triggerRender);
+        const diagramInfo = DIAGRAM_FILES[idx];
+        console.log(`%c[BpmnConverterDemo] Loading diagram: ${diagramInfo.label}`, 'color: #3b82f6; font-weight: bold;');
+        currentDiagram = renderBothPanels(topCanvas, bottomCanvas, diagramInfo.xml, { ...options, stage: currentStage, ...stateVars }, triggerRender);
     };
 
     const STAGES = [

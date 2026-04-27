@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_DPE_1_3" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.28.0">
+  <bpmn:collaboration id="Collaboration_DPE_1_3">
+    <bpmn:participant id="Participant_Pool_WAT" name="Military University of Technology (Ongoing Personnel Service DPE/1-3)" processRef="Process_DPE_1_3" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_DPE_1_3" isExecutable="true" camunda:versionTag="1.1">
+    <bpmn:laneSet id="LaneSet_0p9q7qz">
+      <bpmn:lane id="Lane_HeadOU" name="Head of O.U.">
+        <bpmn:flowNodeRef>Task_ReviewAndForward_HeadOU</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_ApplicationSubmitted</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_PD" name="PD (Personnel Department)">
+        <bpmn:flowNodeRef>Task_ReviewApplication_PD</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_IsChangeOfEmployment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_JoinKWE_LSS</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_JoinDecision</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_InformHeadOU</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ImplementChanges</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_IsChangeOfEmployment_Final</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PrepareDocuments</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_HandOverDocuments</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ConsultLSS</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Archive</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_ProcessEnded</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_IsAcademicTeacher</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Rector" name="Rector (RKR)">
+        <bpmn:flowNodeRef>Task_MakeDecision_RKR</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_VRSA" name="Vice-Rector for Scientific Affairs (PRN)">
+        <bpmn:flowNodeRef>Task_Review_PRN</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_VRE" name="Vice-Rector for Education (PRK)">
+        <bpmn:flowNodeRef>Task_Review_PRK</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Chancellor" name="Chancellor (KAN)">
+        <bpmn:flowNodeRef>Task_MakeDecision_Chancellor</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Quartermaster" name="Quartermaster (KWE)">
+        <bpmn:flowNodeRef>Task_Review_KWE</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:sequenceFlow id="Flow_ArchiveToProcessEnd" sourceRef="Task_Archive" targetRef="EndEvent_ProcessEnded" />
+    <bpmn:sequenceFlow id="Flow_HandOverToArchive" sourceRef="Task_HandOverDocuments" targetRef="Task_Archive" />
+    <bpmn:sequenceFlow id="Flow_PrepareToHandOver" sourceRef="Task_PrepareDocuments" targetRef="Task_HandOverDocuments" />
+    <bpmn:sequenceFlow id="Flow_No_ProcessEnd" name="No (Current matter)" sourceRef="Gateway_IsChangeOfEmployment_Final" targetRef="EndEvent_ProcessEnded" />
+    <bpmn:sequenceFlow id="Flow_Yes_PrepareDocuments" name="Yes" sourceRef="Gateway_IsChangeOfEmployment_Final" targetRef="Task_PrepareDocuments" />
+    <bpmn:sequenceFlow id="Flow_ImplementToFinalGate" sourceRef="Task_ImplementChanges" targetRef="Gateway_IsChangeOfEmployment_Final" />
+    <bpmn:sequenceFlow id="Flow_InformToImplement" sourceRef="Task_InformHeadOU" targetRef="Task_ImplementChanges" />
+    <bpmn:sequenceFlow id="Flow_JoinGateToInform" sourceRef="Gateway_JoinDecision" targetRef="Task_InformHeadOU" />
+    <bpmn:sequenceFlow id="Flow_DecisionRKRToJoinGate" sourceRef="Task_MakeDecision_RKR" target="Gateway_JoinDecision" />
+    <bpmn:sequenceFlow id="Flow_ReviewPRNToDecisionRKR" sourceRef="Task_Review_PRN" targetRef="Task_MakeDecision_RKR" />
+    <bpmn:sequenceFlow id="Flow_ReviewPRKToReviewPRN" sourceRef="Task_Review_PRK" targetRef="Task_Review_PRN" />
+    <bpmn:sequenceFlow id="Flow_DecisionKANToJoinGate" sourceRef="Task_MakeDecision_Chancellor" targetRef="Gateway_JoinDecision" />
+    <bpmn:sequenceFlow id="Flow_Yes_ToPRK" name="Yes" sourceRef="Gateway_IsAcademicTeacher" targetRef="Task_Review_PRK" />
+    <bpmn:sequenceFlow id="Flow_No_ToKAN" name="No (Non-academic employee)" sourceRef="Gateway_IsAcademicTeacher" targetRef="Task_MakeDecision_Chancellor" />
+    <bpmn:sequenceFlow id="Flow_JoinKWE_LSSToIsAcademic" sourceRef="Gateway_JoinKWE_LSS" targetRef="Gateway_IsAcademicTeacher" />
+    <bpmn:sequenceFlow id="Flow_ConsultLSSToJoinKWE_LSS" sourceRef="Task_ConsultLSS" targetRef="Gateway_JoinKWE_LSS" />
+    <bpmn:sequenceFlow id="Flow_ReviewKWEToJoinKWE_LSS" sourceRef="Task_Review_KWE" targetRef="Gateway_JoinKWE_LSS" />
+    <bpmn:sequenceFlow id="Flow_No_CurrentMatter" name="No (Current matter)" sourceRef="Gateway_IsChangeOfEmployment" targetRef="Task_ConsultLSS" />
+    <bpmn:sequenceFlow id="Flow_Yes_ToKWE" name="Yes" sourceRef="Gateway_IsChangeOfEmployment" targetRef="Task_Review_KWE" />
+    <bpmn:sequenceFlow id="Flow_ReviewPDToIsChangeOfEmployment" sourceRef="Task_ReviewApplication_PD" targetRef="Gateway_IsChangeOfEmployment" />
+    <bpmn:sequenceFlow id="Flow_ReviewHeadOUToReviewPD" sourceRef="Task_ReviewAndForward_HeadOU" targetRef="Task_ReviewApplication_PD" />
+    <bpmn:sequenceFlow id="Flow_StartToReviewHeadOU" sourceRef="StartEvent_ApplicationSubmitted" targetRef="Task_ReviewAndForward_HeadOU" />
+    <bpmn:exclusiveGateway id="Gateway_IsChangeOfEmployment" name="Is it &#34;Change of employment conditions&#34;?">
+      <bpmn:incoming>Flow_ReviewPDToIsChangeOfEmployment</bpmn:incoming>
+      <bpmn:outgoing>Flow_Yes_ToKWE</bpmn:outgoing>
+      <bpmn:outgoing>Flow_No_CurrentMatter</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_ReviewApplication_PD" name="Review application (PD)">
+      <bpmn:incoming>Flow_ReviewHeadOUToReviewPD</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReviewPDToIsChangeOfEmployment</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ReviewAndForward_HeadOU" name="Review and forward application to PD">
+      <bpmn:incoming>Flow_StartToReviewHeadOU</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReviewHeadOUToReviewPD</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_JoinKWE_LSS">
+      <bpmn:incoming>Flow_ReviewKWEToJoinKWE_LSS</bpmn:incoming>
+      <bpmn:incoming>Flow_ConsultLSSToJoinKWE_LSS</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinKWE_LSSToIsAcademic</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_JoinDecision">
+      <bpmn:incoming>Flow_DecisionKANToJoinGate</bpmn:incoming>
+      <bpmn:incoming>Flow_DecisionRKRToJoinGate</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinGateToInform</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_InformHeadOU" name="Inform Head of O.U. about the decision">
+      <bpmn:incoming>Flow_JoinGateToInform</bpmn:incoming>
+      <bpmn:outgoing>Flow_InformToImplement</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ImplementChanges" name="Implement changes">
+      <bpmn:incoming>Flow_InformToImplement</bpmn:incoming>
+      <bpmn:outgoing>Flow_ImplementToFinalGate</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_IsChangeOfEmployment_Final" name="Is it &#34;Change of employment conditions&#34;?">
+      <bpmn:incoming>Flow_ImplementToFinalGate</bpmn:incoming>
+      <bpmn:outgoing>Flow_Yes_PrepareDocuments</bpmn:outgoing>
+      <bpmn:outgoing>Flow_No_ProcessEnd</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_PrepareDocuments" name="Prepare confirming documents">
+      <bpmn:incoming>Flow_Yes_PrepareDocuments</bpmn:incoming>
+      <bpmn:outgoing>Flow_PrepareToHandOver</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_HandOverDocuments" name="Hand over documents to employee">
+      <bpmn:incoming>Flow_PrepareToHandOver</bpmn:incoming>
+      <bpmn:outgoing>Flow_HandOverToArchive</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ConsultLSS" name="(Optional) Consult LSS opinion">
+      <bpmn:incoming>Flow_No_CurrentMatter</bpmn:incoming>
+      <bpmn:outgoing>Flow_ConsultLSSToJoinKWE_LSS</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Archive" name="Attach 1 copy to personnel files">
+      <bpmn:incoming>Flow_HandOverToArchive</bpmn:incoming>
+      <bpmn:outgoing>Flow_ArchiveToProcessEnd</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_ProcessEnded" name="Service process ended">
+      <bpmn:incoming>Flow_No_ProcessEnd</bpmn:incoming>
+      <bpmn:incoming>Flow_ArchiveToProcessEnd</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Task_Review_KWE" name="Review application (Quartermaster)">
+      <bpmn:incoming>Flow_Yes_ToKWE</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReviewKWEToJoinKWE_LSS</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_MakeDecision_Chancellor" name="Make decision (KAN) and return to PD">
+      <bpmn:incoming>Flow_No_ToKAN</bpmn:incoming>
+      <bpmn:outgoing>Flow_DecisionKANToJoinGate</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Review_PRK" name="Review application (PRK) and forward to PRN">
+      <bpmn:incoming>Flow_Yes_ToPRK</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReviewPRKToReviewPRN</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Review_PRN" name="Review application (PRN) and forward to Rector">
+      <bpmn:incoming>Flow_ReviewPRKToReviewPRN</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReviewPRNToDecisionRKR</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_MakeDecision_RKR" name="Make decision (RKR) and return to PD">
+      <bpmn:incoming>Flow_ReviewPRNToDecisionRKR</bpmn:incoming>
+      <bpmn:outgoing>Flow_DecisionRKRToJoinGate</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="StartEvent_ApplicationSubmitted" name="Application submitted (change of conditions or current matter)">
+      <bpmn:outgoing>Flow_StartToReviewHeadOU</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="Gateway_IsAcademicTeacher" name="Concerns an academic teacher?">
+      <bpmn:incoming>Flow_JoinKWE_LSSToIsAcademic</bpmn:incoming>
+      <bpmn:outgoing>Flow_No_ToKAN</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Yes_ToPRK</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_DPE_1_3">
+      <bpmndi:BPMNShape id="Participant_Pool_WAT_di" bpmnElement="Participant_Pool_WAT" isHorizontal="true">
+        <dc:Bounds x="150" y="80" width="1870" height="950" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_KWE_di" bpmnElement="Lane_Quartermaster" isHorizontal="true">
+        <dc:Bounds x="180" y="430" width="1840" height="120" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_KAN_di" bpmnElement="Lane_Chancellor" isHorizontal="true">
+        <dc:Bounds x="180" y="550" width="1840" height="120" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_PRK_di" bpmnElement="Lane_VRE" isHorizontal="true">
+        <dc:Bounds x="180" y="670" width="1840" height="120" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_PRN_di" bpmnElement="Lane_VRSA" isHorizontal="true">
+        <dc:Bounds x="180" y="790" width="1840" height="120" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_RKR_di" bpmnElement="Lane_Rector" isHorizontal="true">
+        <dc:Bounds x="180" y="910" width="1840" height="120" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_DPE_di" bpmnElement="Lane_PD" isHorizontal="true">
+        <dc:Bounds x="180" y="200" width="1840" height="230" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Kierownik_JO_di" bpmnElement="Lane_HeadOU" isHorizontal="true">
+        <dc:Bounds x="180" y="80" width="1840" height="120" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_CzyZmianaWarunkow_di" bpmnElement="Gateway_IsChangeOfEmployment" isMarkerVisible="true">
+        <dc:Bounds x="455" y="265" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="443" y="228" width="75" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpiniujeWniosek_DPE_di" bpmnElement="Task_ReviewApplication_PD">
+        <dc:Bounds x="300" y="250" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpiniujeWniosek_JO_di" bpmnElement="Task_ReviewAndForward_HeadOU">
+        <dc:Bounds x="300" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_JoinKWE_SOP_di" bpmnElement="Gateway_JoinKWE_LSS" isMarkerVisible="true">
+        <dc:Bounds x="725" y="265" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_JoinDecyzji_di" bpmnElement="Gateway_JoinDecision" isMarkerVisible="true">
+        <dc:Bounds x="1105" y="265" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_InformujeJO_di" bpmnElement="Task_InformHeadOU">
+        <dc:Bounds x="1210" y="250" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_WprowadzaZmiany_di" bpmnElement="Task_ImplementChanges">
+        <dc:Bounds x="1360" y="250" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_CzyZmianaWarunkow_Final_di" bpmnElement="Gateway_IsChangeOfEmployment_Final" isMarkerVisible="true">
+        <dc:Bounds x="1515" y="265" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1502" y="215" width="75" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PrzygotowujeDokumenty_di" bpmnElement="Task_PrepareDocuments">
+        <dc:Bounds x="1620" y="250" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PrzekazujeDokumenty_di" bpmnElement="Task_HandOverDocuments">
+        <dc:Bounds x="1770" y="250" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_KonsultacjaSOP_di" bpmnElement="Task_ConsultLSS">
+        <dc:Bounds x="570" y="250" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Archiwizuje_di" bpmnElement="Task_Archive">
+        <dc:Bounds x="1900" y="250" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Koniec_di" bpmnElement="EndEvent_ProcessEnded">
+        <dc:Bounds x="1932" y="352" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1913" y="398" width="73" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Opiniuje_KWE_di" bpmnElement="Task_Review_KWE">
+        <dc:Bounds x="570" y="450" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PodejmujeDecyzje_KAN_di" bpmnElement="Task_MakeDecision_Chancellor">
+        <dc:Bounds x="940" y="570" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Opiniuje_PRK_di" bpmnElement="Task_Review_PRK">
+        <dc:Bounds x="940" y="690" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Opiniuje_PRN_di" bpmnElement="Task_Review_PRN">
+        <dc:Bounds x="940" y="810" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PodejmujeDecyzje_RKR_di" bpmnElement="Task_MakeDecision_RKR">
+        <dc:Bounds x="940" y="930" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_ZlozonoWniosek_di" bpmnElement="StartEvent_ApplicationSubmitted">
+        <dc:Bounds x="232" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="210" y="145" width="81" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_CzyNauczyciel_di" bpmnElement="Gateway_IsAcademicTeacher" isMarkerVisible="true">
+        <dc:Bounds x="835" y="265" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="820" y="215" width="80" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0pksk2c_di" bpmnElement="Flow_ArchiveToProcessEnd">
+        <di:waypoint x="1950" y="330" />
+        <di:waypoint x="1950" y="352" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09u9nmg_di" bpmnElement="Flow_HandOverToArchive">
+        <di:waypoint x="1870" y="290" />
+        <di:waypoint x="1900" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_191cflz_di" bpmnElement="Flow_PrepareToHandOver">
+        <di:waypoint x="1720" y="290" />
+        <di:waypoint x="1770" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Nie_Koniec_di" bpmnElement="Flow_No_ProcessEnd">
+        <di:waypoint x="1540" y="315" />
+        <di:waypoint x="1540" y="370" />
+        <di:waypoint x="1932" y="370" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1663" y="343" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Tak_Dokumenty_di" bpmnElement="Flow_Yes_PrepareDocuments">
+        <di:waypoint x="1565" y="290" />
+        <di:waypoint x="1620" y="290" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1587" y="272" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1t0d2d7_di" bpmnElement="Flow_ImplementToFinalGate">
+        <di:waypoint x="1460" y="290" />
+        <di:waypoint x="1515" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1d27j7h_di" bpmnElement="Flow_InformToImplement">
+        <di:waypoint x="1310" y="290" />
+        <di:waypoint x="1360" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0x7w5c0_di" bpmnElement="Flow_JoinGateToInform">
+        <di:waypoint x="1155" y="290" />
+        <di:waypoint x="1210" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0k6a1k6_di" bpmnElement="Flow_ReviewPRNToDecisionRKR">
+        <di:waypoint x="990" y="890" />
+        <di:waypoint x="990" y="930" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0l60t5q_di" bpmnElement="Flow_ReviewPRKToReviewPRN">
+        <di:waypoint x="990" y="770" />
+        <di:waypoint x="990" y="810" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0zcj0s3_di" bpmnElement="Flow_DecisionKANToJoinGate">
+        <di:waypoint x="1040" y="610" />
+        <di:waypoint x="1070" y="610" />
+        <di:waypoint x="1070" y="290" />
+        <di:waypoint x="1105" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Tak_Do_PRK_di" bpmnElement="Flow_Yes_ToPRK">
+        <di:waypoint x="860" y="315" />
+        <di:waypoint x="860" y="730" />
+        <di:waypoint x="940" y="730" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="870" y="510" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Nie_Do_KAN_di" bpmnElement="Flow_No_ToKAN">
+        <di:waypoint x="885" y="290" />
+        <di:waypoint x="910" y="290" />
+        <di:waypoint x="910" y="610" />
+        <di:waypoint x="940" y="610" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="912" y="489" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qacbll_di" bpmnElement="Flow_JoinKWE_LSSToIsAcademic">
+        <di:waypoint x="775" y="290" />
+        <di:waypoint x="835" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0hqu995_di" bpmnElement="Flow_ConsultLSSToJoinKWE_LSS">
+        <di:waypoint x="670" y="290" />
+        <di:waypoint x="725" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xwe6m7_di" bpmnElement="Flow_ReviewKWEToJoinKWE_LSS">
+        <di:waypoint x="670" y="490" />
+        <di:waypoint x="750" y="490" />
+        <di:waypoint x="750" y="315" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Nie_SprawaBiezaca_di" bpmnElement="Flow_No_CurrentMatter">
+        <di:waypoint x="505" y="290" />
+        <di:waypoint x="570" y="290" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="505" y="296" width="61" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Tak_Do_KWE_di" bpmnElement="Flow_Yes_ToKWE">
+        <di:waypoint x="480" y="315" />
+        <di:waypoint x="480" y="490" />
+        <di:waypoint x="570" y="490" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="490" y="398" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1v5o485_di" bpmnElement="Flow_ReviewPDToIsChangeOfEmployment">
+        <di:waypoint x="400" y="290" />
+        <di:waypoint x="455" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02gq1u6_di" bpmnElement="Flow_ReviewHeadOUToReviewPD">
+        <di:waypoint x="350" y="180" />
+        <di:waypoint x="350" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0vjefos_di" bpmnElement="Flow_StartToReviewHeadOU">
+        <di:waypoint x="268" y="120" />
+        <di:waypoint x="284" y="120" />
+        <di:waypoint x="284" y="140" />
+        <di:waypoint x="300" y="140" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

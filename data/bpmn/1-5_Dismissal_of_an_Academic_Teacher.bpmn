@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_DPE_1_5" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.28.0">
+  <bpmn:collaboration id="Collaboration_DPE_1_5">
+    <bpmn:participant id="Participant_Pool_WAT" name="Military University of Technology (Dismissal of an Academic Teacher DPE/1-5)" processRef="Process_DPE_1_5" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_DPE_1_5" isExecutable="true" camunda:versionTag="1.0">
+    <bpmn:laneSet id="LaneSet_DPE_1_5">
+      <bpmn:lane id="Lane_Kierownik_JO" name="Head of O.U. / Vice-Rector for Education (PRK)">
+        <bpmn:flowNodeRef>Task_ReviewApplicationEmployee</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_ProcessInitiation</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_WhoInitiates</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ConsultDraftWithLSS</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SubmitApplicationToPD</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_HandOverDismissalNotice</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_DPE" name="PD (Personnel Department)">
+        <bpmn:flowNodeRef>Task_ReviewApplicationPD</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_InformHeadOU_Path1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ReviewApplicationAfterConsultation</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ForwardApplicationToPRK</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_InformHeadOU_Path2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ForwardDismissalNoticeToHeadOU</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_JoinFinal</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PrepareDocuments</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SettleAccounts</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_DismissalEnded</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Zarzad" name="Board (Trade Unions)">
+        <bpmn:flowNodeRef>Task_IssueTradeUnionOpinion</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_SOP" name="LSS (Legal Service Section)">
+        <bpmn:flowNodeRef>Task_ReviewDraftApplication</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_ParallelConsultations</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AgreeOnDismissalDraft</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_JoinConsultations</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_RKR" name="Rector (RKR)">
+        <bpmn:flowNodeRef>Task_MakeDecisionRKR_Path1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_MakeDecisionRKR_Path2</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_PRN" name="Vice-Rector for Scientific Affairs (PRN)">
+        <bpmn:flowNodeRef>Task_ReviewPRN_Path1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ReviewPRN_Path2</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_PRK" name="Vice-Rector for Education (PRK)">
+        <bpmn:flowNodeRef>Task_ReviewPRK_Path1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ReviewPRK_Path2</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:userTask id="Task_ReviewApplicationEmployee" name="Review application and forward to PD">
+      <bpmn:incoming>Flow_PathEmployee</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReviewEmployeeToReviewPD</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="StartEvent_ProcessInitiation" name="Dismissal process initiation">
+      <bpmn:outgoing>Flow_ToWhoInitiatesGate</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="Gateway_WhoInitiates" name="Who initiates the dismissal?">
+      <bpmn:incoming>Flow_ToWhoInitiatesGate</bpmn:incoming>
+      <bpmn:outgoing>Flow_PathEmployee</bpmn:outgoing>
+      <bpmn:outgoing>Flow_PathMUT</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_ReviewEmployeeToReviewPD" sourceRef="Task_ReviewApplicationEmployee" targetRef="Task_ReviewApplicationPD" />
+    <bpmn:sequenceFlow id="Flow_ReviewPDToReviewPRK1" sourceRef="Task_ReviewApplicationPD" targetRef="Task_ReviewPRK_Path1" />
+    <bpmn:sequenceFlow id="Flow_ReviewPRK1ToReviewPRN1" sourceRef="Task_ReviewPRK_Path1" targetRef="Task_ReviewPRN_Path1" />
+    <bpmn:sequenceFlow id="Flow_ReviewPRN1ToDecisionRKR1" sourceRef="Task_ReviewPRN_Path1" targetRef="Task_MakeDecisionRKR_Path1" />
+    <bpmn:sequenceFlow id="Flow_DecisionRKR1ToInformHeadOU1" sourceRef="Task_MakeDecisionRKR_Path1" target="Task_InformHeadOU_Path1" />
+    <bpmn:sequenceFlow id="Flow_InformHeadOU1ToJoinFinal" sourceRef="Task_InformHeadOU_Path1" targetRef="Gateway_JoinFinal" />
+    <bpmn:sequenceFlow id="Flow_JoinFinalToPrepareDocuments" sourceRef="Gateway_JoinFinal" targetRef="Task_PrepareDocuments" />
+    <bpmn:sequenceFlow id="Flow_PrepareToSettleAccounts" sourceRef="Task_PrepareDocuments" targetRef="Task_SettleAccounts" />
+    <bpmn:sequenceFlow id="Flow_SettleAccountsToDismissalEnded" sourceRef="Task_SettleAccounts" targetRef="EndEvent_DismissalEnded" />
+    <bpmn:sequenceFlow id="Flow_ConsultDraftToReviewDraft" sourceRef="Task_ConsultDraftWithLSS" targetRef="Task_ReviewDraftApplication" />
+    <bpmn:sequenceFlow id="Flow_ReviewDraftToSubmitApplication" sourceRef="Task_ReviewDraftApplication" targetRef="Task_SubmitApplicationToPD" />
+    <bpmn:sequenceFlow id="Flow_SubmitApplicationToParallelGate" sourceRef="Task_SubmitApplicationToPD" targetRef="Gateway_ParallelConsultations" />
+    <bpmn:sequenceFlow id="Flow_ParallelGateToTradeUnionOpinion" sourceRef="Gateway_ParallelConsultations" targetRef="Task_IssueTradeUnionOpinion" />
+    <bpmn:sequenceFlow id="Flow_ParallelGateToAgreeDraft" sourceRef="Gateway_ParallelConsultations" targetRef="Task_AgreeOnDismissalDraft" />
+    <bpmn:sequenceFlow id="Flow_TradeUnionOpinionToJoinConsultation" sourceRef="Task_IssueTradeUnionOpinion" targetRef="Gateway_JoinConsultations" />
+    <bpmn:sequenceFlow id="Flow_AgreeDraftToJoinConsultation" sourceRef="Task_AgreeOnDismissalDraft" targetRef="Gateway_JoinConsultations" />
+    <bpmn:sequenceFlow id="Flow_JoinConsultationToReviewAfter" sourceRef="Gateway_JoinConsultations" targetRef="Task_ReviewApplicationAfterConsultation" />
+    <bpmn:sequenceFlow id="Flow_ReviewAfterToForwardToPRK" sourceRef="Task_ReviewApplicationAfterConsultation" targetRef="Task_ForwardApplicationToPRK" />
+    <bpmn:sequenceFlow id="Flow_ForwardToPRKToReviewPRK2" sourceRef="Task_ForwardApplicationToPRK" targetRef="Task_ReviewPRK_Path2" />
+    <bpmn:sequenceFlow id="Flow_ReviewPRK2ToReviewPRN2" sourceRef="Task_ReviewPRK_Path2" targetRef="Task_ReviewPRN_Path2" />
+    <bpmn:sequenceFlow id="Flow_ReviewPRN2ToDecisionRKR2" sourceRef="Task_ReviewPRN_Path2" targetRef="Task_MakeDecisionRKR_Path2" />
+    <bpmn:sequenceFlow id="Flow_DecisionRKR2ToInformHeadOU2" sourceRef="Task_MakeDecisionRKR_Path2" targetRef="Task_InformHeadOU_Path2" />
+    <bpmn:sequenceFlow id="Flow_InformHeadOU2ToForwardDismissal" sourceRef="Task_InformHeadOU_Path2" targetRef="Task_ForwardDismissalNoticeToHeadOU" />
+    <bpmn:sequenceFlow id="Flow_ForwardDismissalToHandOver" sourceRef="Task_ForwardDismissalNoticeToHeadOU" targetRef="Task_HandOverDismissalNotice" />
+    <bpmn:sequenceFlow id="Flow_HandOverToJoinFinal" sourceRef="Task_HandOverDismissalNotice" targetRef="Gateway_JoinFinal" />
+    <bpmn:sequenceFlow id="Flow_ToWhoInitiatesGate" sourceRef="StartEvent_ProcessInitiation" targetRef="Gateway_WhoInitiates" />
+    <bpmn:sequenceFlow id="Flow_PathEmployee" name="Employee" sourceRef="Gateway_WhoInitiates" targetRef="Task_ReviewApplicationEmployee" />
+    <bpmn:sequenceFlow id="Flow_PathMUT" name="MUT" sourceRef="Gateway_WhoInitiates" targetRef="Task_ConsultDraftWithLSS" />
+    <bpmn:userTask id="Task_ConsultDraftWithLSS" name="Consult draft application with LSS">
+      <bpmn:incoming>Flow_PathMUT</bpmn:incoming>
+      <bpmn:outgoing>Flow_ConsultDraftToReviewDraft</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_SubmitApplicationToPD" name="Submit application to PD (after consultation with LSS)">
+      <bpmn:incoming>Flow_ReviewDraftToSubmitApplication</bpmn:incoming>
+      <bpmn:outgoing>Flow_SubmitApplicationToParallelGate</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ReviewApplicationPD" name="Review application (legal compliance) and forward to PRK">
+      <bpmn:incoming>Flow_ReviewEmployeeToReviewPD</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReviewPDToReviewPRK1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_InformHeadOU_Path1" name="Inform Head of O.U. about Rector&#39;s decision">
+      <bpmn:incoming>Flow_DecisionRKR1ToInformHeadOU1</bpmn:incoming>
+      <bpmn:incoming>Flow_1bw23ns</bpmn:incoming>
+      <bpmn:outgoing>Flow_InformHeadOU1ToJoinFinal</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ReviewPRK_Path1" name="Review application (PRK) and forward to PRN">
+      <bpmn:incoming>Flow_ReviewPDToReviewPRK1</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReviewPRK1ToReviewPRN1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ReviewPRN_Path1" name="Review application (PRN) and forward to Rector">
+      <bpmn:incoming>Flow_ReviewPRK1ToReviewPRN1</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReviewPRN1ToDecisionRKR1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_MakeDecisionRKR_Path1" name="Make decision and forward to PD">
+      <bpmn:incoming>Flow_ReviewPRN1ToDecisionRKR1</bpmn:incoming>
+      <bpmn:outgoing>Flow_DecisionRKR1ToInformHeadOU1</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1bw23ns</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ReviewDraftApplication" name="Review draft application (LSS)">
+      <bpmn:incoming>Flow_ConsultDraftToReviewDraft</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReviewDraftToSubmitApplication</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:parallelGateway id="Gateway_ParallelConsultations" name="Start consultations">
+      <bpmn:incoming>Flow_SubmitApplicationToParallelGate</bpmn:incoming>
+      <bpmn:outgoing>Flow_ParallelGateToTradeUnionOpinion</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ParallelGateToAgreeDraft</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:userTask id="Task_IssueTradeUnionOpinion" name="Issue opinion (Trade Unions)">
+      <bpmn:incoming>Flow_ParallelGateToTradeUnionOpinion</bpmn:incoming>
+      <bpmn:outgoing>Flow_TradeUnionOpinionToJoinConsultation</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_AgreeOnDismissalDraft" name="Agree on dismissal draft (with LSS)">
+      <bpmn:incoming>Flow_ParallelGateToAgreeDraft</bpmn:incoming>
+      <bpmn:outgoing>Flow_AgreeDraftToJoinConsultation</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:parallelGateway id="Gateway_JoinConsultations">
+      <bpmn:incoming>Flow_TradeUnionOpinionToJoinConsultation</bpmn:incoming>
+      <bpmn:incoming>Flow_AgreeDraftToJoinConsultation</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinConsultationToReviewAfter</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:userTask id="Task_ReviewApplicationAfterConsultation" name="Review application (after consultations)">
+      <bpmn:incoming>Flow_JoinConsultationToReviewAfter</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReviewAfterToForwardToPRK</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ForwardApplicationToPRK" name="Forward application with opinion to PRK">
+      <bpmn:incoming>Flow_ReviewAfterToForwardToPRK</bpmn:incoming>
+      <bpmn:outgoing>Flow_ForwardToPRKToReviewPRK2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ReviewPRK_Path2" name="Review application (PRK) and forward to PRN">
+      <bpmn:incoming>Flow_ForwardToPRKToReviewPRK2</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReviewPRK2ToReviewPRN2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ReviewPRN_Path2" name="Review application (PRN) and forward to Rector">
+      <bpmn:incoming>Flow_ReviewPRK2ToReviewPRN2</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReviewPRN2ToDecisionRKR2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_MakeDecisionRKR_Path2" name="Make decision and sign dismissal notice">
+      <bpmn:incoming>Flow_ReviewPRN2ToDecisionRKR2</bpmn:incoming>
+      <bpmn:outgoing>Flow_DecisionRKR2ToInformHeadOU2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_InformHeadOU_Path2" name="Inform Head of O.U. about Rector&#39;s decision">
+      <bpmn:incoming>Flow_DecisionRKR2ToInformHeadOU2</bpmn:incoming>
+      <bpmn:outgoing>Flow_InformHeadOU2ToForwardDismissal</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ForwardDismissalNoticeToHeadOU" name="Forward dismissal notice to Head of O.U.">
+      <bpmn:incoming>Flow_InformHeadOU2ToForwardDismissal</bpmn:incoming>
+      <bpmn:outgoing>Flow_ForwardDismissalToHandOver</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_HandOverDismissalNotice" name="Hand dismissal notice to employee">
+      <bpmn:incoming>Flow_ForwardDismissalToHandOver</bpmn:incoming>
+      <bpmn:outgoing>Flow_HandOverToJoinFinal</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_JoinFinal">
+      <bpmn:incoming>Flow_InformHeadOU1ToJoinFinal</bpmn:incoming>
+      <bpmn:incoming>Flow_HandOverToJoinFinal</bpmn:incoming>
+      <bpmn:outgoing>Flow_JoinFinalToPrepareDocuments</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_PrepareDocuments" name="Prepare documents (Form 30/PD)">
+      <bpmn:incoming>Flow_JoinFinalToPrepareDocuments</bpmn:incoming>
+      <bpmn:outgoing>Flow_PrepareToSettleAccounts</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_SettleAccounts" name="Settle accounts with dismissed employee">
+      <bpmn:incoming>Flow_PrepareToSettleAccounts</bpmn:incoming>
+      <bpmn:outgoing>Flow_SettleAccountsToDismissalEnded</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_DismissalEnded" name="Dismissal process ended">
+      <bpmn:incoming>Flow_SettleAccountsToDismissalEnded</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1bw23ns" sourceRef="Task_MakeDecisionRKR_Path1" targetRef="Task_InformHeadOU_Path1" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_DPE_1_5">
+      <bpmndi:BPMNShape id="Participant_Pool_WAT_di" bpmnElement="Participant_Pool_WAT" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1850" height="930" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_PRK_di" bpmnElement="Lane_PRK" isHorizontal="true">
+        <dc:Bounds x="190" y="390" width="1820" height="125" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_PRN_di" bpmnElement="Lane_PRN" isHorizontal="true">
+        <dc:Bounds x="190" y="515" width="1820" height="125" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_RKR_di" bpmnElement="Lane_RKR" isHorizontal="true">
+        <dc:Bounds x="190" y="640" width="1820" height="125" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_SOP_di" bpmnElement="Lane_SOP" isHorizontal="true">
+        <dc:Bounds x="190" y="765" width="1820" height="125" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Zarzad_di" bpmnElement="Lane_Zarzad" isHorizontal="true">
+        <dc:Bounds x="190" y="890" width="1820" height="120" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_DPE_di" bpmnElement="Lane_DPE" isHorizontal="true">
+        <dc:Bounds x="190" y="230" width="1820" height="160" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Kierownik_JO_di" bpmnElement="Lane_Kierownik_JO" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="1820" height="150" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpiniujWniosekPracownika_di" bpmnElement="Task_ReviewApplicationEmployee">
+        <dc:Bounds x="420" y="110" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_InicjacjaProcesu_di" bpmnElement="StartEvent_ProcessInitiation">
+        <dc:Bounds x="242" y="132" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="222" y="175" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_KtoInicjuje_di" bpmnElement="Gateway_WhoInitiates" isMarkerVisible="true">
+        <dc:Bounds x="325" y="125" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="306" y="95" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_KonsultujProjektWnioskuZ_SOP_di" bpmnElement="Task_ConsultDraftWithLSS">
+        <dc:Bounds x="680" y="110" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ZlozWniosekWDPE_di" bpmnElement="Task_SubmitApplicationToPD">
+        <dc:Bounds x="820" y="110" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpiniujWniosekDPE_di" bpmnElement="Task_ReviewApplicationPD">
+        <dc:Bounds x="420" y="280" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PoinformujJO_Sciezka1_di" bpmnElement="Task_InformHeadOU_Path1">
+        <dc:Bounds x="550" y="280" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpiniujPRK_Sciezka1_di" bpmnElement="Task_ReviewPRK_Path1">
+        <dc:Bounds x="420" y="413" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpiniujPRN_Sciezka1_di" bpmnElement="Task_ReviewPRN_Path1">
+        <dc:Bounds x="420" y="538" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PodejmijDecyzjeRKR_Sciezka1_di" bpmnElement="Task_MakeDecisionRKR_Path1">
+        <dc:Bounds x="420" y="663" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ZaopiniujProjektWniosku_di" bpmnElement="Task_ReviewDraftApplication">
+        <dc:Bounds x="680" y="788" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_ParallelKonsultacje_di" bpmnElement="Gateway_ParallelConsultations">
+        <dc:Bounds x="845" y="803" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="779" y="814.5" width="56" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_WydajOpinieZwiazki_di" bpmnElement="Task_IssueTradeUnionOpinion">
+        <dc:Bounds x="940" y="910" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_UzgodnijProjektWypowiedzenia_di" bpmnElement="Task_AgreeOnDismissalDraft">
+        <dc:Bounds x="940" y="788" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_JoinConsultations_di" bpmnElement="Gateway_JoinConsultations">
+        <dc:Bounds x="1075" y="803" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpiniujWniosekPoKonsultacjach_di" bpmnElement="Task_ReviewApplicationAfterConsultation">
+        <dc:Bounds x="1000" y="280" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PrzekazWniosekDoPRK_di" bpmnElement="Task_ForwardApplicationToPRK">
+        <dc:Bounds x="1140" y="280" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpiniujPRK_Sciezka2_di" bpmnElement="Task_ReviewPRK_Path2">
+        <dc:Bounds x="1140" y="413" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OpiniujPRN_Sciezka2_di" bpmnElement="Task_ReviewPRN_Path2">
+        <dc:Bounds x="1140" y="538" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PodejmijDecyzjeRKR_Sciezka2_di" bpmnElement="Task_MakeDecisionRKR_Path2">
+        <dc:Bounds x="1140" y="663" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PoinformujJO_Sciezka2_di" bpmnElement="Task_InformHeadOU_Path2">
+        <dc:Bounds x="1270" y="280" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PrzekazWypowiedzenieDoJO_di" bpmnElement="Task_ForwardDismissalNoticeToHeadOU">
+        <dc:Bounds x="1400" y="280" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_WreczWypowiedzenie_di" bpmnElement="Task_HandOverDismissalNotice">
+        <dc:Bounds x="1480" y="110" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_JoinFinal_di" bpmnElement="Gateway_JoinFinal" isMarkerVisible="true">
+        <dc:Bounds x="1585" y="295" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PrzygotujDokumenty_di" bpmnElement="Task_PrepareDocuments">
+        <dc:Bounds x="1660" y="280" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_RozliczPracownika_di" bpmnElement="Task_SettleAccounts">
+        <dc:Bounds x="1790" y="280" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_ZwolnienieZakonczoe_di" bpmnElement="EndEvent_DismissalEnded">
+        <dc:Bounds x="1922" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1912" y="345" width="58" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1v5a12a_di" bpmnElement="Flow_ReviewEmployeeToReviewPD">
+        <di:waypoint x="470" y="190" />
+        <di:waypoint x="470" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0u34v89_di" bpmnElement="Flow_ReviewPDToReviewPRK1">
+        <di:waypoint x="470" y="360" />
+        <di:waypoint x="470" y="413" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0yit43g_di" bpmnElement="Flow_ReviewPRK1ToReviewPRN1">
+        <di:waypoint x="470" y="493" />
+        <di:waypoint x="470" y="538" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1h8073b_di" bpmnElement="Flow_ReviewPRN1ToDecisionRKR1">
+        <di:waypoint x="470" y="618" />
+        <di:waypoint x="470" y="663" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08t1u1h_di" bpmnElement="Flow_InformHeadOU1ToJoinFinal">
+        <di:waypoint x="600" y="280" />
+        <di:waypoint x="600" y="250" />
+        <di:waypoint x="1550" y="250" />
+        <di:waypoint x="1550" y="320" />
+        <di:waypoint x="1585" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pcf3e8_di" bpmnElement="Flow_JoinFinalToPrepareDocuments">
+        <di:waypoint x="1635" y="320" />
+        <di:waypoint x="1660" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hbtxb3_di" bpmnElement="Flow_PrepareToSettleAccounts">
+        <di:waypoint x="1760" y="320" />
+        <di:waypoint x="1790" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09l8yoe_di" bpmnElement="Flow_SettleAccountsToDismissalEnded">
+        <di:waypoint x="1890" y="320" />
+        <di:waypoint x="1922" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1r6us8w_di" bpmnElement="Flow_ConsultDraftToReviewDraft">
+        <di:waypoint x="730" y="190" />
+        <di:waypoint x="730" y="788" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0y6rmrw_di" bpmnElement="Flow_ReviewDraftToSubmitApplication">
+        <di:waypoint x="780" y="828" />
+        <di:waypoint x="800" y="828" />
+        <di:waypoint x="800" y="150" />
+        <di:waypoint x="820" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0s6k2sc_di" bpmnElement="Flow_SubmitApplicationToParallelGate">
+        <di:waypoint x="870" y="190" />
+        <di:waypoint x="870" y="803" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01vj2l5_di" bpmnElement="Flow_ParallelGateToTradeUnionOpinion">
+        <di:waypoint x="870" y="853" />
+        <di:waypoint x="870" y="950" />
+        <di:waypoint x="940" y="950" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07b62z8_di" bpmnElement="Flow_ParallelGateToAgreeDraft">
+        <di:waypoint x="895" y="828" />
+        <di:waypoint x="940" y="828" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0l601j2_di" bpmnElement="Flow_TradeUnionOpinionToJoinConsultation">
+        <di:waypoint x="1040" y="950" />
+        <di:waypoint x="1100" y="950" />
+        <di:waypoint x="1100" y="853" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1399w4n_di" bpmnElement="Flow_AgreeDraftToJoinConsultation">
+        <di:waypoint x="1040" y="828" />
+        <di:waypoint x="1075" y="828" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h0aui0_di" bpmnElement="Flow_JoinConsultationToReviewAfter">
+        <di:waypoint x="1100" y="803" />
+        <di:waypoint x="1100" y="582" />
+        <di:waypoint x="1050" y="582" />
+        <di:waypoint x="1050" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0y0g82g_di" bpmnElement="Flow_ReviewAfterToForwardToPRK">
+        <di:waypoint x="1100" y="320" />
+        <di:waypoint x="1140" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12zdpj9_di" bpmnElement="Flow_ForwardToPRKToReviewPRK2">
+        <di:waypoint x="1190" y="360" />
+        <di:waypoint x="1190" y="413" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11n2d8g_di" bpmnElement="Flow_ReviewPRK2ToReviewPRN2">
+        <di:waypoint x="1190" y="493" />
+        <di:waypoint x="1190" y="538" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0yv98l1_di" bpmnElement="Flow_ReviewPRN2ToDecisionRKR2">
+        <di:waypoint x="1190" y="618" />
+        <di:waypoint x="1190" y="663" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0a8q48q_di" bpmnElement="Flow_DecisionRKR2ToInformHeadOU2">
+        <di:waypoint x="1240" y="703" />
+        <di:waypoint x="1320" y="703" />
+        <di:waypoint x="1320" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1e3h70r_di" bpmnElement="Flow_InformHeadOU2ToForwardDismissal">
+        <di:waypoint x="1370" y="320" />
+        <di:waypoint x="1400" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0n7p4bi_di" bpmnElement="Flow_ForwardDismissalToHandOver">
+        <di:waypoint x="1450" y="280" />
+        <di:waypoint x="1450" y="150" />
+        <di:waypoint x="1480" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0q9f6le_di" bpmnElement="Flow_HandOverToJoinFinal">
+        <di:waypoint x="1580" y="150" />
+        <di:waypoint x="1610" y="150" />
+        <di:waypoint x="1610" y="295" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_DoBramkiKto_di" bpmnElement="Flow_ToWhoInitiatesGate">
+        <di:waypoint x="278" y="150" />
+        <di:waypoint x="325" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SciezkaPracownik_di" bpmnElement="Flow_PathEmployee">
+        <di:waypoint x="375" y="150" />
+        <di:waypoint x="420" y="150" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="379" y="132" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SciezkaWAT_di" bpmnElement="Flow_PathMUT">
+        <di:waypoint x="350" y="175" />
+        <di:waypoint x="350" y="210" />
+        <di:waypoint x="710" y="210" />
+        <di:waypoint x="710" y="190" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="410" y="193" width="23" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1bw23ns_di" bpmnElement="Flow_1bw23ns">
+        <di:waypoint x="520" y="703" />
+        <di:waypoint x="600" y="703" />
+        <di:waypoint x="600" y="360" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

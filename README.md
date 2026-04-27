@@ -539,6 +539,8 @@ export { CurvedConnectorShape };
 
 ```
 aurea-eden/
+├── data/
+│   └── bpmn/               # BPMN 2.0 XML templates
 ├── lib/
 │   ├── components/         # Vue component (AureaEdenBpmnDiagram.vue)
 │   ├── connectors/         # Connector base class
@@ -553,8 +555,7 @@ aurea-eden/
 │   ├── CustomNotationDemo/
 │   ├── OrderProcessingDemo/
 │   ├── ShapesDemo/
-│   ├── SimpleBPMN/
-│   └── VueWrapperBpmnDemo/
+│   └── SimpleBPMN/
 ├── assets/                 # Static assets (logo, demo screenshots)
 ├── dist/                   # Built library (ES module + UMD)
 ├── dist-site/              # Built demo site

@@ -67,7 +67,7 @@ To prove theoretical superiority, we will execute a high-throughput comparative 
 ---
 
 ## 5. Roadmap to Completion
-1.  **[ ] Polish Manuscript**: Finalize the LaTeX source for the introduction and State of the Art.
+1.  **[x] Polish Manuscript**: Finalize the LaTeX source for the introduction and State of the Art.
 2.  **[ ] Execute Benchmarking**: Run the procedural generator and collect metric data.
 3.  **[ ] Generate Visualizations**: Export high-resolution comparison plots (Sugiyama vs. Ours).
 4.  **[ ] Final Review**: Audit against Scientific Reports submission guidelines.
