@@ -60172,6 +60172,9 @@ SPREAD LOG: Target ${nodeId} Port ${basePort}`);
       "eventBasedGateway",
       "complexGateway",
       "endEvent",
+      "intermediateCatchEvent",
+      "intermediateThrowEvent",
+      "boundaryEvent",
       "subProcess",
       "callActivity"
     ];
@@ -60440,7 +60443,7 @@ SPREAD LOG: Target ${nodeId} Port ${basePort}`);
     return text.replace(/\n/g, "\\n").replace(/'/g, "\\'");
   }
 }
-const version = "1.46.0";
+const version = "1.46.1";
 var Easing = Object.freeze({
   Linear: Object.freeze({
     None: function(amount) {
@@ -68071,22 +68074,24 @@ class Diagram {
         if (barHeight > maxBarHeight) maxBarHeight = barHeight;
         const rawColor = getColorForValue(colorValue, slotMin, slotMax, colorsInverted);
         const barColor = isDark ? new Color(65535) : rawColor;
-        const slotShape = totalBars === 1 ? element.shape.getOuterShape() : createRoundedBarSlotShape(elementSize.x, elementSize.y, barIndex, totalBars);
-        const barShape = new ValueBarShape(slotShape, barHeight, barColor, this.theme);
-        const barElement = new Element(`${element.elementId}_bar_${barIndex}`, barShape);
-        barElement.themable = false;
-        barElement.userData.barIndex = barIndex;
-        barElement.userData.barDef = barDef;
-        barElement.userData.slotMin = slotMin;
-        barElement.userData.slotMax = slotMax;
-        this.addElement(barElement).positionAt(element.getPosition());
-        element.valueBars.push({ element: barElement, positionOffset: new Vector3(0, 0, 0) });
-        barElement.scale.z = 0;
-        const animationState = { progress: 0 };
-        const tween = new Tween(animationState).to({ progress: 1 }, 1500).easing(Easing.Quartic.Out).onUpdate(() => {
-          barElement.scale.z = animationState.progress;
-        }).start();
-        this.analysisTweens.push(tween);
+        if (barHeight > 0) {
+          const slotShape = totalBars === 1 ? element.shape.getOuterShape() : createRoundedBarSlotShape(elementSize.x, elementSize.y, barIndex, totalBars);
+          const barShape = new ValueBarShape(slotShape, barHeight, barColor, this.theme);
+          const barElement = new Element(`${element.elementId}_bar_${barIndex}`, barShape);
+          barElement.themable = false;
+          barElement.userData.barIndex = barIndex;
+          barElement.userData.barDef = barDef;
+          barElement.userData.slotMin = slotMin;
+          barElement.userData.slotMax = slotMax;
+          this.addElement(barElement).positionAt(element.getPosition());
+          element.valueBars.push({ element: barElement, positionOffset: new Vector3(0, 0, 0) });
+          barElement.scale.z = 0;
+          const animationState = { progress: 0 };
+          const tween = new Tween(animationState).to({ progress: 1 }, 1500).easing(Easing.Quartic.Out).onUpdate(() => {
+            barElement.scale.z = animationState.progress;
+          }).start();
+          this.analysisTweens.push(tween);
+        }
       });
       const taskType = element.userData.taskType;
       let minZ = 0;
@@ -68726,19 +68731,29 @@ class Diagram {
    * Clears all elements and connectors from the diagram.
    */
   clear() {
+    if (this.tween) this.tween.stop();
+    if (this.analysisTweens) {
+      this.analysisTweens.forEach((t2) => t2.stop());
+      this.analysisTweens = [];
+    }
+    this.removeValueBars();
     if (this.elements.length > 0) {
       this.elements.forEach((element) => {
         this.scene.remove(element);
+        if (element.dispose) element.dispose();
       });
     }
     if (this.connectors.length > 0) {
       this.connectors.forEach((connector) => {
         this.scene.remove(connector);
+        if (connector.geometry) connector.geometry.dispose();
+        if (connector.material) connector.material.dispose();
       });
     }
     this.elements = [];
     this.connectors = [];
     this.elementConnectors.clear();
+    this.mode = "VIEW";
   }
   // ================================================================
   //   Diagram JSON
@@ -69381,6 +69396,23 @@ class BpmnDiagram extends Diagram {
     const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediateSignalThrow, "center", BPMN_DIMS.ICON_SIZE_LARGE);
     _el.semanticType = "event";
     _el.bpmnType = "bpmn:IntermediateThrowEvent";
+    _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
+    return _el;
+  }
+  addIntermediateThrowEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
+    const _el = this.addIntermediateEvent(elementId, width, height);
+    _el.bpmnType = "bpmn:IntermediateThrowEvent";
+    return _el;
+  }
+  addIntermediateCatchEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
+    const _el = this.addIntermediateEvent(elementId, width, height);
+    _el.bpmnType = "bpmn:IntermediateCatchEvent";
+    return _el;
+  }
+  addBoundaryEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
+    const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediate, "center", BPMN_DIMS.ICON_SIZE_LARGE);
+    _el.semanticType = "event";
+    _el.bpmnType = "bpmn:BoundaryEvent";
     _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
     return _el;
   }
