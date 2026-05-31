@@ -62148,6 +62148,10 @@ class Shape2 {
     this.outerShape = null;
     this.rebuildGeometry();
   }
+  updatePoints(points) {
+    this.points = points || [];
+    this.rebuildGeometry();
+  }
   /**
    * Rebuilds the 3D geometry from 2D paths provided by the subclass.
    */
@@ -62156,13 +62160,20 @@ class Shape2 {
       this.geometry.dispose();
     }
     const shapes = this.get2DPaths();
-    if (shapes && shapes.length > 0) {
-      this.outerShape = shapes[0].clone();
+    if (!shapes || Array.isArray(shapes) && shapes.length === 0) {
+      this.geometry = new BufferGeometry();
+      this.outerShape = null;
+      return;
+    }
+    const shapesArray = Array.isArray(shapes) ? shapes : [shapes];
+    if (shapesArray.length > 0) {
+      this.outerShape = shapesArray[0].clone();
       this.outerShape.holes = [];
     } else {
       this.outerShape = null;
     }
-    this.geometry = new ExtrudeGeometry(shapes, this.extrusionSettings);
+    const settings = this.tunedExtrudeSettings || this.extrusionSettings || ExtrusionParameters$1;
+    this.geometry = new ExtrudeGeometry(shapesArray, settings);
   }
   /**
    * Base implementation of dimension updates.
@@ -64696,315 +64707,313 @@ const ConnectorDimensions = {
 };
 class RoundedCornerOrthogonalConnectorShape extends Shape2 {
   constructor(connectorPoints) {
+    super(1, 1, 1, {
+      points: connectorPoints || [],
+      name: "RoundedCornerOrthogonalConnectorShape"
+    });
+  }
+  get2DPaths() {
+    if (!this.points || this.points.length < 2) return null;
     const outerRadius = ConnectorDimensions.CONNECTOR_OUTER_RADIUS;
     const lineWidth = ConnectorDimensions.CONNECTOR_LINE_WIDTH;
     const arrowheadWidth = ConnectorDimensions.CONNECTOR_ARROWHEAD_WIDTH;
     const arrowheadLength = ConnectorDimensions.CONNECTOR_ARROWHEAD_LENGTH;
     const width = lineWidth / 2;
-    const color = Colors.ELEMENT_STROKE;
-    const extrudeSettings = ExtrusionParameters$1;
     let pathLength = 0;
-    if (connectorPoints && connectorPoints.length >= 2) {
-      for (let i3 = 1; i3 < connectorPoints.length; i3++) {
-        pathLength += Math.sqrt(
-          Math.pow(connectorPoints[i3].x - connectorPoints[i3 - 1].x, 2) + Math.pow(connectorPoints[i3].y - connectorPoints[i3 - 1].y, 2)
-        );
-      }
+    for (let i3 = 1; i3 < this.points.length; i3++) {
+      pathLength += Math.sqrt(
+        Math.pow(this.points[i3].x - this.points[i3 - 1].x, 2) + Math.pow(this.points[i3].y - this.points[i3 - 1].y, 2)
+      );
     }
-    if (!connectorPoints || connectorPoints.length < 2 || pathLength < 1e-3) {
-      super(new BufferGeometry(), new DiagramEditMaterial(color));
-      this.points = connectorPoints || [];
-      return;
-    }
+    if (pathLength < 1e-3) return null;
     var connectorShape = new Shape$1();
-    if (connectorPoints[0].y == connectorPoints[1].y && connectorPoints[0].x < connectorPoints[1].x) {
-      connectorShape.moveTo(connectorPoints[0].x, connectorPoints[0].y + width);
-      connectorShape.lineTo(connectorPoints[0].x, connectorPoints[0].y - width);
+    if (this.points[0].y == this.points[1].y && this.points[0].x < this.points[1].x) {
+      connectorShape.moveTo(this.points[0].x, this.points[0].y + width);
+      connectorShape.lineTo(this.points[0].x, this.points[0].y - width);
     }
-    if (connectorPoints[0].y == connectorPoints[1].y && connectorPoints[0].x > connectorPoints[1].x) {
-      connectorShape.moveTo(connectorPoints[0].x, connectorPoints[0].y - width);
-      connectorShape.lineTo(connectorPoints[0].x, connectorPoints[0].y + width);
+    if (this.points[0].y == this.points[1].y && this.points[0].x > this.points[1].x) {
+      connectorShape.moveTo(this.points[0].x, this.points[0].y - width);
+      connectorShape.lineTo(this.points[0].x, this.points[0].y + width);
     }
-    if (connectorPoints[0].x == connectorPoints[1].x && connectorPoints[0].y < connectorPoints[1].y) {
-      connectorShape.moveTo(connectorPoints[0].x - width, connectorPoints[0].y);
-      connectorShape.lineTo(connectorPoints[0].x + width, connectorPoints[0].y);
+    if (this.points[0].x == this.points[1].x && this.points[0].y < this.points[1].y) {
+      connectorShape.moveTo(this.points[0].x - width, this.points[0].y);
+      connectorShape.lineTo(this.points[0].x + width, this.points[0].y);
     }
-    if (connectorPoints[0].x == connectorPoints[1].x && connectorPoints[0].y > connectorPoints[1].y) {
-      connectorShape.moveTo(connectorPoints[0].x + width, connectorPoints[0].y);
-      connectorShape.lineTo(connectorPoints[0].x - width, connectorPoints[0].y);
+    if (this.points[0].x == this.points[1].x && this.points[0].y > this.points[1].y) {
+      connectorShape.moveTo(this.points[0].x + width, this.points[0].y);
+      connectorShape.lineTo(this.points[0].x - width, this.points[0].y);
     }
-    for (var i2 = 1; i2 < connectorPoints.length - 1; i2++) {
-      const prevLen = Math.sqrt(Math.pow(connectorPoints[i2].x - connectorPoints[i2 - 1].x, 2) + Math.pow(connectorPoints[i2].y - connectorPoints[i2 - 1].y, 2));
-      const nextLen = Math.sqrt(Math.pow(connectorPoints[i2 + 1].x - connectorPoints[i2].x, 2) + Math.pow(connectorPoints[i2 + 1].y - connectorPoints[i2].y, 2));
+    for (var i2 = 1; i2 < this.points.length - 1; i2++) {
+      const prevLen = Math.sqrt(Math.pow(this.points[i2].x - this.points[i2 - 1].x, 2) + Math.pow(this.points[i2].y - this.points[i2 - 1].y, 2));
+      const nextLen = Math.sqrt(Math.pow(this.points[i2 + 1].x - this.points[i2].x, 2) + Math.pow(this.points[i2 + 1].y - this.points[i2].y, 2));
       const maxRadius = Math.min(prevLen / 2, nextLen / 2);
       const currentOuter = Math.min(outerRadius, maxRadius);
       const currentInner = Math.max(0, currentOuter - lineWidth);
-      if (connectorPoints[i2 - 1].y == connectorPoints[i2].y) {
-        if (connectorPoints[i2 - 1].x < connectorPoints[i2].x) {
-          if (connectorPoints[i2].y < connectorPoints[i2 + 1].y) {
-            connectorShape.lineTo(connectorPoints[i2].x + width - currentOuter, connectorPoints[i2].y - width);
+      if (this.points[i2 - 1].y == this.points[i2].y) {
+        if (this.points[i2 - 1].x < this.points[i2].x) {
+          if (this.points[i2].y < this.points[i2 + 1].y) {
+            connectorShape.lineTo(this.points[i2].x + width - currentOuter, this.points[i2].y - width);
             if (currentOuter > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x + width,
-              connectorPoints[i2].y - width,
-              connectorPoints[i2].x + width,
-              connectorPoints[i2].y - width + currentOuter
+              this.points[i2].x + width,
+              this.points[i2].y - width,
+              this.points[i2].x + width,
+              this.points[i2].y - width + currentOuter
             );
           } else {
-            connectorShape.lineTo(connectorPoints[i2].x - width - currentInner, connectorPoints[i2].y - width);
+            connectorShape.lineTo(this.points[i2].x - width - currentInner, this.points[i2].y - width);
             if (currentInner > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x - width,
-              connectorPoints[i2].y - width,
-              connectorPoints[i2].x - width,
-              connectorPoints[i2].y - width - currentInner
+              this.points[i2].x - width,
+              this.points[i2].y - width,
+              this.points[i2].x - width,
+              this.points[i2].y - width - currentInner
             );
           }
         } else {
-          if (connectorPoints[i2].y < connectorPoints[i2 + 1].y) {
-            connectorShape.lineTo(connectorPoints[i2].x + width + currentInner, connectorPoints[i2].y + width);
+          if (this.points[i2].y < this.points[i2 + 1].y) {
+            connectorShape.lineTo(this.points[i2].x + width + currentInner, this.points[i2].y + width);
             if (currentInner > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x + width,
-              connectorPoints[i2].y + width,
-              connectorPoints[i2].x + width,
-              connectorPoints[i2].y + width + currentInner
+              this.points[i2].x + width,
+              this.points[i2].y + width,
+              this.points[i2].x + width,
+              this.points[i2].y + width + currentInner
             );
           } else {
-            connectorShape.lineTo(connectorPoints[i2].x - width + currentOuter, connectorPoints[i2].y + width);
+            connectorShape.lineTo(this.points[i2].x - width + currentOuter, this.points[i2].y + width);
             if (currentOuter > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x - width,
-              connectorPoints[i2].y - width,
-              connectorPoints[i2].x - width,
-              connectorPoints[i2].y + width - currentOuter
+              this.points[i2].x - width,
+              this.points[i2].y - width,
+              this.points[i2].x - width,
+              this.points[i2].y + width - currentOuter
             );
           }
         }
       }
-      if (connectorPoints[i2 - 1].x == connectorPoints[i2].x) {
-        if (connectorPoints[i2 - 1].y < connectorPoints[i2].y) {
-          if (connectorPoints[i2].x < connectorPoints[i2 + 1].x) {
-            connectorShape.lineTo(connectorPoints[i2].x + width, connectorPoints[i2].y - width - currentInner);
+      if (this.points[i2 - 1].x == this.points[i2].x) {
+        if (this.points[i2 - 1].y < this.points[i2].y) {
+          if (this.points[i2].x < this.points[i2 + 1].x) {
+            connectorShape.lineTo(this.points[i2].x + width, this.points[i2].y - width - currentInner);
             if (currentInner > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x + width,
-              connectorPoints[i2].y - width,
-              connectorPoints[i2].x + width + currentInner,
-              connectorPoints[i2].y - width
+              this.points[i2].x + width,
+              this.points[i2].y - width,
+              this.points[i2].x + width + currentInner,
+              this.points[i2].y - width
             );
           } else {
-            connectorShape.lineTo(connectorPoints[i2].x + width, connectorPoints[i2].y + width - currentOuter);
+            connectorShape.lineTo(this.points[i2].x + width, this.points[i2].y + width - currentOuter);
             if (currentOuter > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x + width,
-              connectorPoints[i2].y + width,
-              connectorPoints[i2].x + width - currentOuter,
-              connectorPoints[i2].y + width
+              this.points[i2].x + width,
+              this.points[i2].y + width,
+              this.points[i2].x + width - currentOuter,
+              this.points[i2].y + width
             );
           }
         } else {
-          if (connectorPoints[i2].x < connectorPoints[i2 + 1].x) {
-            connectorShape.lineTo(connectorPoints[i2].x - width, connectorPoints[i2].y - width + currentOuter);
+          if (this.points[i2].x < this.points[i2 + 1].x) {
+            connectorShape.lineTo(this.points[i2].x - width, this.points[i2].y - width + currentOuter);
             if (currentOuter > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x - width,
-              connectorPoints[i2].y - width,
-              connectorPoints[i2].x - width + currentOuter,
-              connectorPoints[i2].y - width
+              this.points[i2].x - width,
+              this.points[i2].y - width,
+              this.points[i2].x - width + currentOuter,
+              this.points[i2].y - width
             );
           } else {
-            connectorShape.lineTo(connectorPoints[i2].x - width, connectorPoints[i2].y + width + currentInner);
+            connectorShape.lineTo(this.points[i2].x - width, this.points[i2].y + width + currentInner);
             if (currentInner > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x - width,
-              connectorPoints[i2].y + width,
-              connectorPoints[i2].x - width - currentInner,
-              connectorPoints[i2].y + width
+              this.points[i2].x - width,
+              this.points[i2].y + width,
+              this.points[i2].x - width - currentInner,
+              this.points[i2].y + width
             );
           }
         }
       }
     }
-    if (connectorPoints[connectorPoints.length - 2].y == connectorPoints[connectorPoints.length - 1].y && connectorPoints[connectorPoints.length - 2].x < connectorPoints[connectorPoints.length - 1].x) {
+    if (this.points[this.points.length - 2].y == this.points[this.points.length - 1].y && this.points[this.points.length - 2].x < this.points[this.points.length - 1].x) {
       connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x - arrowheadLength,
-        connectorPoints[connectorPoints.length - 1].y - width
+        this.points[this.points.length - 1].x - arrowheadLength,
+        this.points[this.points.length - 1].y - width
       );
       connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x - arrowheadLength,
-        connectorPoints[connectorPoints.length - 1].y - arrowheadWidth
+        this.points[this.points.length - 1].x - arrowheadLength,
+        this.points[this.points.length - 1].y - arrowheadWidth
       );
       connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x,
-        connectorPoints[connectorPoints.length - 1].y
+        this.points[this.points.length - 1].x,
+        this.points[this.points.length - 1].y
       );
       connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x - arrowheadLength,
-        connectorPoints[connectorPoints.length - 1].y + arrowheadWidth
+        this.points[this.points.length - 1].x - arrowheadLength,
+        this.points[this.points.length - 1].y + arrowheadWidth
       );
       connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x - arrowheadLength,
-        connectorPoints[connectorPoints.length - 1].y + width
-      );
-    }
-    if (connectorPoints[connectorPoints.length - 2].y == connectorPoints[connectorPoints.length - 1].y && connectorPoints[connectorPoints.length - 2].x > connectorPoints[connectorPoints.length - 1].x) {
-      connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x + arrowheadLength,
-        connectorPoints[connectorPoints.length - 1].y + width
-      );
-      connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x + arrowheadLength,
-        connectorPoints[connectorPoints.length - 1].y + arrowheadWidth
-      );
-      connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x,
-        connectorPoints[connectorPoints.length - 1].y
-      );
-      connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x + arrowheadLength,
-        connectorPoints[connectorPoints.length - 1].y - arrowheadWidth
-      );
-      connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x + arrowheadLength,
-        connectorPoints[connectorPoints.length - 1].y - width
+        this.points[this.points.length - 1].x - arrowheadLength,
+        this.points[this.points.length - 1].y + width
       );
     }
-    if (connectorPoints[connectorPoints.length - 2].x == connectorPoints[connectorPoints.length - 1].x && connectorPoints[connectorPoints.length - 2].y < connectorPoints[connectorPoints.length - 1].y) {
+    if (this.points[this.points.length - 2].y == this.points[this.points.length - 1].y && this.points[this.points.length - 2].x > this.points[this.points.length - 1].x) {
       connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x + width,
-        connectorPoints[connectorPoints.length - 1].y - arrowheadLength
+        this.points[this.points.length - 1].x + arrowheadLength,
+        this.points[this.points.length - 1].y + width
       );
       connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x + arrowheadWidth,
-        connectorPoints[connectorPoints.length - 1].y - arrowheadLength
+        this.points[this.points.length - 1].x + arrowheadLength,
+        this.points[this.points.length - 1].y + arrowheadWidth
       );
       connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x,
-        connectorPoints[connectorPoints.length - 1].y
+        this.points[this.points.length - 1].x,
+        this.points[this.points.length - 1].y
       );
       connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x - arrowheadWidth,
-        connectorPoints[connectorPoints.length - 1].y - arrowheadLength
+        this.points[this.points.length - 1].x + arrowheadLength,
+        this.points[this.points.length - 1].y - arrowheadWidth
       );
       connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x - width,
-        connectorPoints[connectorPoints.length - 1].y - arrowheadLength
-      );
-    }
-    if (connectorPoints[connectorPoints.length - 2].x == connectorPoints[connectorPoints.length - 1].x && connectorPoints[connectorPoints.length - 2].y > connectorPoints[connectorPoints.length - 1].y) {
-      connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x - width,
-        connectorPoints[connectorPoints.length - 1].y + arrowheadLength * 32 / 35
-      );
-      connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x - arrowheadWidth,
-        connectorPoints[connectorPoints.length - 1].y + arrowheadLength * 32 / 35
-      );
-      connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x,
-        connectorPoints[connectorPoints.length - 1].y
-      );
-      connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x + arrowheadWidth,
-        connectorPoints[connectorPoints.length - 1].y + arrowheadLength * 32 / 35
-      );
-      connectorShape.lineTo(
-        connectorPoints[connectorPoints.length - 1].x + width,
-        connectorPoints[connectorPoints.length - 1].y + arrowheadLength * 32 / 35
+        this.points[this.points.length - 1].x + arrowheadLength,
+        this.points[this.points.length - 1].y - width
       );
     }
-    for (var i2 = connectorPoints.length - 2; i2 > 0; i2--) {
-      const prevLen = Math.sqrt(Math.pow(connectorPoints[i2].x - connectorPoints[i2 + 1].x, 2) + Math.pow(connectorPoints[i2].y - connectorPoints[i2 + 1].y, 2));
-      const nextLen = Math.sqrt(Math.pow(connectorPoints[i2 - 1].x - connectorPoints[i2].x, 2) + Math.pow(connectorPoints[i2 - 1].y - connectorPoints[i2].y, 2));
+    if (this.points[this.points.length - 2].x == this.points[this.points.length - 1].x && this.points[this.points.length - 2].y < this.points[this.points.length - 1].y) {
+      connectorShape.lineTo(
+        this.points[this.points.length - 1].x + width,
+        this.points[this.points.length - 1].y - arrowheadLength
+      );
+      connectorShape.lineTo(
+        this.points[this.points.length - 1].x + arrowheadWidth,
+        this.points[this.points.length - 1].y - arrowheadLength
+      );
+      connectorShape.lineTo(
+        this.points[this.points.length - 1].x,
+        this.points[this.points.length - 1].y
+      );
+      connectorShape.lineTo(
+        this.points[this.points.length - 1].x - arrowheadWidth,
+        this.points[this.points.length - 1].y - arrowheadLength
+      );
+      connectorShape.lineTo(
+        this.points[this.points.length - 1].x - width,
+        this.points[this.points.length - 1].y - arrowheadLength
+      );
+    }
+    if (this.points[this.points.length - 2].x == this.points[this.points.length - 1].x && this.points[this.points.length - 2].y > this.points[this.points.length - 1].y) {
+      connectorShape.lineTo(
+        this.points[this.points.length - 1].x - width,
+        this.points[this.points.length - 1].y + arrowheadLength * 32 / 35
+      );
+      connectorShape.lineTo(
+        this.points[this.points.length - 1].x - arrowheadWidth,
+        this.points[this.points.length - 1].y + arrowheadLength * 32 / 35
+      );
+      connectorShape.lineTo(
+        this.points[this.points.length - 1].x,
+        this.points[this.points.length - 1].y
+      );
+      connectorShape.lineTo(
+        this.points[this.points.length - 1].x + arrowheadWidth,
+        this.points[this.points.length - 1].y + arrowheadLength * 32 / 35
+      );
+      connectorShape.lineTo(
+        this.points[this.points.length - 1].x + width,
+        this.points[this.points.length - 1].y + arrowheadLength * 32 / 35
+      );
+    }
+    for (var i2 = this.points.length - 2; i2 > 0; i2--) {
+      const prevLen = Math.sqrt(Math.pow(this.points[i2].x - this.points[i2 + 1].x, 2) + Math.pow(this.points[i2].y - this.points[i2 + 1].y, 2));
+      const nextLen = Math.sqrt(Math.pow(this.points[i2 - 1].x - this.points[i2].x, 2) + Math.pow(this.points[i2 - 1].y - this.points[i2].y, 2));
       const maxRadius = Math.min(prevLen / 2, nextLen / 2);
       const currentOuter = Math.min(outerRadius, maxRadius);
       const currentInner = Math.max(0, currentOuter - lineWidth);
-      if (connectorPoints[i2 + 1].y == connectorPoints[i2].y) {
-        if (connectorPoints[i2 + 1].x < connectorPoints[i2].x) {
-          if (connectorPoints[i2].y < connectorPoints[i2 - 1].y) {
-            connectorShape.lineTo(connectorPoints[i2].x + width - currentInner, connectorPoints[i2].y - width);
+      if (this.points[i2 + 1].y == this.points[i2].y) {
+        if (this.points[i2 + 1].x < this.points[i2].x) {
+          if (this.points[i2].y < this.points[i2 - 1].y) {
+            connectorShape.lineTo(this.points[i2].x + width - currentInner, this.points[i2].y - width);
             if (currentInner > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x + width,
-              connectorPoints[i2].y - width,
-              connectorPoints[i2].x + width,
-              connectorPoints[i2].y - width + currentInner
+              this.points[i2].x + width,
+              this.points[i2].y - width,
+              this.points[i2].x + width,
+              this.points[i2].y - width + currentInner
             );
           } else {
-            connectorShape.lineTo(connectorPoints[i2].x - width - currentInner, connectorPoints[i2].y - width);
+            connectorShape.lineTo(this.points[i2].x - width - currentInner, this.points[i2].y - width);
             if (currentInner > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x - width,
-              connectorPoints[i2].y - width,
-              connectorPoints[i2].x - width,
-              connectorPoints[i2].y - width - currentInner
+              this.points[i2].x - width,
+              this.points[i2].y - width,
+              this.points[i2].x - width,
+              this.points[i2].y - width - currentInner
             );
           }
         } else {
-          if (connectorPoints[i2].y < connectorPoints[i2 - 1].y) {
-            connectorShape.lineTo(connectorPoints[i2].x + width + currentInner, connectorPoints[i2].y + width);
+          if (this.points[i2].y < this.points[i2 - 1].y) {
+            connectorShape.lineTo(this.points[i2].x + width + currentInner, this.points[i2].y + width);
             if (currentInner > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x + width,
-              connectorPoints[i2].y + width,
-              connectorPoints[i2].x + width,
-              connectorPoints[i2].y + width + currentInner
+              this.points[i2].x + width,
+              this.points[i2].y + width,
+              this.points[i2].x + width,
+              this.points[i2].y + width + currentInner
             );
           } else {
-            connectorShape.lineTo(connectorPoints[i2].x - width + currentOuter, connectorPoints[i2].y + width);
+            connectorShape.lineTo(this.points[i2].x - width + currentOuter, this.points[i2].y + width);
             if (currentOuter > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x - width,
-              connectorPoints[i2].y + width,
-              connectorPoints[i2].x - width,
-              connectorPoints[i2].y + width - currentOuter
+              this.points[i2].x - width,
+              this.points[i2].y + width,
+              this.points[i2].x - width,
+              this.points[i2].y + width - currentOuter
             );
           }
         }
       }
-      if (connectorPoints[i2 + 1].x == connectorPoints[i2].x) {
-        if (connectorPoints[i2 + 1].y < connectorPoints[i2].y) {
-          if (connectorPoints[i2].x < connectorPoints[i2 - 1].x) {
-            connectorShape.lineTo(connectorPoints[i2].x + width, connectorPoints[i2].y - width - currentInner);
+      if (this.points[i2 + 1].x == this.points[i2].x) {
+        if (this.points[i2 + 1].y < this.points[i2].y) {
+          if (this.points[i2].x < this.points[i2 - 1].x) {
+            connectorShape.lineTo(this.points[i2].x + width, this.points[i2].y - width - currentInner);
             if (currentInner > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x + width,
-              connectorPoints[i2].y - width,
-              connectorPoints[i2].x + width + currentInner,
-              connectorPoints[i2].y - width
+              this.points[i2].x + width,
+              this.points[i2].y - width,
+              this.points[i2].x + width + currentInner,
+              this.points[i2].y - width
             );
           } else {
-            connectorShape.lineTo(connectorPoints[i2].x + width, connectorPoints[i2].y + width - currentOuter);
+            connectorShape.lineTo(this.points[i2].x + width, this.points[i2].y + width - currentOuter);
             if (currentOuter > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x + width,
-              connectorPoints[i2].y + width,
-              connectorPoints[i2].x + width - currentOuter,
-              connectorPoints[i2].y + width
+              this.points[i2].x + width,
+              this.points[i2].y + width,
+              this.points[i2].x + width - currentOuter,
+              this.points[i2].y + width
             );
           }
         } else {
-          if (connectorPoints[i2].x < connectorPoints[i2 - 1].x) {
-            connectorShape.lineTo(connectorPoints[i2].x - width, connectorPoints[i2].y - width + currentOuter);
+          if (this.points[i2].x < this.points[i2 - 1].x) {
+            connectorShape.lineTo(this.points[i2].x - width, this.points[i2].y - width + currentOuter);
             if (currentOuter > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x - width,
-              connectorPoints[i2].y - width,
-              connectorPoints[i2].x - width + currentOuter,
-              connectorPoints[i2].y - width
+              this.points[i2].x - width,
+              this.points[i2].y - width,
+              this.points[i2].x - width + currentOuter,
+              this.points[i2].y - width
             );
           } else {
-            connectorShape.lineTo(connectorPoints[i2].x - width, connectorPoints[i2].y + width + currentInner);
+            connectorShape.lineTo(this.points[i2].x - width, this.points[i2].y + width + currentInner);
             if (currentInner > 0) connectorShape.quadraticCurveTo(
-              connectorPoints[i2].x - width,
-              connectorPoints[i2].y + width,
-              connectorPoints[i2].x - width - currentInner,
-              connectorPoints[i2].y + width
+              this.points[i2].x - width,
+              this.points[i2].y + width,
+              this.points[i2].x - width - currentInner,
+              this.points[i2].y + width
             );
           }
         }
       }
     }
-    if (connectorPoints[0].y == connectorPoints[1].y && connectorPoints[0].x < connectorPoints[1].x) {
-      connectorShape.lineTo(connectorPoints[0].x, connectorPoints[0].y + width);
+    if (this.points[0].y == this.points[1].y && this.points[0].x < this.points[1].x) {
+      connectorShape.lineTo(this.points[0].x, this.points[0].y + width);
     }
-    if (connectorPoints[0].y == connectorPoints[1].y && connectorPoints[0].x > connectorPoints[1].x) {
-      connectorShape.lineTo(connectorPoints[0].x, connectorPoints[0].y - width);
+    if (this.points[0].y == this.points[1].y && this.points[0].x > this.points[1].x) {
+      connectorShape.lineTo(this.points[0].x, this.points[0].y - width);
     }
-    if (connectorPoints[0].x == connectorPoints[1].x && connectorPoints[0].y < connectorPoints[1].y) {
-      connectorShape.lineTo(connectorPoints[0].x - width, connectorPoints[0].y);
+    if (this.points[0].x == this.points[1].x && this.points[0].y < this.points[1].y) {
+      connectorShape.lineTo(this.points[0].x - width, this.points[0].y);
     }
-    if (connectorPoints[0].x == connectorPoints[1].x && connectorPoints[0].y > connectorPoints[1].y) {
-      connectorShape.lineTo(connectorPoints[0].x + width, connectorPoints[0].y);
+    if (this.points[0].x == this.points[1].x && this.points[0].y > this.points[1].y) {
+      connectorShape.lineTo(this.points[0].x + width, this.points[0].y);
     }
-    var connectorGeometry = new ExtrudeGeometry(connectorShape, extrudeSettings);
-    super(connectorGeometry, new DiagramEditMaterial(color));
+    return connectorShape;
   }
 }
 const RectangleDimensions = {
@@ -65087,6 +65096,7 @@ class Connector extends Mesh {
   constructor(elementId, shape = new RoundedCornerOrthogonalConnectorShape(), sourceElement = null, targetElement = null, sourcePosition = "auto", targetPosition = "auto", label = null, type = "sequence", properties = {}) {
     super(shape.geometry, shape.material);
     this.elementId = elementId;
+    this.shape = shape;
     this.sourceElement = sourceElement;
     this.targetElement = targetElement;
     this.sourcePosition = sourcePosition;
@@ -65120,14 +65130,9 @@ class Connector extends Mesh {
       (_b = this.properties) == null ? void 0 : _b.waypointPorts
     );
     this.points = points;
-    let newShape;
-    if (this.type === "association") ;
-    else {
-      newShape = new RoundedCornerOrthogonalConnectorShape(points);
-    }
-    if (newShape) {
-      if (this.geometry) this.geometry.dispose();
-      this.geometry = newShape.geometry;
+    if (this.shape) {
+      this.shape.updatePoints(points);
+      this.geometry = this.shape.geometry;
     }
     if (this.label && this.labelElement) {
       this._updateLabelPosition();
@@ -65398,28 +65403,23 @@ class Connector extends Mesh {
 }
 class StraightDottedConnectorShape extends Shape2 {
   constructor(connectorPoints) {
-    if (!connectorPoints || connectorPoints.length < 2) {
-      console.error("StraightDottedConnectorShape requires at least 2 points.");
-      super(new BufferGeometry(), new DiagramEditMaterial(Colors.SECONDARY_STROKE || Colors.ELEMENT_STROKE));
-      this.points = [];
-      return;
-    }
-    const start = connectorPoints[0];
-    const end = connectorPoints[connectorPoints.length - 1];
+    super(1, 1, 1, {
+      points: connectorPoints || [],
+      name: "StraightDottedConnectorShape"
+    });
+  }
+  get2DPaths() {
+    if (!this.points || this.points.length < 2) return null;
+    const start = this.points[0];
+    const end = this.points[this.points.length - 1];
     const p1 = new Vector2(start.x, start.y);
     const p2 = new Vector2(end.x, end.y);
     const lineWidth = ConnectorDimensions.CONNECTOR_LINE_WIDTH;
-    const color = Colors.ELEMENT_STROKE;
-    const extrudeSettings = ExtrusionParameters$1;
     const radius = lineWidth * 0.8;
     const gapLength = radius * 6;
     const direction = new Vector2().subVectors(p2, p1);
     const totalLength = direction.length();
-    if (totalLength < 1e-3) {
-      super(new BufferGeometry(), new DiagramEditMaterial(color));
-      this.points = connectorPoints || [];
-      return;
-    }
+    if (totalLength < 1e-3) return null;
     direction.normalize();
     const shapes = [];
     let currentDist = 0;
@@ -65430,9 +65430,7 @@ class StraightDottedConnectorShape extends Shape2 {
       shapes.push(dotShape);
       currentDist += radius * 2 + gapLength;
     }
-    const geometry = new ExtrudeGeometry(shapes, extrudeSettings);
-    super(geometry, new DiagramEditMaterial(color));
-    this.name = "StraightDottedConnectorShape";
+    return shapes;
   }
 }
 class Element extends Mesh {
@@ -69012,23 +69010,22 @@ class TextAnnotationShape extends Shape2 {
 }
 class StraightArrowConnectorShape extends Shape2 {
   constructor(connectorPoints) {
-    if (!connectorPoints || connectorPoints.length < 2) {
-      console.error("StraightArrowConnectorShape requires at least 2 points.");
-      super(new BufferGeometry(), new DiagramEditMaterial(Colors.ELEMENT_STROKE));
-      return;
-    }
+    super(1, 1, 1, {
+      points: connectorPoints || [],
+      name: "StraightArrowConnectorShape"
+    });
+  }
+  get2DPaths() {
+    if (!this.points || this.points.length < 2) return null;
     const hw = ConnectorDimensions.CONNECTOR_LINE_WIDTH / 2;
     const aw = ConnectorDimensions.CONNECTOR_ARROWHEAD_WIDTH;
     const al = ConnectorDimensions.CONNECTOR_ARROWHEAD_LENGTH;
-    const src = connectorPoints[0];
-    const tgt = connectorPoints[connectorPoints.length - 1];
+    const src = this.points[0];
+    const tgt = this.points[this.points.length - 1];
     const dx = tgt.x - src.x;
     const dy = tgt.y - src.y;
     const len = Math.sqrt(dx * dx + dy * dy);
-    if (len < 1e-6) {
-      super(new BufferGeometry(), new DiagramEditMaterial(Colors.ELEMENT_STROKE));
-      return;
-    }
+    if (len < 1e-6) return null;
     const dxN = dx / len;
     const dyN = dy / len;
     const pxN = -dyN;
@@ -69045,43 +69042,43 @@ class StraightArrowConnectorShape extends Shape2 {
     shape.lineTo(src.x - pxN * hw, src.y - pyN * hw);
     shape.lineTo(src.x + pxN * hw, src.y + pyN * hw);
     shape.closePath();
-    const geometry = new ExtrudeGeometry(shape, ExtrusionParameters$1);
-    super(geometry, new DiagramEditMaterial(Colors.ELEMENT_STROKE));
-    this.name = "StraightArrowConnectorShape";
+    return shape;
   }
 }
 class DashedOrthogonalConnectorShape extends Shape2 {
   constructor(connectorPoints) {
-    if (!connectorPoints || connectorPoints.length < 2) {
-      super(new BufferGeometry(), new DiagramEditMaterial(Colors.ELEMENT_STROKE));
-      return;
-    }
+    super(1, 1, 1, {
+      points: connectorPoints || [],
+      name: "DashedOrthogonalConnectorShape",
+      tunedExtrudeSettings: {
+        steps: 1,
+        depth: 0.4,
+        bevelEnabled: true,
+        bevelThickness: 0.1,
+        bevelSize: 0.1,
+        bevelOffset: 0,
+        bevelSegments: 2
+      }
+    });
+  }
+  get2DPaths() {
+    if (!this.points || this.points.length < 2) return null;
     const lineWidth = ConnectorDimensions.CONNECTOR_LINE_WIDTH;
-    const color = Colors.ELEMENT_STROKE;
-    const tunedExtrudeSettings = {
-      steps: 1,
-      depth: 0.4,
-      bevelEnabled: true,
-      bevelThickness: 0.1,
-      bevelSize: 0.1,
-      bevelOffset: 0,
-      bevelSegments: 2
-    };
     const headWidth = ConnectorDimensions.CONNECTOR_ARROWHEAD_WIDTH * 2;
     const headLength = ConnectorDimensions.CONNECTOR_ARROWHEAD_LENGTH;
     const startCircleRadius = 4;
     const dashLength = 4;
     const gapLength = 6;
     const shapes = [];
-    for (let i2 = 0; i2 < connectorPoints.length - 1; i2++) {
-      const p1 = connectorPoints[i2];
-      const p2 = connectorPoints[i2 + 1];
+    for (let i2 = 0; i2 < this.points.length - 1; i2++) {
+      const p1 = this.points[i2];
+      const p2 = this.points[i2 + 1];
       const segmentDir = new Vector2().subVectors(p2, p1);
       const segmentLen = segmentDir.length();
       segmentDir.normalize();
       const normal = new Vector2(-segmentDir.y, segmentDir.x).multiplyScalar(lineWidth / 2);
       let currentPos = i2 === 0 ? startCircleRadius : 0;
-      const stopPos = i2 === connectorPoints.length - 2 ? segmentLen - headLength : segmentLen;
+      const stopPos = i2 === this.points.length - 2 ? segmentLen - headLength : segmentLen;
       while (currentPos < stopPos) {
         const drawLen = Math.min(dashLength, stopPos - currentPos);
         if (drawLen <= 0) break;
@@ -69097,15 +69094,15 @@ class DashedOrthogonalConnectorShape extends Shape2 {
         currentPos += dashLength + gapLength;
       }
     }
-    const start = connectorPoints[0];
+    const start = this.points[0];
     const startCircle = new Shape$1();
     startCircle.absarc(start.x, start.y, startCircleRadius, 0, Math.PI * 2, false);
     const innerHole = new Path();
     innerHole.absarc(start.x, start.y, startCircleRadius - lineWidth, 0, Math.PI * 2, true);
     startCircle.holes.push(innerHole);
     shapes.push(startCircle);
-    const end = connectorPoints[connectorPoints.length - 1];
-    const last2 = connectorPoints[connectorPoints.length - 2];
+    const end = this.points[this.points.length - 1];
+    const last2 = this.points[this.points.length - 2];
     const endDir = new Vector2().subVectors(end, last2).normalize();
     const endNormal = new Vector2(-endDir.y, endDir.x);
     const tip = end;
@@ -69142,9 +69139,7 @@ class DashedOrthogonalConnectorShape extends Shape2 {
     arrowHole.closePath();
     arrowShape.holes.push(arrowHole);
     shapes.push(arrowShape);
-    const geometry = new ExtrudeGeometry(shapes, tunedExtrudeSettings);
-    super(geometry, new DiagramEditMaterial(color));
-    this.name = "DashedOrthogonalConnectorShape";
+    return shapes;
   }
 }
 const subProcessMarker = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<svg\n   xmlns:dc="http://purl.org/dc/elements/1.1/"\n   xmlns:cc="http://creativecommons.org/ns#"\n   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n   xmlns:svg="http://www.w3.org/2000/svg"\n   xmlns="http://www.w3.org/2000/svg"\n   version="1.1"\n   id="svg2"\n   viewBox="0 0 2000 2000"\n   height="2000"\n   width="2000">\n  <defs\n     id="defs4" />\n  <metadata\n     id="metadata7">\n    <rdf:RDF>\n      <cc:Work\n         rdf:about="">\n        <dc:format>image/svg+xml</dc:format>\n        <dc:type\n           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />\n        <dc:title></dc:title>\n        <cc:license\n           rdf:resource="https://github.com/bpmn-io/bpmn-font/blob/master/LICENSE" />\n        <dc:creator>\n          <cc:Agent>\n            <dc:title>Jörg Dotzki</dc:title>\n          </cc:Agent>\n        </dc:creator>\n        <dc:subject>\n          <rdf:Bag>\n            <rdf:li>BPMN</rdf:li>\n            <rdf:li>bpmn-io</rdf:li>\n            <rdf:li>bpmn.io</rdf:li>\n            <rdf:li>Font</rdf:li>\n          </rdf:Bag>\n        </dc:subject>\n      </cc:Work>\n    </rdf:RDF>\n  </metadata>\n  <g\n     transform="translate(0,947.63784)"\n     id="layer1">\n    <path\n       id="rect4136-1"\n       transform="translate(0,-947.63784)"\n       d="m 300,300 0,50 0,1350 1400,0 0,-1400 z m 88,88 1224,0 0,1224 -1224,0 z m 522,212 0,310 -310,0 0,180 310,0 0,310 180,0 0,-310 310,0 0,-180 -310,0 0,-310 z"\n       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;white-space:normal;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:200;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />\n  </g>\n</svg>\n';
@@ -69637,16 +69632,52 @@ class BpmnDiagram extends Diagram {
   // Add BPMN Connectors
   // --------------------------------------------------
   addFlowConnector(elementId, points) {
-    return this.addConnector(new Connector(elementId, new RoundedCornerOrthogonalConnectorShape(points)));
+    return this.addConnector(new Connector(
+      elementId,
+      new RoundedCornerOrthogonalConnectorShape(points),
+      null,
+      null,
+      "auto",
+      "auto",
+      null,
+      "sequence"
+    ));
   }
   addAssociationConnector(elementId, points) {
-    return this.addConnector(new Connector(elementId, new StraightDottedConnectorShape(points)));
+    return this.addConnector(new Connector(
+      elementId,
+      new StraightDottedConnectorShape(points),
+      null,
+      null,
+      "auto",
+      "auto",
+      null,
+      "association"
+    ));
   }
   addStraightArrowConnector(elementId, points) {
-    return this.addConnector(new Connector(elementId, new StraightArrowConnectorShape(points)));
+    return this.addConnector(new Connector(
+      elementId,
+      new StraightArrowConnectorShape(points),
+      null,
+      null,
+      "auto",
+      "auto",
+      null,
+      "sequence"
+    ));
   }
   addDashedOrthogonalConnector(elementId, points) {
-    return this.addConnector(new Connector(elementId, new DashedOrthogonalConnectorShape(points)));
+    return this.addConnector(new Connector(
+      elementId,
+      new DashedOrthogonalConnectorShape(points),
+      null,
+      null,
+      "auto",
+      "auto",
+      null,
+      "message-flow"
+    ));
   }
   // --------------------------------------------------
   // Import BPMN Diagram from .bpmn file (XML)
