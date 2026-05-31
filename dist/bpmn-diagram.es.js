@@ -62125,7 +62125,7 @@ const Colors = {
   ELEMENT_TEXT: Themes.LIGHT.ELEMENT_TEXT
 };
 class Shape2 {
-  constructor(width, height, lineWidth = 1) {
+  constructor(width, height, lineWidth = 1, extraConfig = {}) {
     if (width instanceof BufferGeometry) {
       this.geometry = width;
       this.material = height;
@@ -62139,6 +62139,7 @@ class Shape2 {
     this.lineWidth = lineWidth;
     this.color = Colors.ELEMENT_STROKE;
     this.extrusionSettings = ExtrusionParameters$1;
+    Object.assign(this, extraConfig);
     this.material = new DiagramEditMaterial(this.color);
     this.geometry = null;
     this.outerShape = null;
@@ -68864,8 +68865,7 @@ class Diagram {
 }
 class RoundedRectangleShape extends Shape2 {
   constructor(horizontalSize = RectangleDimensions.HORIZONTAL_SIZE, verticalSize = RectangleDimensions.VERTICAL_SIZE, cornerRadius = RectangleDimensions.CORNER_RADIUS, lineWidth = RectangleDimensions.LINE_WIDTH) {
-    super(horizontalSize, verticalSize, lineWidth);
-    this.cornerRadius = cornerRadius;
+    super(horizontalSize, verticalSize, lineWidth, { cornerRadius });
     this.name = "RoundedRectangleShape";
   }
   get2DPaths() {
