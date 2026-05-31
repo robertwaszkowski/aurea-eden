@@ -39,7 +39,7 @@ function createCard(parentContainer, title, subtitle, barId, isPreview = false) 
     
     const previewStyle = `
         position: absolute;
-        top: 86px;
+        bottom: 12px;
         right: 12px;
         width: 380px;
         height: 250px;
@@ -293,7 +293,7 @@ function createCard(parentContainer, title, subtitle, barId, isPreview = false) 
             if (isMinimized) {
                 card.style.cssText = `
                     position: absolute;
-                    top: 86px;
+                    bottom: 12px;
                     right: 12px;
                     width: 380px;
                     height: 32px;

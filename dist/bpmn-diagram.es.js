@@ -62124,6 +62124,28 @@ const Colors = {
   ELEMENT_STROKE: Themes.LIGHT.ELEMENT_STROKE,
   ELEMENT_TEXT: Themes.LIGHT.ELEMENT_TEXT
 };
+const RectangleDimensions = {
+  HORIZONTAL_SIZE: 100,
+  VERTICAL_SIZE: 80,
+  CORNER_RADIUS: 10,
+  LINE_WIDTH: 1
+};
+const CircleDimensions = {
+  RADIUS: 18,
+  LINE_WIDTH_THIN: 0.4,
+  LINE_WIDTH_NORMAL: 1,
+  LINE_WIDTH_THICK: 2.4
+};
+const DiamondDimensions = {
+  DIAGONAL: 48,
+  LINE_WIDTH: 1
+};
+const StrokeStyles = {
+  THIN: "thin",
+  THICK: "thick",
+  DOUBLE: "double",
+  DASHED: "dashed"
+};
 class Shape2 {
   constructor(width, height, lineWidth = 1, extraConfig = {}) {
     if (width instanceof BufferGeometry) {
@@ -62136,13 +62158,24 @@ class Shape2 {
     }
     this.width = width;
     this.height = height;
-    this.lineWidth = lineWidth;
-    this.shapeWidth = width;
-    this.shapeHeight = height;
-    this.shapeLineWidth = lineWidth;
+    Object.assign(this, extraConfig);
+    this.strokeStyle = this.strokeStyle || StrokeStyles.THIN;
+    let targetLineWidth = lineWidth;
+    if (extraConfig.strokeStyle) {
+      if (this.strokeStyle === StrokeStyles.THICK) {
+        targetLineWidth = CircleDimensions.LINE_WIDTH_THICK;
+      } else if (this.strokeStyle === StrokeStyles.THIN || this.strokeStyle === StrokeStyles.DOUBLE) {
+        targetLineWidth = CircleDimensions.LINE_WIDTH_THIN;
+      } else if (this.strokeStyle === StrokeStyles.DASHED) {
+        targetLineWidth = CircleDimensions.LINE_WIDTH_NORMAL;
+      }
+    }
+    this.lineWidth = targetLineWidth;
+    this.shapeWidth = this.width;
+    this.shapeHeight = this.height;
+    this.shapeLineWidth = this.lineWidth;
     this.color = Colors.ELEMENT_STROKE;
     this.extrusionSettings = ExtrusionParameters$1;
-    Object.assign(this, extraConfig);
     this.material = new DiagramEditMaterial(this.color);
     this.geometry = null;
     this.outerShape = null;
@@ -62159,21 +62192,57 @@ class Shape2 {
     if (this.geometry) {
       this.geometry.dispose();
     }
-    const shapes = this.get2DPaths();
-    if (!shapes || Array.isArray(shapes) && shapes.length === 0) {
+    let shapes = [];
+    if (this.strokeStyle === StrokeStyles.DOUBLE && typeof this.getSinglePath === "function") {
+      const spacing = 3;
+      const outer = this.getSinglePath(this.width, this.height);
+      const outerHole = this.getSinglePath(this.width - this.lineWidth * 2, this.height - this.lineWidth * 2);
+      if (outer && outerHole) {
+        const holePath = new Path();
+        holePath.copy(outerHole);
+        outer.holes.push(holePath);
+      }
+      const innerW = this.width - this.lineWidth * 2 - spacing * 2;
+      const innerH = this.height - this.lineWidth * 2 - spacing * 2;
+      const inner = this.getSinglePath(innerW, innerH);
+      const innerHole = this.getSinglePath(innerW - this.lineWidth * 2, innerH - this.lineWidth * 2);
+      if (inner && innerHole) {
+        const holePath = new Path();
+        holePath.copy(innerHole);
+        inner.holes.push(holePath);
+      }
+      if (outer && inner) {
+        shapes = [outer, inner];
+      } else if (outer) {
+        shapes = [outer];
+      }
+    } else if (this.strokeStyle === StrokeStyles.DASHED && typeof this.getDashedPaths === "function") {
+      const dashed = this.getDashedPaths();
+      shapes = Array.isArray(dashed) ? dashed : [dashed];
+    } else if (typeof this.getSinglePath === "function") {
+      const outer = this.getSinglePath(this.width, this.height);
+      const inner = this.getSinglePath(this.width - this.lineWidth * 2, this.height - this.lineWidth * 2);
+      if (outer && inner) {
+        const holePath = new Path();
+        holePath.copy(inner);
+        outer.holes.push(holePath);
+      }
+      if (outer) {
+        shapes = [outer];
+      }
+    } else if (typeof this.get2DPaths === "function") {
+      const legacy = this.get2DPaths();
+      shapes = Array.isArray(legacy) ? legacy : [legacy];
+    }
+    if (!shapes || shapes.length === 0 || !shapes[0]) {
       this.geometry = new BufferGeometry();
       this.outerShape = null;
       return;
     }
-    const shapesArray = Array.isArray(shapes) ? shapes : [shapes];
-    if (shapesArray.length > 0) {
-      this.outerShape = shapesArray[0].clone();
-      this.outerShape.holes = [];
-    } else {
-      this.outerShape = null;
-    }
+    this.outerShape = shapes[0].clone();
+    this.outerShape.holes = [];
     const settings = this.tunedExtrudeSettings || this.extrusionSettings || ExtrusionParameters$1;
-    this.geometry = new ExtrudeGeometry(shapesArray, settings);
+    this.geometry = new ExtrudeGeometry(shapes, settings);
   }
   /**
    * Base implementation of dimension updates.
@@ -65016,81 +65085,94 @@ class RoundedCornerOrthogonalConnectorShape extends Shape2 {
     return connectorShape;
   }
 }
-const RectangleDimensions = {
-  HORIZONTAL_SIZE: 100,
-  VERTICAL_SIZE: 80,
-  CORNER_RADIUS: 10,
-  LINE_WIDTH: 1
-};
-const CircleDimensions = {
-  RADIUS: 18,
-  LINE_WIDTH_NORMAL: 1
-};
-const DiamondDimensions = {
-  DIAGONAL: 48,
-  LINE_WIDTH: 1
-};
 class CircleShape extends Shape2 {
-  constructor(width = CircleDimensions.RADIUS * 2, height = CircleDimensions.RADIUS * 2, lineWidth = CircleDimensions.LINE_WIDTH_NORMAL) {
+  constructor(width = CircleDimensions.RADIUS * 2, height = CircleDimensions.RADIUS * 2, strokeStyle = StrokeStyles.THIN, extraConfig = {}) {
     let targetWidth = width;
     let targetHeight = height;
     if (!width || !height) {
       targetWidth = CircleDimensions.RADIUS * 2;
       targetHeight = CircleDimensions.RADIUS * 2;
     }
-    super(targetWidth, targetHeight, lineWidth);
+    let config = extraConfig;
+    let targetStyle = strokeStyle;
+    if (typeof strokeStyle === "number") {
+      config = { strokeStyle: legacyStrokeToStyle(strokeStyle), ...extraConfig };
+      targetStyle = legacyStrokeToStyle(strokeStyle);
+    }
+    super(targetWidth, targetHeight, CircleDimensions.LINE_WIDTH_NORMAL, {
+      strokeStyle: targetStyle,
+      ...config
+    });
     this.name = "CircleShape";
   }
-  get2DPaths() {
-    const radius = Math.min(this.width, this.height) / 2;
-    const drawCircle = (r2) => {
-      const path = new Shape$1();
-      const centerX = 0;
-      const centerY = 0;
-      const controlPointDistance = r2 * 0.552284749831;
-      path.moveTo(centerX, centerY - r2);
-      path.bezierCurveTo(
-        centerX + controlPointDistance,
-        centerY - r2,
-        centerX + r2,
-        centerY - controlPointDistance,
-        centerX + r2,
-        centerY
-      );
-      path.bezierCurveTo(
-        centerX + r2,
-        centerY + controlPointDistance,
-        centerX + controlPointDistance,
-        centerY + r2,
-        centerX,
-        centerY + r2
-      );
-      path.bezierCurveTo(
-        centerX - controlPointDistance,
-        centerY + r2,
-        centerX - r2,
-        centerY + controlPointDistance,
-        centerX - r2,
-        centerY
-      );
-      path.bezierCurveTo(
-        centerX - r2,
-        centerY - controlPointDistance,
-        centerX - controlPointDistance,
-        centerY - r2,
-        centerX,
-        centerY - r2
-      );
-      return path;
-    };
-    const outerRing = drawCircle(radius);
-    if (this.lineWidth > 0 && radius > this.lineWidth) {
-      const holePath = new Path();
-      holePath.copy(drawCircle(radius - this.lineWidth));
-      outerRing.holes.push(holePath);
-    }
-    return [outerRing];
+  getSinglePath(w2, h2) {
+    const radius = Math.min(w2, h2) / 2;
+    const path = new Shape$1();
+    const centerX = 0;
+    const centerY = 0;
+    const controlPointDistance = radius * 0.552284749831;
+    path.moveTo(centerX, centerY - radius);
+    path.bezierCurveTo(
+      centerX + controlPointDistance,
+      centerY - radius,
+      centerX + radius,
+      centerY - controlPointDistance,
+      centerX + radius,
+      centerY
+    );
+    path.bezierCurveTo(
+      centerX + radius,
+      centerY + controlPointDistance,
+      centerX + controlPointDistance,
+      centerY + radius,
+      centerX,
+      centerY + radius
+    );
+    path.bezierCurveTo(
+      centerX - controlPointDistance,
+      centerY + radius,
+      centerX - radius,
+      centerY + controlPointDistance,
+      centerX - radius,
+      centerY
+    );
+    path.bezierCurveTo(
+      centerX - radius,
+      centerY - controlPointDistance,
+      centerX - controlPointDistance,
+      centerY - radius,
+      centerX,
+      centerY - radius
+    );
+    return path;
   }
+  getDashedPaths() {
+    const radius = Math.min(this.width, this.height) / 2;
+    const numDashes = 12;
+    const step = Math.PI * 2 / numDashes;
+    const dashFraction = 0.6;
+    const shapes = [];
+    const outerR = radius;
+    const innerR = radius - this.lineWidth;
+    if (innerR <= 0) return null;
+    for (let i2 = 0; i2 < numDashes; i2++) {
+      const theta1 = i2 * step;
+      const theta2 = theta1 + step * dashFraction;
+      const dashShape = new Shape$1();
+      dashShape.moveTo(Math.cos(theta1) * outerR, Math.sin(theta1) * outerR);
+      dashShape.absarc(0, 0, outerR, theta1, theta2, false);
+      dashShape.lineTo(Math.cos(theta2) * innerR, Math.sin(theta2) * innerR);
+      dashShape.absarc(0, 0, innerR, theta2, theta1, true);
+      dashShape.closePath();
+      shapes.push(dashShape);
+    }
+    return shapes;
+  }
+}
+function legacyStrokeToStyle(lineWidth) {
+  if (lineWidth === CircleDimensions.LINE_WIDTH_THICK) return StrokeStyles.THICK;
+  if (lineWidth === CircleDimensions.LINE_WIDTH_THIN) return StrokeStyles.THIN;
+  return StrokeStyles.THIN;
 }
 class Connector extends Mesh {
   constructor(elementId, shape = new RoundedCornerOrthogonalConnectorShape(), sourceElement = null, targetElement = null, sourcePosition = "auto", targetPosition = "auto", label = null, type = "sequence", properties = {}) {
@@ -68868,70 +68950,71 @@ class Diagram {
   }
 }
 class RoundedRectangleShape extends Shape2 {
-  constructor(horizontalSize = RectangleDimensions.HORIZONTAL_SIZE, verticalSize = RectangleDimensions.VERTICAL_SIZE, cornerRadius = RectangleDimensions.CORNER_RADIUS, lineWidth = RectangleDimensions.LINE_WIDTH) {
-    super(horizontalSize, verticalSize, lineWidth, { cornerRadius });
+  constructor(horizontalSize = RectangleDimensions.HORIZONTAL_SIZE, verticalSize = RectangleDimensions.VERTICAL_SIZE, cornerRadius = RectangleDimensions.CORNER_RADIUS, strokeStyle = StrokeStyles.THIN, extraConfig = {}) {
+    let targetStyle = strokeStyle;
+    let config = extraConfig;
+    if (typeof strokeStyle === "number") {
+      config = { strokeStyle: StrokeStyles.THIN, ...extraConfig };
+      targetStyle = StrokeStyles.THIN;
+    }
+    super(horizontalSize, verticalSize, RectangleDimensions.LINE_WIDTH, {
+      cornerRadius,
+      strokeStyle: targetStyle,
+      ...config
+    });
     this.name = "RoundedRectangleShape";
   }
-  get2DPaths() {
-    const width = this.width;
-    const height = this.height;
-    const outerRadius = this.cornerRadius;
-    const innerRadius = this.cornerRadius - this.lineWidth;
-    const roundedRect = (w2, h2, radius) => {
-      const ctx = new Shape$1();
-      const centerX = 0;
-      const centerY = 0;
-      const x2 = centerX - w2 / 2;
-      const y2 = centerY - h2 / 2;
-      ctx.moveTo(x2 + radius, y2);
-      ctx.lineTo(x2 + w2 - radius, y2);
-      ctx.quadraticCurveTo(x2 + w2, y2, x2 + w2, y2 + radius);
-      ctx.lineTo(x2 + w2, y2 + h2 - radius);
-      ctx.quadraticCurveTo(x2 + w2, y2 + h2, x2 + w2 - radius, y2 + h2);
-      ctx.lineTo(x2 + radius, y2 + h2);
-      ctx.quadraticCurveTo(x2, y2 + h2, x2, y2 + h2 - radius);
-      ctx.lineTo(x2, y2 + radius);
-      ctx.quadraticCurveTo(x2, y2, x2 + radius, y2);
-      return ctx;
-    };
-    const activityShape = roundedRect(width, height, outerRadius);
-    if (this.lineWidth > 0 && width > this.lineWidth * 2 && height > this.lineWidth * 2) {
-      const activityHole = new Path();
-      activityHole.copy(roundedRect(width - 2 * this.lineWidth, height - 2 * this.lineWidth, innerRadius));
-      activityShape.holes.push(activityHole);
-    }
-    return [activityShape];
+  getSinglePath(w2, h2) {
+    const radius = this.cornerRadius;
+    const ctx = new Shape$1();
+    const centerX = 0;
+    const centerY = 0;
+    const x2 = centerX - w2 / 2;
+    const y2 = centerY - h2 / 2;
+    ctx.moveTo(x2 + radius, y2);
+    ctx.lineTo(x2 + w2 - radius, y2);
+    ctx.quadraticCurveTo(x2 + w2, y2, x2 + w2, y2 + radius);
+    ctx.lineTo(x2 + w2, y2 + h2 - radius);
+    ctx.quadraticCurveTo(x2 + w2, y2 + h2, x2 + w2 - radius, y2 + h2);
+    ctx.lineTo(x2 + radius, y2 + h2);
+    ctx.quadraticCurveTo(x2, y2 + h2, x2, y2 + h2 - radius);
+    ctx.lineTo(x2, y2 + radius);
+    ctx.quadraticCurveTo(x2, y2, x2 + radius, y2);
+    return ctx;
   }
 }
 class DiamondShape extends Shape2 {
-  constructor(width = DiamondDimensions.DIAGONAL, height = DiamondDimensions.DIAGONAL, lineWidth = DiamondDimensions.LINE_WIDTH) {
-    super(width, height, lineWidth);
+  constructor(width = DiamondDimensions.DIAGONAL, height = DiamondDimensions.DIAGONAL, strokeStyle = StrokeStyles.THIN, extraConfig = {}) {
+    let targetStyle = strokeStyle;
+    let config = extraConfig;
+    if (typeof strokeStyle === "number") {
+      config = { strokeStyle: StrokeStyles.THIN, ...extraConfig };
+      targetStyle = StrokeStyles.THIN;
+    }
+    super(width, height, DiamondDimensions.LINE_WIDTH, {
+      strokeStyle: targetStyle,
+      ...config
+    });
     this.name = "DiamondShape";
   }
-  get2DPaths() {
-    const width = this.width;
-    const height = this.height;
-    const diamond = (verticalSize, horizontalSize) => {
-      const ctx = new Shape$1();
-      const centerX = 0;
-      const centerY = 0;
-      ctx.moveTo(centerX - verticalSize / 2, centerY);
-      ctx.lineTo(centerX, centerY - verticalSize / 2);
-      ctx.lineTo(centerX + horizontalSize / 2, centerY);
-      ctx.lineTo(centerX, centerY + verticalSize / 2);
-      ctx.lineTo(centerX - horizontalSize / 2, centerY);
-      ctx.closePath();
-      return ctx;
-    };
-    const gatewayShape = diamond(width, height);
-    const widthOffset = this.lineWidth * Math.sqrt(2) * 2;
-    const heightOffset = this.lineWidth * Math.sqrt(2) * 2;
-    if (this.lineWidth > 0 && width > widthOffset && height > heightOffset) {
-      const gatewayHole = new Path();
-      gatewayHole.copy(diamond(Math.max(0, width - widthOffset), Math.max(0, height - heightOffset)));
-      gatewayShape.holes.push(gatewayHole);
+  getSinglePath(w2, h2) {
+    let finalW = w2;
+    let finalH = h2;
+    if (w2 < this.width) {
+      const widthOffset = this.lineWidth * Math.sqrt(2) * 2;
+      finalW = Math.max(0, this.width - widthOffset);
+      finalH = Math.max(0, this.height - widthOffset);
     }
-    return [gatewayShape];
+    const ctx = new Shape$1();
+    const centerX = 0;
+    const centerY = 0;
+    ctx.moveTo(centerX - finalW / 2, centerY);
+    ctx.lineTo(centerX, centerY - finalH / 2);
+    ctx.lineTo(centerX + finalW / 2, centerY);
+    ctx.lineTo(centerX, centerY + finalH / 2);
+    ctx.lineTo(centerX - finalW / 2, centerY);
+    ctx.closePath();
+    return ctx;
   }
 }
 class SwimlaneShape extends Shape2 {
@@ -69149,7 +69232,6 @@ const parallel = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!-- C
 const eventBased = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!-- Created with Inkscape (http://www.inkscape.org/) -->\n\n<svg\n   width="13.758311mm"\n   height="13.758311mm"\n   viewBox="0 0 13.758311 13.758311"\n   version="1.1"\n   id="svg1"\n   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"\n   sodipodi:docname="event-based.svg"\n   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"\n   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"\n   xmlns="http://www.w3.org/2000/svg"\n   xmlns:svg="http://www.w3.org/2000/svg">\n  <sodipodi:namedview\n     id="namedview1"\n     pagecolor="#ffffff"\n     bordercolor="#000000"\n     borderopacity="0.25"\n     inkscape:showpageshadow="2"\n     inkscape:pageopacity="0.0"\n     inkscape:pagecheckerboard="0"\n     inkscape:deskcolor="#d1d1d1"\n     inkscape:document-units="mm"\n     inkscape:zoom="4.3759929"\n     inkscape:cx="21.36658"\n     inkscape:cy="26.16549"\n     inkscape:window-width="1104"\n     inkscape:window-height="786"\n     inkscape:window-x="0"\n     inkscape:window-y="38"\n     inkscape:window-maximized="0"\n     inkscape:current-layer="layer1" />\n  <defs\n     id="defs1" />\n  <g\n     inkscape:label="Layer 1"\n     inkscape:groupmode="layer"\n     id="layer1"\n     transform="translate(-1969.426,-2186.3844)">\n    <circle\n       cx="1976.3052"\n       cy="2193.2637"\n       r="3.96875"\n       style="fill:none;stroke:#22242a;stroke-width:0.264583px;stroke-linecap:round;stroke-linejoin:round"\n       id="circle112" />\n    <circle\n       cx="1976.3052"\n       cy="2193.2637"\n       r="3.175"\n       style="fill:none;stroke:#22242a;stroke-width:0.264583px;stroke-linecap:round;stroke-linejoin:round"\n       id="circle113" />\n    <path\n       d="m 1974.4531,2192.4698 1.9483,-1.2988 1.9483,1.2988 -0.6494,2.5978 h -2.5978 z"\n       style="fill:none;stroke:#22242a;stroke-width:0.529167px;stroke-linecap:round;stroke-linejoin:round"\n       id="path113" />\n    <rect\n       x="1970.2197"\n       y="2187.1782"\n       rx="1.0583333"\n       width="12.170834"\n       height="12.170834"\n       class="djs-outline"\n       style="fill:none;stroke-width:0.264583"\n       id="rect114" />\n  </g>\n</svg>\n';
 const complex = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!-- Created with Inkscape (http://www.inkscape.org/) -->\n\n<svg\n   width="13.758311mm"\n   height="13.758311mm"\n   viewBox="0 0 13.758311 13.758311"\n   version="1.1"\n   id="svg1"\n   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"\n   sodipodi:docname="complex.svg"\n   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"\n   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"\n   xmlns="http://www.w3.org/2000/svg"\n   xmlns:svg="http://www.w3.org/2000/svg">\n  <sodipodi:namedview\n     id="namedview1"\n     pagecolor="#ffffff"\n     bordercolor="#000000"\n     borderopacity="0.25"\n     inkscape:showpageshadow="2"\n     inkscape:pageopacity="0.0"\n     inkscape:pagecheckerboard="0"\n     inkscape:deskcolor="#d1d1d1"\n     inkscape:document-units="mm"\n     inkscape:zoom="4.8390424"\n     inkscape:cx="39.987251"\n     inkscape:cy="19.218679"\n     inkscape:window-width="1104"\n     inkscape:window-height="827"\n     inkscape:window-x="0"\n     inkscape:window-y="38"\n     inkscape:window-maximized="0"\n     inkscape:current-layer="layer1" />\n  <defs\n     id="defs1" />\n  <g\n     inkscape:label="Layer 1"\n     inkscape:groupmode="layer"\n     id="layer1"\n     transform="translate(-101.73231,-141.68439)">\n    <g\n       id="path115"\n       style="fill:#22242a;fill-opacity:1;stroke:none;stroke-width:0;stroke-dasharray:none"\n       transform="matrix(0.26458333,0,0,0.26458333,-13.62604,-21.563537)">\n      <path\n         style="fill:#22242a;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"\n         d="m 460,631 v 7.11679 l -5.01825,-5.01825 -3.10219,3.10219 5.01825,5.01825 h -7.11679 v 4.37956 h 7.11679 l -5.01825,5.01825 3.10219,3.10219 L 460,648.70073 v 7.11679 h 4.37956 v -7.11679 l 5.01825,5.01825 3.10219,-3.10219 -5.01825,-5.01825 h 7.11679 v -4.37956 h -7.11679 l 5.01825,-5.01825 -3.10219,-3.10219 -5.01825,5.01825 V 631 Z"\n         id="path211" />\n    </g>\n    <rect\n       x="102.52604"\n       y="142.47813"\n       rx="1.0583333"\n       width="12.170834"\n       height="12.170834"\n       class="djs-outline"\n       style="fill:none;stroke-width:0.264583"\n       id="rect117" />\n  </g>\n</svg>\n';
 const conditional = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!-- Created with Inkscape (http://www.inkscape.org/) -->\n\n<svg\n   width="4.1010432mm"\n   height="5.0270829mm"\n   viewBox="0 0 4.1010433 5.0270831"\n   version="1.1"\n   id="svg1"\n   inkscape:version="1.4 (86a8ad7, 2024-10-11)"\n   sodipodi:docname="conditional.svg"\n   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"\n   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"\n   xmlns="http://www.w3.org/2000/svg"\n   xmlns:svg="http://www.w3.org/2000/svg">\n  <sodipodi:namedview\n     id="namedview1"\n     pagecolor="#505050"\n     bordercolor="#eeeeee"\n     borderopacity="1"\n     inkscape:showpageshadow="0"\n     inkscape:pageopacity="0"\n     inkscape:pagecheckerboard="0"\n     inkscape:deskcolor="#505050"\n     inkscape:document-units="mm"\n     inkscape:zoom="8.1336326"\n     inkscape:cx="2.3359796"\n     inkscape:cy="13.216727"\n     inkscape:window-width="2560"\n     inkscape:window-height="1009"\n     inkscape:window-x="-8"\n     inkscape:window-y="-8"\n     inkscape:window-maximized="1"\n     inkscape:current-layer="layer1" />\n  <defs\n     id="defs1" />\n  <g\n     inkscape:label="Layer 1"\n     inkscape:groupmode="layer"\n     id="layer1"\n     transform="translate(-156.23646,-112.58021)">\n    <path\n       d="m 156.36875,112.7125 h 3.83646 v 4.7625 h -3.83646 z m 0.52917,0.79375 h 2.77813 M 156.89792,114.3 h 2.77813 m -2.77813,0.79375 h 2.77813 m -2.77813,0.79375 h 2.77813 m -2.77813,0.79375 h 2.77813 m -2.77813,0.79375 h 2.77813"\n       style="fill:none;stroke:#22242a;stroke-width:0.264583px;stroke-linecap:round;stroke-linejoin:round"\n       id="path22" />\n  </g>\n</svg>\n';
-const intermediate = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!-- Created with Inkscape (http://www.inkscape.org/) -->\n\n<svg\n   width="8.3343754mm"\n   height="8.3343754mm"\n   viewBox="0 0 8.3343756 8.3343756"\n   version="1.1"\n   id="svg1"\n   inkscape:version="1.4 (86a8ad7, 2024-10-11)"\n   sodipodi:docname="intermediate.svg"\n   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"\n   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"\n   xmlns="http://www.w3.org/2000/svg"\n   xmlns:svg="http://www.w3.org/2000/svg">\n  <sodipodi:namedview\n     id="namedview1"\n     pagecolor="#505050"\n     bordercolor="#eeeeee"\n     borderopacity="1"\n     inkscape:showpageshadow="0"\n     inkscape:pageopacity="0"\n     inkscape:pagecheckerboard="0"\n     inkscape:deskcolor="#505050"\n     inkscape:document-units="mm"\n     inkscape:zoom="16.267265"\n     inkscape:cx="12.663468"\n     inkscape:cy="14.35398"\n     inkscape:window-width="2560"\n     inkscape:window-height="1009"\n     inkscape:window-x="-8"\n     inkscape:window-y="-8"\n     inkscape:window-maximized="1"\n     inkscape:current-layer="layer1" />\n  <defs\n     id="defs1" />\n  <g\n     inkscape:label="Layer 1"\n     inkscape:groupmode="layer"\n     id="layer1"\n     transform="translate(207.23489,-211.8651)">\n    <circle\n       cx="-203.0677"\n       cy="216.03229"\n       r="3.96875"\n       style="fill:none;stroke:#22242a;stroke-width:0.396875px;stroke-linecap:round;stroke-linejoin:round"\n       id="circle50" />\n  </g>\n</svg>\n';
 const intermediateCompensation = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!-- Created with Inkscape (http://www.inkscape.org/) -->\n\n<svg\n   width="8.3343754mm"\n   height="8.3343754mm"\n   viewBox="0 0 8.3343756 8.3343756"\n   version="1.1"\n   id="svg1"\n   inkscape:version="1.4 (86a8ad7, 2024-10-11)"\n   sodipodi:docname="intermediate-compensation.svg"\n   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"\n   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"\n   xmlns="http://www.w3.org/2000/svg"\n   xmlns:svg="http://www.w3.org/2000/svg">\n  <sodipodi:namedview\n     id="namedview1"\n     pagecolor="#505050"\n     bordercolor="#eeeeee"\n     borderopacity="1"\n     inkscape:showpageshadow="0"\n     inkscape:pageopacity="0"\n     inkscape:pagecheckerboard="0"\n     inkscape:deskcolor="#505050"\n     inkscape:document-units="mm"\n     inkscape:zoom="11.502694"\n     inkscape:cx="55.46527"\n     inkscape:cy="20.212657"\n     inkscape:window-width="2560"\n     inkscape:window-height="1009"\n     inkscape:window-x="-8"\n     inkscape:window-y="-8"\n     inkscape:window-maximized="1"\n     inkscape:current-layer="layer1" />\n  <defs\n     id="defs1" />\n  <g\n     inkscape:label="Layer 1"\n     inkscape:groupmode="layer"\n     id="layer1"\n     transform="translate(69.65157,-208.95468)">\n    <circle\n       cx="-65.484383"\n       cy="213.12187"\n       r="3.96875"\n       style="fill:none;stroke:#22242a;stroke-width:0.396875px;stroke-linecap:round;stroke-linejoin:round"\n       id="circle87" />\n    <path\n       d="m -68.151379,213.12187 2.38125,-1.71979 v 3.43958 z m 2.460625,-0.10583 2.301875,-1.61396 v 3.43958 l -2.301875,-1.61396 z"\n       style="fill:#22242a;stroke:#22242a;stroke-width:0.264583px;stroke-linecap:round;stroke-linejoin:round"\n       id="path87" />\n  </g>\n</svg>\n';
 const intermediateConditional = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!-- Created with Inkscape (http://www.inkscape.org/) -->\n\n<svg\n   width="8.3343754mm"\n   height="8.3343754mm"\n   viewBox="0 0 8.3343756 8.3343756"\n   version="1.1"\n   id="svg1"\n   inkscape:version="1.4 (86a8ad7, 2024-10-11)"\n   sodipodi:docname="intermediate-conditional.svg"\n   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"\n   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"\n   xmlns="http://www.w3.org/2000/svg"\n   xmlns:svg="http://www.w3.org/2000/svg">\n  <sodipodi:namedview\n     id="namedview1"\n     pagecolor="#505050"\n     bordercolor="#eeeeee"\n     borderopacity="1"\n     inkscape:showpageshadow="0"\n     inkscape:pageopacity="0"\n     inkscape:pagecheckerboard="0"\n     inkscape:deskcolor="#505050"\n     inkscape:document-units="mm"\n     inkscape:zoom="11.502694"\n     inkscape:cx="17.561104"\n     inkscape:cy="19.864912"\n     inkscape:window-width="2560"\n     inkscape:window-height="1009"\n     inkscape:window-x="-8"\n     inkscape:window-y="-8"\n     inkscape:window-maximized="1"\n     inkscape:current-layer="layer1" />\n  <defs\n     id="defs1" />\n  <g\n     inkscape:label="Layer 1"\n     inkscape:groupmode="layer"\n     id="layer1"\n     transform="translate(-91.215099,-208.95468)">\n    <circle\n       cx="95.382286"\n       cy="213.12187"\n       r="3.96875"\n       style="fill:none;stroke:#22242a;stroke-width:0.396875px;stroke-linecap:round;stroke-linejoin:round"\n       id="circle78" />\n    <path\n       d="m 93.397914,210.60833 h 3.836458 v 4.7625 h -3.836458 z m 0.529167,0.79375 h 2.778125 m -2.778125,0.79375 h 2.778125 m -2.778125,0.79375 h 2.778125 m -2.778125,0.79375 h 2.778125 m -2.778125,0.79375 h 2.778125 m -2.778125,0.79375 h 2.778125"\n       style="fill:none;stroke:#22242a;stroke-width:0.264583px;stroke-linecap:round;stroke-linejoin:round"\n       id="path78" />\n  </g>\n</svg>\n';
 const intermediateEscalation = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n<!-- Created with Inkscape (http://www.inkscape.org/) -->\n\n<svg\n   width="8.3343754mm"\n   height="8.3343754mm"\n   viewBox="0 0 8.3343756 8.3343756"\n   version="1.1"\n   id="svg1"\n   inkscape:version="1.4 (86a8ad7, 2024-10-11)"\n   sodipodi:docname="intermediate-escalation.svg"\n   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"\n   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"\n   xmlns="http://www.w3.org/2000/svg"\n   xmlns:svg="http://www.w3.org/2000/svg">\n  <sodipodi:namedview\n     id="namedview1"\n     pagecolor="#505050"\n     bordercolor="#eeeeee"\n     borderopacity="1"\n     inkscape:showpageshadow="0"\n     inkscape:pageopacity="0"\n     inkscape:pagecheckerboard="0"\n     inkscape:deskcolor="#505050"\n     inkscape:document-units="mm"\n     inkscape:zoom="11.502694"\n     inkscape:cx="-12.779615"\n     inkscape:cy="20.386529"\n     inkscape:window-width="2560"\n     inkscape:window-height="1009"\n     inkscape:window-x="-8"\n     inkscape:window-y="-8"\n     inkscape:window-maximized="1"\n     inkscape:current-layer="layer1" />\n  <defs\n     id="defs1" />\n  <g\n     inkscape:label="Layer 1"\n     inkscape:groupmode="layer"\n     id="layer1"\n     transform="translate(-371.14427,-181.43802)">\n    <circle\n       cx="375.31146"\n       cy="185.60521"\n       r="3.96875"\n       style="fill:none;stroke:#22242a;stroke-width:0.396875px;stroke-linecap:round;stroke-linejoin:round"\n       id="circle75" />\n    <path\n       d="m 375.31146,182.74771 2.11667,5.29167 -2.11667,-1.85209 -2.11667,1.85209 z"\n       style="fill:#22242a;stroke:#22242a;stroke-width:0.264583px;stroke-linecap:round;stroke-linejoin:round"\n       id="path75" />\n  </g>\n</svg>\n';
@@ -69343,77 +69425,77 @@ class BpmnDiagram extends Diagram {
   }
   // Intermediate Events
   addIntermediateEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
-    const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediate, "center", BPMN_DIMS.ICON_SIZE_LARGE);
+    const _el = this.addElement(new Element(elementId, new CircleShape(width, height, "double")));
     _el.semanticType = "event";
     _el.bpmnType = "bpmn:IntermediateCatchEvent";
     _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
     return _el;
   }
   addIntermediateMessageCatchEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
-    const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediateReceive, "center", BPMN_DIMS.ICON_SIZE_LARGE);
+    const _el = this.addElement(new Element(elementId, new CircleShape(width, height, "double"))).addIcon(intermediateReceive, "center", BPMN_DIMS.ICON_SIZE_LARGE);
     _el.semanticType = "event";
     _el.bpmnType = "bpmn:IntermediateCatchEvent";
     _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
     return _el;
   }
   addIntermediateMessageThrowEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
-    const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediateSend, "center", BPMN_DIMS.ICON_SIZE_LARGE);
+    const _el = this.addElement(new Element(elementId, new CircleShape(width, height, "double"))).addIcon(intermediateSend, "center", BPMN_DIMS.ICON_SIZE_LARGE);
     _el.semanticType = "event";
     _el.bpmnType = "bpmn:IntermediateThrowEvent";
     _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
     return _el;
   }
   addIntermediateTimerEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
-    const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediateTimer, "center", BPMN_DIMS.ICON_SIZE_LARGE);
+    const _el = this.addElement(new Element(elementId, new CircleShape(width, height, "double"))).addIcon(intermediateTimer, "center", BPMN_DIMS.ICON_SIZE_LARGE);
     _el.semanticType = "event";
     _el.bpmnType = "bpmn:IntermediateCatchEvent";
     _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
     return _el;
   }
   addIntermediateEscalationEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
-    const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediateEscalation, "center", BPMN_DIMS.ICON_SIZE_LARGE);
+    const _el = this.addElement(new Element(elementId, new CircleShape(width, height, "double"))).addIcon(intermediateEscalation, "center", BPMN_DIMS.ICON_SIZE_LARGE);
     _el.semanticType = "event";
     _el.bpmnType = "bpmn:IntermediateThrowEvent";
     _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
     return _el;
   }
   addIntermediateConditionalEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
-    const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediateConditional, "center", BPMN_DIMS.ICON_SIZE_LARGE);
+    const _el = this.addElement(new Element(elementId, new CircleShape(width, height, "double"))).addIcon(intermediateConditional, "center", BPMN_DIMS.ICON_SIZE_LARGE);
     _el.semanticType = "event";
     _el.bpmnType = "bpmn:IntermediateCatchEvent";
     _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
     return _el;
   }
   addIntermediateLinkCatchEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
-    const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediateLinkCatch, "center", BPMN_DIMS.ICON_SIZE_LARGE);
+    const _el = this.addElement(new Element(elementId, new CircleShape(width, height, "double"))).addIcon(intermediateLinkCatch, "center", BPMN_DIMS.ICON_SIZE_LARGE);
     _el.semanticType = "event";
     _el.bpmnType = "bpmn:IntermediateCatchEvent";
     _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
     return _el;
   }
   addIntermediateLinkThrowEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
-    const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediateLinkThrow, "center", BPMN_DIMS.ICON_SIZE_LARGE);
+    const _el = this.addElement(new Element(elementId, new CircleShape(width, height, "double"))).addIcon(intermediateLinkThrow, "center", BPMN_DIMS.ICON_SIZE_LARGE);
     _el.semanticType = "event";
     _el.bpmnType = "bpmn:IntermediateThrowEvent";
     _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
     return _el;
   }
   addIntermediateCompensationEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
-    const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediateCompensation, "center", BPMN_DIMS.ICON_SIZE_LARGE);
+    const _el = this.addElement(new Element(elementId, new CircleShape(width, height, "double"))).addIcon(intermediateCompensation, "center", BPMN_DIMS.ICON_SIZE_LARGE);
     _el.semanticType = "event";
     _el.bpmnType = "bpmn:IntermediateThrowEvent";
     _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
     return _el;
   }
   addIntermediateSignalCatchEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
-    const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediateSignalCatch, "center", BPMN_DIMS.ICON_SIZE_LARGE);
+    const _el = this.addElement(new Element(elementId, new CircleShape(width, height, "double"))).addIcon(intermediateSignalCatch, "center", BPMN_DIMS.ICON_SIZE_LARGE);
     _el.semanticType = "event";
     _el.bpmnType = "bpmn:IntermediateCatchEvent";
     _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
     return _el;
   }
   addIntermediateSignalThrowEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
-    const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediateSignalThrow, "center", BPMN_DIMS.ICON_SIZE_LARGE);
+    const _el = this.addElement(new Element(elementId, new CircleShape(width, height, "double"))).addIcon(intermediateSignalThrow, "center", BPMN_DIMS.ICON_SIZE_LARGE);
     _el.semanticType = "event";
     _el.bpmnType = "bpmn:IntermediateThrowEvent";
     _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
@@ -69430,7 +69512,7 @@ class BpmnDiagram extends Diagram {
     return _el;
   }
   addBoundaryEvent(elementId, width = BPMN_DIMS.EVENT_SIZE, height = BPMN_DIMS.EVENT_SIZE) {
-    const _el = this.addElement(new Element(elementId, new CircleShape(width, height))).addIcon(intermediate, "center", BPMN_DIMS.ICON_SIZE_LARGE);
+    const _el = this.addElement(new Element(elementId, new CircleShape(width, height, "double")));
     _el.semanticType = "event";
     _el.bpmnType = "bpmn:BoundaryEvent";
     _el.textStyle = { fontSize: BPMN_DIMS.FONT_SIZE_EVENT, align: BPMN_DIMS.TEXT_ALIGN_EVENT, offset: new Vector3(0, -(height / 2) - BPMN_DIMS.LABEL_GAP_BELOW, 3), vAlign: "top", faceCamera: BPMN_DIMS.FACE_CAMERA_EVENT };
