@@ -62137,6 +62137,9 @@ class Shape2 {
     this.width = width;
     this.height = height;
     this.lineWidth = lineWidth;
+    this.shapeWidth = width;
+    this.shapeHeight = height;
+    this.shapeLineWidth = lineWidth;
     this.color = Colors.ELEMENT_STROKE;
     this.extrusionSettings = ExtrusionParameters$1;
     Object.assign(this, extraConfig);
@@ -62170,6 +62173,9 @@ class Shape2 {
     if (newLineWidth !== void 0) {
       this.lineWidth = newLineWidth;
     }
+    this.shapeWidth = this.width;
+    this.shapeHeight = this.height;
+    this.shapeLineWidth = this.lineWidth;
     this.rebuildGeometry();
   }
   /**
