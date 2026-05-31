@@ -230,7 +230,7 @@ const App = {
   },
   data() {
     return {
-      selectedDemo: 'SubprocessDemo',
+      selectedDemo: 'BpmnConverterDemo',
       demos: [
         { title: 'Subprocess Demo', value: 'SubprocessDemo' },
         { title: 'BPMN Converter Demo', value: 'BpmnConverterDemo' },

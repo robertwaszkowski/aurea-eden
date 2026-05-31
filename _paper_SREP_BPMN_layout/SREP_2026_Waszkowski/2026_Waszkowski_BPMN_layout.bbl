@@ -1,0 +1,269 @@
+\begin{thebibliography}{10}
+\urlstyle{rm}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname doiprefix\endcsname\relax\def\doiprefix{DOI: }\fi
+\providecommand{\bibinfo}[2]{#2}
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem{ref_akinbowale}
+\bibinfo{author}{Akinbowale, O.~E.}, \bibinfo{author}{Zerihun, M.~F.} \&
+  \bibinfo{author}{Mashigo, P.}
+\newblock \bibinfo{journal}{\bibinfo{title}{Business process management
+  framework systematic review of the trends, potentials and future}}.
+\newblock {\emph{\JournalTitle{Cogent Business \& Management}}}
+  \textbf{\bibinfo{volume}{13}} (\bibinfo{year}{2026}).
+
+\bibitem{ref_tebourbi}
+\bibinfo{author}{Tebourbi, H.} \emph{et~al.}
+\newblock \bibinfo{journal}{\bibinfo{title}{{BPMN}-based design of multi-agent
+  systems: Personalized language learning workflow automation with
+  {RAG}-enhanced knowledge access}}.
+\newblock {\emph{\JournalTitle{Information}}} \textbf{\bibinfo{volume}{16}},
+  \bibinfo{pages}{809} (\bibinfo{year}{2025}).
+
+\bibitem{ref_lopes}
+\bibinfo{author}{Lopes, C.~S.} \& \bibinfo{author}{Guerreiro, S.}
+\newblock \bibinfo{journal}{\bibinfo{title}{Assessing business process models:
+  A literature review on techniques for {BPMN} testing and formal
+  verification}}.
+\newblock {\emph{\JournalTitle{Business Process Management Journal}}}
+  \textbf{\bibinfo{volume}{29}}, \bibinfo{pages}{135--162}
+  (\bibinfo{year}{2023}).
+
+\bibitem{ref_licardo}
+\bibinfo{author}{Licardo, J.~T.}, \bibinfo{author}{Tankovi{\'c}, N.} \&
+  \bibinfo{author}{Etinger, D.}
+\newblock \bibinfo{journal}{\bibinfo{title}{{BPMN} assistant: An {LLM}-based
+  approach to business process modeling}}.
+\newblock {\emph{\JournalTitle{Applied Sciences}}}
+  \textbf{\bibinfo{volume}{16}}, \bibinfo{pages}{2213} (\bibinfo{year}{2026}).
+
+\bibitem{ref_kourani_promoai}
+\bibinfo{author}{Kourani, H.} \emph{et~al.}
+\newblock \bibinfo{title}{{ProMoAI}: Process modeling with generative {AI}}.
+\newblock In \emph{\bibinfo{booktitle}{Proceedings of the Thirty-Third
+  International Joint Conference on Artificial Intelligence}}
+  (\bibinfo{year}{2024}).
+
+\bibitem{ref_nivon}
+\bibinfo{author}{Nivon, Q.} \& \bibinfo{author}{Sala{\"u}n, G.}
+\newblock \bibinfo{title}{Automated generation of {BPMN} processes from textual
+  requirements}.
+\newblock In \emph{\bibinfo{booktitle}{Service-Oriented Computing}},
+  \bibinfo{pages}{185--201} (\bibinfo{publisher}{Springer},
+  \bibinfo{year}{2024}).
+
+\bibitem{ref_jointjs}
+\bibinfo{author}{Stara, Z.}
+\newblock \bibinfo{title}{Why building a {BPMN} modeler {UI} is harder than it
+  looks}.
+\newblock \bibinfo{howpublished}{JointJS Blog} (\bibinfo{year}{2026}).
+
+\bibitem{ref_effinger_interactive}
+\bibinfo{author}{Effinger, P.}, \bibinfo{author}{Siebenhaller, M.} \&
+  \bibinfo{author}{Kaufmann, M.}
+\newblock \bibinfo{title}{An interactive layout tool for {BPMN}}.
+\newblock In \emph{\bibinfo{booktitle}{2009 IEEE Conference on Commerce and
+  Enterprise Computing}}, \bibinfo{pages}{399--406} (\bibinfo{year}{2009}).
+
+\bibitem{ref_de_souza}
+\bibinfo{author}{de~Souza~Albuquerque, L.~M.}, \bibinfo{author}{da~Silveira,
+  D.~S.} \& \bibinfo{author}{Bezerra, A.~T.}
+\newblock \bibinfo{journal}{\bibinfo{title}{Verifying the understandability of
+  {BPMN} diagrams: A biometric study on the cognitive impact of layout
+  guidelines}}.
+\newblock {\emph{\JournalTitle{Displays}}} \textbf{\bibinfo{volume}{91}},
+  \bibinfo{pages}{103236} (\bibinfo{year}{2026}).
+
+\bibitem{ref_lubke_eye}
+\bibinfo{author}{L{\"u}bke, D.}, \bibinfo{author}{Ahrens, M.} \&
+  \bibinfo{author}{Schneider, K.}
+\newblock \bibinfo{journal}{\bibinfo{title}{Influence of diagram layout and
+  scrolling on understandability of {BPMN} processes: An eye tracking
+  experiment with {BPMN} diagrams}}.
+\newblock {\emph{\JournalTitle{Information Technology and Management}}}
+  \textbf{\bibinfo{volume}{22}}, \bibinfo{pages}{99--131}
+  (\bibinfo{year}{2021}).
+
+\bibitem{ref_schrepfer}
+\bibinfo{author}{Schrepfer, M.}, \bibinfo{author}{Wolf, J.},
+  \bibinfo{author}{Mendling, J.} \& \bibinfo{author}{Reijers, H.~A.}
+\newblock \bibinfo{title}{The impact of secondary notation on process model
+  understanding}.
+\newblock In \emph{\bibinfo{booktitle}{The Practice of Enterprise Modeling
+  (PoEM 2009)}}, vol.~\bibinfo{volume}{39} of \emph{\bibinfo{series}{LNBIP}},
+  \bibinfo{pages}{161--175} (\bibinfo{year}{2009}).
+
+\bibitem{ref_wlekly}
+\bibinfo{author}{Wlekły, P.}
+\newblock \bibinfo{journal}{\bibinfo{title}{Aesthetics and usability of
+  statistics data visualisation through charts: An eyetracking study as a tool
+  for chart analysis}}.
+\newblock {\emph{\JournalTitle{European Research Studies Journal}}}
+  \textbf{\bibinfo{volume}{XXVII}}, \bibinfo{pages}{848--868}
+  (\bibinfo{year}{2024}).
+
+\bibitem{ref_kitzmann}
+\bibinfo{author}{Kitzmann, I.}, \bibinfo{author}{K{\"o}nig, C.},
+  \bibinfo{author}{L{\"u}bke, D.} \& \bibinfo{author}{Singer, L.}
+\newblock \bibinfo{title}{A simple algorithm for automatic layout of {BPMN}
+  processes}.
+\newblock In \emph{\bibinfo{booktitle}{2009 IEEE Conference on Commerce and
+  Enterprise Computing}}, \bibinfo{pages}{391--398}
+  (\bibinfo{organization}{IEEE}, \bibinfo{year}{2009}).
+
+\bibitem{ref_gschwind}
+\bibinfo{author}{Gschwind, T.}, \bibinfo{author}{Pinggera, J.},
+  \bibinfo{author}{Zugal, S.}, \bibinfo{author}{Reijers, H.~A.} \&
+  \bibinfo{author}{Weber, B.}
+\newblock \bibinfo{title}{A linear time layout algorithm for business process
+  models}.
+\newblock \bibinfo{type}{Tech. Rep.}, \bibinfo{institution}{IBM Research /
+  University of Innsbruck} (\bibinfo{year}{2013}).
+
+\bibitem{ref_sugiyama}
+\bibinfo{author}{Sugiyama, K.}, \bibinfo{author}{Tagawa, S.} \&
+  \bibinfo{author}{Toda, M.}
+\newblock \bibinfo{journal}{\bibinfo{title}{Methods for visual understanding of
+  hierarchical system structures}}.
+\newblock {\emph{\JournalTitle{IEEE Transactions on Systems, Man, and
+  Cybernetics}}} \textbf{\bibinfo{volume}{11}}, \bibinfo{pages}{109--125}
+  (\bibinfo{year}{1981}).
+
+\bibitem{ref_gansner}
+\bibinfo{author}{Gansner, E.~R.}, \bibinfo{author}{Koutsofios, E.},
+  \bibinfo{author}{North, S.~C.} \& \bibinfo{author}{Vo, K.-P.}
+\newblock \bibinfo{journal}{\bibinfo{title}{A technique for drawing directed
+  graphs}}.
+\newblock {\emph{\JournalTitle{IEEE Transactions on Software Engineering}}}
+  \textbf{\bibinfo{volume}{19}}, \bibinfo{pages}{214--230}
+  (\bibinfo{year}{1993}).
+
+\bibitem{ref_brandes}
+\bibinfo{author}{Brandes, U.} \& \bibinfo{author}{K{\"o}pf, B.}
+\newblock \bibinfo{title}{Fast and simple horizontal coordinate assignment}.
+\newblock In \emph{\bibinfo{booktitle}{Graph Drawing (GD 2001)}}, vol.
+  \bibinfo{volume}{2265} of \emph{\bibinfo{series}{LNCS}},
+  \bibinfo{pages}{31--44} (\bibinfo{year}{2002}).
+
+\bibitem{ref_waszkowski}
+\bibinfo{author}{Waszkowski, R.}
+\newblock \bibinfo{journal}{\bibinfo{title}{{Aurea EDEN}: A {3D} visualization
+  approach for {E-Commerce} customer journey analytics}}.
+\newblock {\emph{\JournalTitle{Journal of Theoretical and Applied Electronic
+  Commerce Research}}} \textbf{\bibinfo{volume}{20}}, \bibinfo{pages}{279},
+  \doiprefix\url{10.3390/jtaer20040279} (\bibinfo{year}{2025}).
+
+\bibitem{ref_purchase1997}
+\bibinfo{author}{Purchase, H.~C.}
+\newblock \bibinfo{title}{Which aesthetic has the greatest effect on human
+  understanding?}
+\newblock In \emph{\bibinfo{booktitle}{Graph Drawing Symposium}},
+  \bibinfo{pages}{248--261} (\bibinfo{year}{1997}).
+
+\bibitem{ref_purchase2000}
+\bibinfo{author}{Purchase, H.~C.}, \bibinfo{author}{Carrington, D.} \&
+  \bibinfo{author}{Allder, J.-A.}
+\newblock \bibinfo{title}{Experimenting with aesthetics-based graph layout}.
+\newblock In \emph{\bibinfo{booktitle}{Diagrams 2000}}, vol.
+  \bibinfo{volume}{1889} of \emph{\bibinfo{series}{LNAI}},
+  \bibinfo{pages}{498--501} (\bibinfo{year}{2000}).
+
+\bibitem{ref_corradini}
+\bibinfo{author}{Corradini, F.} \emph{et~al.}
+\newblock \bibinfo{journal}{\bibinfo{title}{A guidelines framework for
+  understandable {BPMN} models}}.
+\newblock {\emph{\JournalTitle{Data \& Knowledge Engineering}}}
+  \textbf{\bibinfo{volume}{113}}, \bibinfo{pages}{129--154}
+  (\bibinfo{year}{2018}).
+
+\bibitem{ref_mendling}
+\bibinfo{author}{Mendling, J.}, \bibinfo{author}{Reijers, H.~A.} \&
+  \bibinfo{author}{van~der Aalst, W. M.~P.}
+\newblock \bibinfo{journal}{\bibinfo{title}{Seven process modeling guidelines
+  ({7PMG})}}.
+\newblock {\emph{\JournalTitle{Information and Software Technology}}}
+  \textbf{\bibinfo{volume}{52}}, \bibinfo{pages}{127--136}
+  (\bibinfo{year}{2010}).
+
+\bibitem{ref_lubke_github}
+\bibinfo{author}{L{\"u}bke, D.} \& \bibinfo{author}{Wutke, D.}
+\newblock \bibinfo{journal}{\bibinfo{title}{Analysis of prevalent {BPMN} layout
+  choices on {GitHub}}}.
+\newblock {\emph{\JournalTitle{CEUR Workshop Proceedings}}}
+  \textbf{\bibinfo{volume}{2839}}, \bibinfo{pages}{46--54}
+  (\bibinfo{year}{2021}).
+
+\bibitem{ref_baalmann_algo}
+\bibinfo{author}{Baalmann, E.} \& \bibinfo{author}{L{\"u}bke, D.}
+\newblock \bibinfo{journal}{\bibinfo{title}{Algorithmic classification of
+  layouts of {BPMN} diagrams}}.
+\newblock {\emph{\JournalTitle{CEUR Workshop Proceedings}}}
+  \textbf{\bibinfo{volume}{3113}} (\bibinfo{year}{2022}).
+
+\bibitem{ref_baalmann_val}
+\bibinfo{author}{Baalmann, E.} \& \bibinfo{author}{L{\"u}bke, D.}
+\newblock \bibinfo{journal}{\bibinfo{title}{Validation of algorithmic {BPMN}
+  layout classification}}.
+\newblock {\emph{\JournalTitle{CEUR Workshop Proceedings}}}
+  (\bibinfo{year}{2023}).
+
+\bibitem{ref_effinger_patterns}
+\bibinfo{author}{Effinger, P.}
+\newblock \bibinfo{title}{Layout patterns with {BPMN} semantics}.
+\newblock In \emph{\bibinfo{booktitle}{BPMN 2011}}, vol.~\bibinfo{volume}{95}
+  of \emph{\bibinfo{series}{LNBIP}}, \bibinfo{pages}{130--135}
+  (\bibinfo{year}{2011}).
+
+\bibitem{ref_kasperowski}
+\bibinfo{author}{Kasperowski, M.}, \bibinfo{author}{Domr{\"o}s, S.} \&
+  \bibinfo{author}{von Hanxleden, R.}
+\newblock \bibinfo{title}{The eclipse layout kernel}.
+\newblock In \emph{\bibinfo{booktitle}{32nd International Symposium on Graph
+  Drawing (GD 2024)}} (\bibinfo{year}{2024}).
+
+\bibitem{ref_tamassia}
+\bibinfo{author}{Tamassia, R.}
+\newblock \bibinfo{journal}{\bibinfo{title}{On embedding a graph in the grid
+  with the minimum number of bends}}.
+\newblock {\emph{\JournalTitle{SIAM Journal on Computing}}}
+  \textbf{\bibinfo{volume}{16}}, \bibinfo{pages}{421--444}
+  (\bibinfo{year}{1987}).
+
+\bibitem{ref_effinger_study}
+\bibinfo{author}{Effinger, P.}, \bibinfo{author}{Jogsch, N.} \&
+  \bibinfo{author}{Seiz, S.}
+\newblock \bibinfo{title}{On a study of layout aesthetics for business process
+  models using {BPMN}}.
+\newblock In \emph{\bibinfo{booktitle}{BPMN 2010}}, vol.~\bibinfo{volume}{67}
+  of \emph{\bibinfo{series}{LNBIP}}, \bibinfo{pages}{31--45}
+  (\bibinfo{year}{2010}).
+
+\bibitem{ref_contreras}
+\bibinfo{author}{Contreras, A.}, \bibinfo{author}{Falcone, Y.},
+  \bibinfo{author}{Sala{\"u}n, G.} \& \bibinfo{author}{Zuo, A.}
+\newblock \bibinfo{title}{{WEASY}: A tool for modelling optimised {BPMN}
+  processes} (\bibinfo{year}{2024}).
+
+\bibitem{ref_hong}
+\bibinfo{author}{Hong, S.-H.}, \bibinfo{author}{Nikolov, N.~S.} \&
+  \bibinfo{author}{Tarassov, A.}
+\newblock \bibinfo{journal}{\bibinfo{title}{A {2.5D} hierarchical drawing of
+  directed graphs}}.
+\newblock {\emph{\JournalTitle{Journal of Graph Algorithms and Applications}}}
+  \textbf{\bibinfo{volume}{11}}, \bibinfo{pages}{371--396}
+  (\bibinfo{year}{2007}).
+
+\bibitem{ref_pads}
+\bibinfo{author}{{PADS Blog}}.
+\newblock \bibinfo{title}{Visualizing object-centric {Petri} nets}
+  (\bibinfo{year}{2024}).
+
+\bibitem{ref_kourani_llm}
+\bibinfo{author}{Kourani, H.} \emph{et~al.}
+\newblock \emph{\bibinfo{title}{Process Modeling With Large Language Models}}
+  (\bibinfo{publisher}{Springer}, \bibinfo{year}{2024}).
+
+\end{thebibliography}

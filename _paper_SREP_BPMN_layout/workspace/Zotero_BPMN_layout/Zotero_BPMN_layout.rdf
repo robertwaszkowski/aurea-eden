@@ -1,0 +1,1499 @@
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:z="http://www.zotero.org/namespaces/export#"
+ xmlns:dcterms="http://purl.org/dc/terms/"
+ xmlns:bib="http://purl.org/net/biblio#"
+ xmlns:foaf="http://xmlns.com/foaf/0.1/"
+ xmlns:link="http://purl.org/rss/1.0/modules/link/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:prism="http://prismstandard.org/namespaces/1.2/basic/"
+ xmlns:vcard="http://nwalsh.com/rdf/vCard#">
+    <bib:Article rdf:about="http://www.emerald.com/bpmj/article/29/8/133-162/258196">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:1463-7154"/>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Lopes</foaf:surname>
+                        <foaf:givenName>Tomás</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Guerreiro</foaf:surname>
+                        <foaf:givenName>Sérgio</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_3102"/>
+        <dc:title>Assessing business process models: a literature review on techniques for BPMN testing and formal verification</dc:title>
+        <dcterms:abstract>Purpose
+              Testing business processes is crucial to assess the compliance of business process models with requirements. Automating this task optimizes testing efforts and reduces human error while also providing improvement insights for the business process modeling activity. The primary purposes of this paper are to conduct a literature review of Business Process Model and Notation (BPMN) testing and formal verification and to propose the Business Process Evaluation and Research Framework for Enhancement and Continuous Testing (bPERFECT) framework, which aims to guide business process testing (BPT) research and implementation. Secondary objectives include (1) eliciting the existing types of testing, (2) evaluating their impact on efficiency and (3) assessing the formal verification techniques that complement testing.
+            
+            
+              Design/methodology/approach
+              The methodology used is based on Kitchenham's (2004) original procedures for conducting systematic literature reviews.
+            
+            
+              Findings
+              Results of this study indicate that three distinct business process model testing types can be found in the literature: black/gray-box, regression and integration. Testing and verification approaches differ in aspects such as awareness of test data, coverage criteria and auxiliary representations used. However, most solutions pose notable hindrances, such as BPMN element limitations, that lead to limited practicality.
+            
+            
+              Research limitations/implications
+              The databases selected in the review protocol may have excluded relevant studies on this topic. More databases and gray literature could also be considered for inclusion in this review.
+            
+            
+              Originality/value
+              Three main originality aspects are identified in this study as follows: (1) the classification of process model testing types, (2) the future trends foreseen for BPMN model testing and verification and (3) the bPERFECT framework for testing business processes.</dcterms:abstract>
+        <dc:date>2023-12-18</dc:date>
+        <z:language>en</z:language>
+        <z:shortTitle>Assessing business process models</z:shortTitle>
+        <z:libraryCatalog>DOI.org (Crossref)</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>http://www.emerald.com/bpmj/article/29/8/133-162/258196</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 09:43:36</dcterms:dateSubmitted>
+        <dc:rights>https://www.emerald.com/insight/site-policies</dc:rights>
+        <bib:pages>133-162</bib:pages>
+    </bib:Article>
+    <bib:Journal rdf:about="urn:issn:1463-7154">
+        <prism:volume>29</prism:volume>
+        <dc:title>Business Process Management Journal</dc:title>
+        <dc:identifier>DOI 10.1108/BPMJ-11-2022-0557</dc:identifier>
+        <prism:number>8</prism:number>
+        <dcterms:alternative>BPMJ</dcterms:alternative>
+        <dc:identifier>ISSN 1463-7154</dc:identifier>
+    </bib:Journal>
+    <z:Attachment rdf:about="#item_3102">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3102/Lopes and Guerreiro - 2023 - Assessing business process models a literature review on techniques for BPMN testing and formal ver.pdf"/>
+        <dc:title>Full Text</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.emerald.com/insight/content/doi/10.1108/BPMJ-11-2022-0557/full/pdf?title=assessing-business-process-models-a-literature-review-on-techniques-for-bpmn-testing-and-formal-verification</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 09:43:38</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="https://jgaa.info/index.php/jgaa/article/view/paper151">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:1526-1719"/>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Hong</foaf:surname>
+                        <foaf:givenName>Seok-Hee</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Nikolov</foaf:surname>
+                        <foaf:givenName>Nikola S.</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Tarassov</foaf:surname>
+                        <foaf:givenName>Alexandre</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_3109"/>
+        <dc:title>A 2.5D Hierarchical Drawing of Directed Graphs</dc:title>
+        <dc:date>2007</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>DOI.org (Crossref)</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://jgaa.info/index.php/jgaa/article/view/paper151</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 09:43:42</dcterms:dateSubmitted>
+        <bib:pages>371-396</bib:pages>
+    </bib:Article>
+    <bib:Journal rdf:about="urn:issn:1526-1719">
+        <prism:volume>11</prism:volume>
+        <dc:title>Journal of Graph Algorithms and Applications</dc:title>
+        <dc:identifier>DOI 10.7155/jgaa.00151</dc:identifier>
+        <prism:number>2</prism:number>
+        <dcterms:alternative>JGAA</dcterms:alternative>
+        <dc:identifier>ISSN 1526-1719</dc:identifier>
+    </bib:Journal>
+    <z:Attachment rdf:about="#item_3109">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3109/Hong et al. - 2007 - A 2.5D Hierarchical Drawing of Directed Graphs.pdf"/>
+        <dc:title>Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://jgaa.info/index.php/jgaa/article/download/paper151/2811</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 09:43:45</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="https://link.springer.com/10.1007/s10799-021-00327-7">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:1385-951X,%201573-7667"/>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Lübke</foaf:surname>
+                        <foaf:givenName>Daniel</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Ahrens</foaf:surname>
+                        <foaf:givenName>Maike</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Schneider</foaf:surname>
+                        <foaf:givenName>Kurt</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_3111"/>
+        <dc:title>Influence of diagram layout and scrolling on understandability of BPMN processes: an eye tracking experiment with BPMN diagrams</dc:title>
+        <dcterms:abstract>Abstract
+            Business process modeling is an important activity for developing software systems—especially within digitization projects and when realizing digital business models. Specifying requirements and building executable workflows is often done by using BPMN 2.0 process models. Although there are several style guides available for BPMN, e.g., by Silver and Richard (BPMN method and style, vol 2, Cody-Cassidy Press, Aptos, 2009), there has not been much empirical research done into the consequences of the diagram layout. In particular, layouts that require scrolling have not been investigated yet. The aim of this research is to establish layout guidelines for business process modeling that help business process modelers to create more understandable business process diagrams. For establishing benefits and penalties of different layouts, a controlled eye tracking experiment was conducted, in which data of 21 professional software developers was used. Our results show that horizontal layouts are less demanding and that as many diagram elements as possible should be put on the initially visible screen area because such diagram elements are viewed more often and longer. Additionally, diagram elements related to the reader’s task are read more often than those not relevant to the task. BPMN modelers should favor a horizontal layout and use a more complex snake or multi-line layout whenever the diagrams are too large to fit on one page in order to support BPMN model comprehension.</dcterms:abstract>
+        <dc:date>06/2021</dc:date>
+        <z:language>en</z:language>
+        <z:shortTitle>Influence of diagram layout and scrolling on understandability of BPMN processes</z:shortTitle>
+        <z:libraryCatalog>DOI.org (Crossref)</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://link.springer.com/10.1007/s10799-021-00327-7</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 09:43:45</dcterms:dateSubmitted>
+        <bib:pages>99-131</bib:pages>
+    </bib:Article>
+    <bib:Journal rdf:about="urn:issn:1385-951X,%201573-7667">
+        <prism:volume>22</prism:volume>
+        <dc:title>Information Technology and Management</dc:title>
+        <dc:identifier>DOI 10.1007/s10799-021-00327-7</dc:identifier>
+        <prism:number>2</prism:number>
+        <dcterms:alternative>Inf Technol Manag</dcterms:alternative>
+        <dc:identifier>ISSN 1385-951X, 1573-7667</dc:identifier>
+    </bib:Journal>
+    <z:Attachment rdf:about="#item_3111">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3111/Lübke et al. - 2021 - Influence of diagram layout and scrolling on understandability of BPMN processes an eye tracking ex.pdf"/>
+        <dc:title>Full Text</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://link.springer.com/content/pdf/10.1007/s10799-021-00327-7.pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 09:43:46</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <rdf:Description rdf:about="https://ceur-ws.org/Vol-3386/#paper3">
+        <z:itemType>conferencePaper</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:1613-0073"/>
+        <dc:publisher>
+            <foaf:Organization>
+                <vcard:adr>
+                    <vcard:Address>
+                       <vcard:locality>Hannover, Germany</vcard:locality>
+                    </vcard:Address>
+                </vcard:adr>
+                <foaf:name>CEUR</foaf:name>
+            </foaf:Organization>
+        </dc:publisher>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Baalmann</foaf:surname>
+                        <foaf:givenName>Elias</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Lübke</foaf:surname>
+                        <foaf:givenName>Daniel</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <bib:editors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Böhm</foaf:surname>
+                        <foaf:givenName>Sebastian</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Lübke</foaf:surname>
+                        <foaf:givenName>Daniel</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:editors>
+        <link:link rdf:resource="#item_3119"/>
+        <dc:title>Validation of Algorithmic BPMN Layout Classification (short paper)</dc:title>
+        <dc:date>2023-02-16</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>CEUR Workshop Proceedings</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://ceur-ws.org/Vol-3386/#paper3</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 10:02:15</dcterms:dateSubmitted>
+        <bib:pages>13-20</bib:pages>
+        <bib:presentedAt>
+            <bib:Conference>
+               <dc:title>ZEUS Workshop 2023</dc:title>
+            </bib:Conference>
+        </bib:presentedAt>
+    </rdf:Description>
+    <bib:Journal rdf:about="urn:issn:1613-0073">
+        <dcterms:isPartOf>
+           <bib:Series><dc:title>CEUR Workshop Proceedings</dc:title></bib:Series>
+        </dcterms:isPartOf>
+        <prism:volume>3386</prism:volume>
+        <dc:title>Proceedings of the 15th Central European Workshop Services and their Composition (ZEUS 2023)</dc:title>
+        <dc:identifier>ISSN 1613-0073</dc:identifier>
+    </bib:Journal>
+    <z:Attachment rdf:about="#item_3119">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3119/Baalmann and Lübke - 2023 - Validation of Algorithmic BPMN Layout Classification (short paper).pdf"/>
+        <dc:title>Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://ceur-ws.org/Vol-3386/paper3.pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 10:02:15</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <rdf:Description rdf:about="https://ceur-ws.org/Vol-2839/#paper9">
+        <z:itemType>conferencePaper</z:itemType>
+        <dcterms:isPartOf>
+            <bib:Journal>
+                <dcterms:isPartOf>
+                    <bib:Series>
+                       <dc:title>CEUR Workshop Proceedings</dc:title>
+                    </bib:Series>
+                </dcterms:isPartOf>
+                <prism:volume>2839</prism:volume>
+                <dc:title>Proceedings of the 13th European Workshop on Services and their Composition (ZEUS 2021)</dc:title>
+                <dc:identifier>ISSN 1613-0073</dc:identifier>
+            </bib:Journal>
+        </dcterms:isPartOf>
+        <dc:publisher>
+            <foaf:Organization>
+                <vcard:adr>
+                    <vcard:Address>
+                       <vcard:locality>Bamberg, Germany</vcard:locality>
+                    </vcard:Address>
+                </vcard:adr>
+                <foaf:name>CEUR</foaf:name>
+            </foaf:Organization>
+        </dc:publisher>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Lübke</foaf:surname>
+                        <foaf:givenName>Daniel</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Wutke</foaf:surname>
+                        <foaf:givenName>Daniel</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <bib:editors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Manner</foaf:surname>
+                        <foaf:givenName>Johannes</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Haarmann</foaf:surname>
+                        <foaf:givenName>Stephan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kolb</foaf:surname>
+                        <foaf:givenName>Stefan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Herzberg</foaf:surname>
+                        <foaf:givenName>Nico</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kopp</foaf:surname>
+                        <foaf:givenName>Oliver</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:editors>
+        <link:link rdf:resource="#item_3121"/>
+        <dc:title>Analysis of Prevalent BPMN Layout Choices on GitHub</dc:title>
+        <dc:date>2021-02-25</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>CEUR Workshop Proceedings</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://ceur-ws.org/Vol-2839/#paper9</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 10:05:27</dcterms:dateSubmitted>
+        <bib:pages>46-54</bib:pages>
+        <bib:presentedAt>
+            <bib:Conference>
+                <dc:title>European Workshop on Services and their Composition</dc:title>
+            </bib:Conference>
+        </bib:presentedAt>
+    </rdf:Description>
+    <z:Attachment rdf:about="#item_3121">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3121/Lübke and Wutke - 2021 - Analysis of Prevalent BPMN Layout Choices on GitHub.pdf"/>
+        <dc:title>Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://ceur-ws.org/Vol-2839/paper9.pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 10:05:27</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <rdf:Description rdf:about="urn:isbn:978-3-642-25160-3">
+        <z:itemType>conferencePaper</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:1865-1356"/>
+        <dc:publisher>
+            <foaf:Organization>
+               <foaf:name>Springer, Berlin, Heidelberg</foaf:name>
+            </foaf:Organization>
+        </dc:publisher>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Effinger</foaf:surname>
+                        <foaf:givenName>Philip</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_3125"/>
+        <dc:title>Layout Patterns with BPMN Semantics</dc:title>
+        <dcterms:abstract>BPMN is a notation language that provides visual elements for modeling business processes. The resulting BPMN diagrams that represent BPMN models follow rules concerning their layout for creating a common understanding among all BPMN designers. A subset of the rules...</dcterms:abstract>
+        <dc:date>2011</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>link-1springer-1com-10000165q0072.han.wat.edu.pl</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://link-1springer-1com-10000165q0072.han.wat.edu.pl/chapter/10.1007/978-3-642-25160-3_11</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 10:11:34</dcterms:dateSubmitted>
+        <bib:pages>130-135</bib:pages>
+        <bib:presentedAt>
+            <bib:Conference>
+                <dc:title>International Workshop on Business Process Modeling Notation</dc:title>
+            </bib:Conference>
+        </bib:presentedAt>
+    </rdf:Description>
+    <bib:Journal rdf:about="urn:issn:1865-1356">
+        <dc:identifier>ISBN 978-3-642-25160-3</dc:identifier>
+        <dc:title>Business Process Model and Notation</dc:title>
+        <dc:identifier>DOI 10.1007/978-3-642-25160-3_11</dc:identifier>
+        <dc:identifier>ISSN 1865-1356</dc:identifier>
+    </bib:Journal>
+    <z:Attachment rdf:about="#item_3125">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3125/Effinger - 2011 - Layout Patterns with BPMN Semantics.pdf"/>
+        <dc:title>Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://link-1springer-1com-10000165q0072.han.wat.edu.pl/content/pdf/10.1007/978-3-642-25160-3_11.pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 10:11:34</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <rdf:Description rdf:about="https://ieeexplore.ieee.org/stampPDF/getPDF.jsp">
+        <z:itemType>conferencePaper</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:2378-1971"/>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Effinger</foaf:surname>
+                        <foaf:givenName>Philip</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Siebenhaller</foaf:surname>
+                        <foaf:givenName>Martin</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kaufmann</foaf:surname>
+                        <foaf:givenName>Michael</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_3129"/>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>BPMN</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>BPMN Layout</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>BPMN Visualization</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Business</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Graph Drawing</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Joining processes</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Layout</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Process design</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Prototypes</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Software tools</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Unified modeling language</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Visualization</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:title>An Interactive Layout Tool for BPMN</dc:title>
+        <dcterms:abstract>Business processes are at the core of todaypsilas business world. Most of the effort put into business processes in practice is either the task of designing a new process or the task of analyzing and improving an existing process. In both cases, visualizations of the process models support the user in achieving his objectives. In this paper, we present the first prototype of our tool &quot;BPMN-Layouter&quot;. Our supported notation language is the business process modeling notation (BPMN). The tool was implemented to integrate several concepts that we developed and adopted for the use in BPMN modeling. The integrated approaches comprehend the tasks of finding an automatic layout for a BPMN model, increasing the readability of given visualizations and developing further existing BPMN models in an interactive fashion. Also, a method for automatic division of complex BPMN models is provided, too.</dcterms:abstract>
+        <dc:date>2009-07</dc:date>
+        <z:libraryCatalog>IEEE Xplore</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://ieeexplore.ieee.org/stampPDF/getPDF.jsp</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 10:15:35</dcterms:dateSubmitted>
+        <bib:pages>399-406</bib:pages>
+        <bib:presentedAt>
+            <bib:Conference>
+                <dc:title>2009 IEEE Conference on Commerce and Enterprise Computing</dc:title>
+            </bib:Conference>
+        </bib:presentedAt>
+    </rdf:Description>
+    <bib:Journal rdf:about="urn:issn:2378-1971">
+        <dc:title>2009 IEEE Conference on Commerce and Enterprise Computing</dc:title>
+        <dc:identifier>DOI 10.1109/CEC.2009.36</dc:identifier>
+        <dc:identifier>ISSN 2378-1971</dc:identifier>
+    </bib:Journal>
+    <z:Attachment rdf:about="#item_3129">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3129/Effinger et al. - 2009 - An Interactive Layout Tool for BPMN.pdf"/>
+        <dc:title>Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://ieeexplore.ieee.org/stampPDF/getPDF.jsp?tp=&amp;arnumber=5210768&amp;ref=</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 10:15:38</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <rdf:Description rdf:about="https://ieeexplore.ieee.org/document/5210767">
+        <z:itemType>conferencePaper</z:itemType>
+        <dcterms:isPartOf>
+            <bib:Journal>
+                <dc:title>2009 IEEE Conference on Commerce and Enterprise Computing</dc:title>
+                <dc:identifier>DOI 10.1109/CEC.2009.28</dc:identifier>
+                <dc:identifier>ISSN 2378-1971</dc:identifier>
+            </bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kitzmann</foaf:surname>
+                        <foaf:givenName>Ingo</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>König</foaf:surname>
+                        <foaf:givenName>Christoph</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Lübke</foaf:surname>
+                        <foaf:givenName>Daniel</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Singer</foaf:surname>
+                        <foaf:givenName>Leif</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_3133"/>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Acoustical engineering</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>algorithm</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>bpmn</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Business</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Context modeling</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Humans</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>layout</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Layout</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>process</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Runtime</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Semiconductor optical amplifiers</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Software algorithms</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Software engineering</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Visualization</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:title>A Simple Algorithm for Automatic Layout of BPMN Processes</dc:title>
+        <dcterms:abstract>Badly and inconsistently layouted business processes are hard to read for humans and therefore lack comprehensibility. Furthermore, processes generated by software have no layout at all. If stakeholders cannot comprehend the process descriptions, they are unable to validate them and find mistakes. By offering a fully automatic layout algorithm for BPMN, it is possible to layout business processes in a consistent and clear way so that stakeholders can better and quicker comprehend the contents. This leads to better comprehensiblity and thus to better communication in BPM / SOA projects and allows for consistent process layouts throughout projects and enterprises - independent from the model source. In addition, this permits using generated models without manual layouting.</dcterms:abstract>
+        <dc:date>2009-07</dc:date>
+        <z:libraryCatalog>IEEE Xplore</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://ieeexplore.ieee.org/document/5210767</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 10:18:50</dcterms:dateSubmitted>
+        <bib:pages>391-398</bib:pages>
+        <bib:presentedAt>
+            <bib:Conference>
+                <dc:title>2009 IEEE Conference on Commerce and Enterprise Computing</dc:title>
+            </bib:Conference>
+        </bib:presentedAt>
+    </rdf:Description>
+    <z:Attachment rdf:about="#item_3133">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3133/Kitzmann et al. - 2009 - A Simple Algorithm for Automatic Layout of BPMN Processes.pdf"/>
+        <dc:title>Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://ieeexplore.ieee.org/stampPDF/getPDF.jsp?tp=&amp;arnumber=5210767&amp;ref=</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 10:18:51</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <rdf:Description rdf:about="urn:isbn:978-3-642-16298-5">
+        <z:itemType>conferencePaper</z:itemType>
+        <dcterms:isPartOf>
+            <bib:Journal>
+                <dc:identifier>ISBN 978-3-642-16298-5</dc:identifier>
+                <dc:title>Business Process Modeling Notation</dc:title>
+                <dc:identifier>DOI 10.1007/978-3-642-16298-5_5</dc:identifier>
+                <dc:identifier>ISSN 1865-1356</dc:identifier>
+            </bib:Journal>
+        </dcterms:isPartOf>
+        <dc:publisher>
+            <foaf:Organization>
+               <foaf:name>Springer, Berlin, Heidelberg</foaf:name>
+            </foaf:Organization>
+        </dc:publisher>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Effinger</foaf:surname>
+                        <foaf:givenName>Philip</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Jogsch</foaf:surname>
+                        <foaf:givenName>Nicole</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Seiz</foaf:surname>
+                        <foaf:givenName>Sandra</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_3135"/>
+        <dc:title>On a Study of Layout Aesthetics for Business Process Models Using BPMN</dc:title>
+        <dcterms:abstract>As BPMN spreads among a constantly growing user group, it is indispensable to analyze the expectations of users towards the appearance of a BPMN model. The user groups are mostly inhomogeneous since users stem from different backgrounds, e.g. IT, managerial sciences...</dcterms:abstract>
+        <dc:date>2010</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>link-1springer-1com-10000165q0075.han.wat.edu.pl</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://link-1springer-1com-10000165q0075.han.wat.edu.pl/chapter/10.1007/978-3-642-16298-5_5</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 10:22:13</dcterms:dateSubmitted>
+        <bib:pages>31-45</bib:pages>
+        <bib:presentedAt>
+            <bib:Conference>
+                <dc:title>International Workshop on Business Process Modeling Notation</dc:title>
+            </bib:Conference>
+        </bib:presentedAt>
+    </rdf:Description>
+    <z:Attachment rdf:about="#item_3135">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3135/Effinger et al. - 2010 - On a Study of Layout Aesthetics for Business Process Models Using BPMN.pdf"/>
+        <dc:title>Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://link-1springer-1com-10000165q0075.han.wat.edu.pl/content/pdf/10.1007/978-3-642-16298-5_5.pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 10:22:14</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="https://www.sciencedirect.com/science/article/pii/S0169023X1630341X">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:0169-023X"/>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Corradini</foaf:surname>
+                        <foaf:givenName>Flavio</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Ferrari</foaf:surname>
+                        <foaf:givenName>Alessio</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Fornari</foaf:surname>
+                        <foaf:givenName>Fabrizio</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Gnesi</foaf:surname>
+                        <foaf:givenName>Stefania</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Polini</foaf:surname>
+                        <foaf:givenName>Andrea</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Re</foaf:surname>
+                        <foaf:givenName>Barbara</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Spagnolo</foaf:surname>
+                        <foaf:givenName>Giorgio O.</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_3141"/>
+        <link:link rdf:resource="#item_3140"/>
+        <dc:subject>#LikeIt</dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>BPMN</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Business process modeling</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Model quality</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Modeling guidelines</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Models understandability</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Tool</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:title>A Guidelines framework for understandable BPMN models</dc:title>
+        <dcterms:abstract>Business process modeling allows abstracting and reasoning on how work is structured within complex organizations. Business process models represent blueprints that can serve different purposes for a variety of stakeholders. For example, business analysts can use these models to better understand how the organization works; employees playing a role in the process can use them to learn the tasks that they are supposed to perform; software analysts/developers can refer to the models to understand the system-as-is before designing the system-to-be. Given the variety of stakeholders that need to interpret these models, and considering the pivotal function that models play within organizations, understandability becomes a fundamental quality that need to be taken into particular account by modelers. In this paper we provide a set of fifty guidelines that can help modelers to improve the understandability of their models. The work focuses on the Business Process Modelling Notation 2.0 standard published by the Object Management Group, which has acquired a clear predominance among the modeling notations for business processes. Guidelines were derived by means of a thoughtful literature review – which allowed identifying around one hundred guidelines – and through successive activities of synthesis and homogenization. In addition, we implemented a freely available open source tool, named BEBoP (understandaBility vErifier for Business Process models), to check the adherence of a model to the guidelines. Finally, guidelines violation has been checked with BEBoP on a dataset of 11,294 models available in a publicly accessible repository. Our tests show that, although the majority of the guidelines are respected by the models, some guidelines, which are recognized as fundamental by the literature, are frequently violated.</dcterms:abstract>
+        <dc:date>2018-01-01</dc:date>
+        <z:libraryCatalog>ScienceDirect</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.sciencedirect.com/science/article/pii/S0169023X1630341X</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:04:59</dcterms:dateSubmitted>
+        <bib:pages>129-154</bib:pages>
+    </bib:Article>
+    <bib:Journal rdf:about="urn:issn:0169-023X">
+        <prism:volume>113</prism:volume>
+        <dc:title>Data &amp; Knowledge Engineering</dc:title>
+        <dc:identifier>DOI 10.1016/j.datak.2017.11.003</dc:identifier>
+        <dcterms:alternative>Data &amp; Knowledge Engineering</dcterms:alternative>
+        <dc:identifier>ISSN 0169-023X</dc:identifier>
+    </bib:Journal>
+    <z:Attachment rdf:about="#item_3141">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3141/Corradini et al. - 2018 - A Guidelines framework for understandable BPMN models.pdf"/>
+        <dc:title>ScienceDirect Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://pdf.sciencedirectassets.com/271546/1-s2.0-S0169023X18X00020/1-s2.0-S0169023X1630341X/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQD%2Fh%2FMHJwulKUjRzDYt7VjmEJfeI9wRUl3HwheDoafZ5AIhAMBY%2Fc87CVVvXILgaqMeco1C5caWnT0yoLY71KCGjhTvKrMFCHMQBRoMMDU5MDAzNTQ2ODY1Igwlo0MsWcbW8Cr9fEkqkAVvsDttF5uEcL2kaFNsJ1qIX8X9ZElyuOCcmIbzPyRiy6FnYqEGE58RAGsTGafRxXIA6dAmsZOlhYFVbcCWgimR6lH1g1wY9HsLim%2FX8fhVaQhuy0fT%2FciHg5eW010Au238dJVvPcROXdY9bfKnFhOwGEPLQXYSTj86wGR5VEr7nlVzRSJip5QEROiUlFbyND5H2XhA9laXR4pwi4P4HqR5WWrLr%2FfXxLtt%2B3USOf3wi4sOpI83oyUZLcwhKJhylrffWBpPO28kWTUamzP4FZJw0N8e3N0mKDbnH1ip%2BF1SlUCOMA%2F7v55P9cyZNWKdhrKI3jXctrr8rm2ty71Sg%2BqDs7HrQnMY9cNlighXnut1HL7%2BYWMyBlimfp8QqgQ0F2GoG27mv%2F21npGg1az%2FGACuf%2BBcgK%2FrJf%2FkdsJIiHKInAuPZSr5er1R%2BL0I34Pn9Ulx64i4FAEBXWOavQPTE%2Bb0wCw2o9XSSftjNfjm2nT4G6g%2B1Qr3qsAs9nWTdOBH01bva8IgK4iCTtDeIkvfNkjlBSPdWrH9G15wYk96qNFz3I9z5gMvRnml3cNFSjROHDbiovGwq7jiwFJv5oNmm60o4OrgZKSp3sKa9NxyI%2Bs%2FdGakAh0AeTVZeK7ijSo0WcBFnFhDDjpqJFsEcvUmfzF1d%2FQovWZ6QIO3jac86dnmn%2BH3FtQWekFis1OYqKxKU2VPIfYXciAjFor2X1bO1TDs1Ige%2FSQgrWI%2B%2FmX1rlAB%2B7r8n7YNfdDtNf%2F85b9nkAEa0gShSSjwbHGHhw467DeGzdgLLOsJiJfAsFRTYM9Vhoq00IQP845HwbClCSN0OoPlaGry5oRhIgw%2B2aqAfPf2TJC3pP%2BZL9LtsvsWk0Io0jDloMrNBjqwAdpE94I7cmWSYQ5l3quwXlDcG2vk%2FLQ0aiemtIGw1yGbfQnyYSJssseeHc9wK3EvKKw8GaDODV4AXQg5GhtjPhbEHiqKW35Gt3YXMoX9duXsoIBLY6xWVMZpF2XMJDOXNk%2BkL4pnyb2njgkfncNsxC6K2vI%2BsWkpOFXhXDQzo3Z5FW4x1YW41mgcsyhLKgUmlBGkoYFxkIxYfS0UMWOOiZWd5YMVnqeZ%2BgzDK1R3QyUW&amp;X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20260312T110505Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=300&amp;X-Amz-Credential=ASIAQ3PHCVTYRGUPXUBP%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Signature=10f222f7898a54da454e447f2305677bb14e4cc4e6a2655e38e75906462b833e&amp;hash=0d525397ebfa6113a39952432ec30a55f31a9d135d4aac0c74e3f32a9f6b069a&amp;host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&amp;pii=S0169023X1630341X&amp;tid=spdf-b102f6d9-6ce8-4eec-8352-8c3705bc68eb&amp;sid=011d387c99eb21468f2bd5a56c95f1912ea7gxrqb&amp;type=client&amp;tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&amp;rh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&amp;ua=16035f0b075757515505&amp;rr=9db2525e29fdf974&amp;cc=pl</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:05:06</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <z:Attachment rdf:about="#item_3140">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3140/S0169023X1630341X.html"/>
+        <dc:title>ScienceDirect Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.sciencedirect.com/science/article/pii/S0169023X1630341X</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:05:04</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="https://www.sciencedirect.com/science/article/pii/S0141938225002732">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:0141-9382"/>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>de Souza Albuquerque</foaf:surname>
+                        <foaf:givenName>Lenylda Maria</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>da Silveira</foaf:surname>
+                        <foaf:givenName>Denis Silva</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Bezerra</foaf:surname>
+                        <foaf:givenName>Ângela Tavares</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_3144"/>
+        <link:link rdf:resource="#item_3143"/>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Biometric analysis</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Business process diagrams</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Cognitive load</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Electroencephalography</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Eye-tracking</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Layout guidelines</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Process model comprehension</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:title>Verifying the understandability of BPMN diagrams: a biometric study on the cognitive impact of layout guidelines</dc:title>
+        <dcterms:abstract>The layout of Business Process Model and Notation (BPMN) diagrams plays a critical role in determining how effectively users interpret process information. However, empirical evidence regarding the cognitive impact of layout quality remains limited. This study investigates the influence of visual layout guidelines on the understandability of BPMN models using a multimodal biometric approach. We conducted a controlled experiment in which 37 participants interpreted two BPMN diagrams: one that adhered to layout best practices and another that deliberately violated them. During the task, their physiological responses were monitored via eye-tracking and EEG. Results indicate that models following layout guidelines significantly reduce cognitive load, improve attention distribution, and enhance task performance. Participants exposed to disorganized layouts showed increased EEG theta activity, more dispersed eye fixations, and lower accuracy rates. The study triangulates biometric data with subjective assessments to provide a comprehensive understanding of how layout structure affects comprehension. These findings reinforce the value of user-centered modeling practices and highlight the potential of biometric methods for evaluating the cognitive effectiveness of process representations.</dcterms:abstract>
+        <dc:date>2026-01-01</dc:date>
+        <z:shortTitle>Verifying the understandability of BPMN diagrams</z:shortTitle>
+        <z:libraryCatalog>ScienceDirect</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.sciencedirect.com/science/article/pii/S0141938225002732</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:42:14</dcterms:dateSubmitted>
+        <bib:pages>103236</bib:pages>
+    </bib:Article>
+    <bib:Journal rdf:about="urn:issn:0141-9382">
+        <prism:volume>91</prism:volume>
+        <dc:title>Displays</dc:title>
+        <dc:identifier>DOI 10.1016/j.displa.2025.103236</dc:identifier>
+        <dcterms:alternative>Displays</dcterms:alternative>
+        <dc:identifier>ISSN 0141-9382</dc:identifier>
+    </bib:Journal>
+    <z:Attachment rdf:about="#item_3144">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3144/de Souza Albuquerque et al. - 2026 - Verifying the understandability of BPMN diagrams a biometric study on the cognitive impact of layou.pdf"/>
+        <dc:title>ScienceDirect Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://pdf.sciencedirectassets.com/271537/1-s2.0-S0141938225X00056/1-s2.0-S0141938225002732/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEKz%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIA5ri4viIbKIiFH88Aa6BVfBKsQW%2FFcZz%2FCB0VtdJwwpAiAHBs4zKosqWbPWIVRk5b5nxjqB%2BJ3pe77A0zjLZ%2FEiYCqzBQh0EAUaDDA1OTAwMzU0Njg2NSIMfyb4arHf1ovcEoKyKpAF2VqAdpPHAaflomqGAXcC%2Bj1qbHUgSFut2rdan33%2F3O6oEtyUhJsc5vN3nHYeb9YaKHP%2BldPQZpVEgsrouxj%2BeRTQi9GTwrJt6PQPd2LgSIEicptvvUgyx8SmcmEkWqou%2FCbwUL8ctW3W0148dpTg22s2h2MJMoqsN9RPXWy%2BK6D%2BxSqdQEiBuZvmV%2BWUkmBKe3VCU6H1NsyI3obYgK%2Bvhj4GCPEjpUGxvhsDbAjmcgTAypP92Vl0zCDqKw0LBNws4UNU993wCwG47g78%2B%2FVN8J6MZHkUHIXZKUtgtGZb%2BU%2FHTU7PmpZ7xua4pQ6eDvN45yVze1fBtRXogWPf6%2BipRTmXZRMSINiz%2BzL4pDl5OgMdo5MXDYpyJ0wLt%2BfMOFljZCf1Zf43ecHXVokEZZKkcY8TghcR6viMbc93nTIaBEOifuIvzAc4u9NHZ%2BDu%2FB468MIvQ6Ex25uw5ZavTeEnWlBKZpPInef2U9sXkB70JX3AL9bHZAusDZ%2BCU%2FxI9BOS7zSc4GJ3hrmSkHCythQAkwz2VZP8qzsaYdFUQAu%2FsUWPAhcpdFLqO49H0VeUjRXJItj9JRYQZg%2BOvAYGn0yvoKrzzy0efNlSHZMOcSxGW6jqPeCRChHpXs45Ind%2FElaDasoZU%2BjgV64HsKiK9TUIjn1eAHYKgd03MdOCnPjTfZWL%2FE48%2F8JnluXk5%2B3XRR4QL8NZ98PXQ%2FhcexzIDOCYxXYQw2t2vxGAJFaS9dlA%2FWpLoJ2WDP3oE%2BQwYkaukidKxZ%2F2vwomBnS5R7e4lUsqxhtnSVdBt%2F4hXpqrIBUJzDO2tFhdI9MMg2zkdKPrP%2FK3HYNZISTpGG2By3%2BpmC26tea44b4pa6Kw2SyB01uQm0sw473KzQY6sgETZ2vZMRoIv1pErMY4V4WN21RHwhSfHE7iIR6zUtzscEFuDRuUc7s4Z31rzo%2FVIp8Ejh1IlrO5Q3ZlP5EOwd6RyoMlrLr8%2B%2BmuXMOfY5l%2FCWhqjQHaU8WnpiO6Jaxf178bXu3mcOjRraR60PUtOIHoThIB%2BeSfcblyjsKRVsJ7Eqm5O6UR2mE1qimt0s5AEFoZ2AuRQ9DG9Q1lJwDO0MPLSI9mwsLf5Fy0dSIczDFKJzkA&amp;X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20260312T114220Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=300&amp;X-Amz-Credential=ASIAQ3PHCVTYXXFEPKDC%2F20260312%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Signature=5fa0a4e726d1a4fb4efb7ed86896ac138a90f8037fca401cef6f26c8a09f828d&amp;hash=c0c5c6bc7f84329d5cd53de32f2ce194eb1fb2a4dd75ab926e9741f64449419b&amp;host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&amp;pii=S0141938225002732&amp;tid=spdf-98d6ad65-0424-4e79-90d0-93951e54ce2d&amp;sid=011d387c99eb21468f2bd5a56c95f1912ea7gxrqb&amp;type=client&amp;tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&amp;rh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&amp;ua=16035f0b07575a5b0652&amp;rr=9db288f26cc027c0&amp;cc=pl</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:42:22</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <z:Attachment rdf:about="#item_3143">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3143/S0141938225002732.html"/>
+        <dc:title>ScienceDirect Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.sciencedirect.com/science/article/pii/S0141938225002732</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:42:20</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="https://www.mdpi.com/2076-3417/16/5/2213">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:2076-3417"/>
+        <dc:publisher>
+            <foaf:Organization>
+                <foaf:name>Multidisciplinary Digital Publishing Institute</foaf:name>
+            </foaf:Organization>
+        </dc:publisher>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Licardo</foaf:surname>
+                        <foaf:givenName>Josip Tomo</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Tanković</foaf:surname>
+                        <foaf:givenName>Nikola</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Etinger</foaf:surname>
+                        <foaf:givenName>Darko</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_3146"/>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Business Process Model and Notation (BPMN)</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>generative AI</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Large Language Models (LLMs)</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>natural language processing</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>process modeling</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:title>BPMN Assistant: An LLM-Based Approach to Business Process Modeling</dc:title>
+        <dcterms:abstract>Featured ApplicationThe proposed system is designed for integration into enterprise Business Process Management (BPM) platforms, with the aim of assis...</dcterms:abstract>
+        <dc:date>2026-02-25</dc:date>
+        <z:language>en</z:language>
+        <z:shortTitle>BPMN Assistant</z:shortTitle>
+        <z:libraryCatalog>www.mdpi.com</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.mdpi.com/2076-3417/16/5/2213</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:43:18</dcterms:dateSubmitted>
+        <dc:rights>http://creativecommons.org/licenses/by/3.0/</dc:rights>
+    </bib:Article>
+    <bib:Journal rdf:about="urn:issn:2076-3417">
+        <prism:volume>16</prism:volume>
+        <dc:title>Applied Sciences</dc:title>
+        <dc:identifier>DOI 10.3390/app16052213</dc:identifier>
+        <prism:number>5</prism:number>
+        <dc:identifier>ISSN 2076-3417</dc:identifier>
+    </bib:Journal>
+    <z:Attachment rdf:about="#item_3146">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3146/Licardo et al. - 2026 - BPMN Assistant An LLM-Based Approach to Business Process Modeling.pdf"/>
+        <dc:title>Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.mdpi.com/2076-3417/16/5/2213/pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:43:19</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="https://www.scientific.net/EH.27.719">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:2813-8333"/>
+        <dc:publisher>
+            <foaf:Organization>
+               <foaf:name>Trans Tech Publications Ltd</foaf:name>
+            </foaf:Organization>
+        </dc:publisher>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Negara</foaf:surname>
+                        <foaf:givenName>Aldrich Sancho Sapata</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Ferdiana</foaf:surname>
+                        <foaf:givenName>Ridi</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Santosa</foaf:surname>
+                        <foaf:givenName>Paulus Insap</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dc:title>Future Trends Business Process Model Automation – Systematic Literature Review</dc:title>
+        <dcterms:abstract>Business Process Model and Notation (BPMN) is a modelling approach for business processes that connects communication between business analysts and system development teams with visual notation. Not only does BPMN model the notation diagram, but there is also contextual information about who is involved in the process, or more precisely, the role of an organizational unit responsible for fulfilling each task sequence. Considering how much study is being done on automatic generation of BPMN, a review is needed when seeking to know the latest information about this field. The main objectives of this study are to enhance understanding and knowledge in the field of automated BPMN generation, and to assess the level of achievement of previous researchers. Several studies encounter restrictions in dealing with intricate sentences and input data requirements. Certain research is centered on particular components or features of BPMN, including the interconnection of tasks, gateway rules, and hierarchical structures, while others strive to enhance the precision and comprehensiveness of BPMN models.</dcterms:abstract>
+        <dc:date>2025</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>www.scientific.net</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.scientific.net/EH.27.719</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:45:24</dcterms:dateSubmitted>
+        <dc:description>Conference Name: The 10th International Conference on Science and Technology</dc:description>
+        <bib:pages>719-728</bib:pages>
+    </bib:Article>
+    <bib:Journal rdf:about="urn:issn:2813-8333">
+        <prism:volume>27</prism:volume>
+        <dc:title>Engineering Headway</dc:title>
+        <dc:identifier>DOI 10.4028/p-RSl0y2</dc:identifier>
+        <dc:identifier>ISSN 2813-8333</dc:identifier>
+    </bib:Journal>
+    <bib:Article rdf:about="https://www-1tandfonline-1com-100003d5q0086.han.wat.edu.pl/doi/full/10.1080/23311975.2026.2627025">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:null"/>
+        <dc:publisher>
+           <foaf:Organization><foaf:name>Cogent OA</foaf:name></foaf:Organization>
+        </dc:publisher>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Akinbowale</foaf:surname>
+                        <foaf:givenName>Oluwatoyin Esther</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Zerihun</foaf:surname>
+                        <foaf:givenName>Mulatu Fekadu</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Mashigo</foaf:surname>
+                        <foaf:givenName>Polly</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_3149"/>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Business process</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>business process management</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Business, Management and Accounting</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>decision-making</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Economics</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Finance</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>process modelling</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>workflows</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:title>Business process management framework: systematic review of the trends, potentials and future</dc:title>
+        <dc:date>2026-02-06</dc:date>
+        <z:shortTitle>Business process management framework</z:shortTitle>
+        <z:libraryCatalog>www-1tandfonline-1com-100003d5q0086.han.wat.edu.pl (Atypon)</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www-1tandfonline-1com-100003d5q0086.han.wat.edu.pl/doi/full/10.1080/23311975.2026.2627025</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:52:07</dcterms:dateSubmitted>
+        <bib:pages>2627025</bib:pages>
+    </bib:Article>
+    <bib:Journal rdf:about="urn:issn:null">
+        <prism:volume>13</prism:volume>
+        <dc:title>Cogent Business &amp; Management</dc:title>
+        <dc:identifier>DOI 10.1080/23311975.2026.2627025</dc:identifier>
+        <prism:number>1</prism:number>
+        <dc:identifier>ISSN null</dc:identifier>
+    </bib:Journal>
+    <z:Attachment rdf:about="#item_3149">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3149/Akinbowale et al. - 2026 - Business process management framework systematic review of the trends, potentials and future.pdf"/>
+        <dc:title>Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www-1tandfonline-1com-100003d5q0086.han.wat.edu.pl/doi/pdf/10.1080/23311975.2026.2627025#references-Section1</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:52:09</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <rdf:Description rdf:about="urn:isbn:978-3-95977-343-0">
+        <z:itemType>conferencePaper</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:1868-8969"/>
+        <dc:publisher>
+            <foaf:Organization>
+                <vcard:adr>
+                    <vcard:Address>
+                       <vcard:locality>Dagstuhl, Germany</vcard:locality>
+                    </vcard:Address>
+                </vcard:adr>
+                <foaf:name>Schloss Dagstuhl – Leibniz-Zentrum für Informatik</foaf:name>
+            </foaf:Organization>
+        </dc:publisher>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kasperowski</foaf:surname>
+                        <foaf:givenName>Maximilian</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Domrös</foaf:surname>
+                        <foaf:givenName>Sören</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>von Hanxleden</foaf:surname>
+                        <foaf:givenName>Reinhard</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <bib:editors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Felsner</foaf:surname>
+                        <foaf:givenName>Stefan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Klein</foaf:surname>
+                        <foaf:givenName>Karsten</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:editors>
+        <link:link rdf:resource="#item_3151"/>
+        <link:link rdf:resource="#item_3152"/>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Automatic Layout</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Layered Layout</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Layout Library</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:title>The Eclipse Layout Kernel</dc:title>
+        <dc:date>2024</dc:date>
+        <z:libraryCatalog>Dagstuhl Research Online Publication Server</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.GD.2024.56</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:54:55</dcterms:dateSubmitted>
+        <bib:pages>56:1–56:2</bib:pages>
+    </rdf:Description>
+    <bib:Journal rdf:about="urn:issn:1868-8969">
+        <dcterms:isPartOf>
+            <bib:Series>
+                <dc:title>Leibniz International Proceedings in Informatics (LIPIcs)</dc:title>
+            </bib:Series>
+        </dcterms:isPartOf>
+        <prism:volume>320</prism:volume>
+        <dc:identifier>ISBN 978-3-95977-343-0</dc:identifier>
+        <dc:title>32nd International Symposium on Graph Drawing and Network Visualization (GD 2024)</dc:title>
+        <dc:identifier>DOI 10.4230/LIPIcs.GD.2024.56</dc:identifier>
+        <dc:identifier>ISSN 1868-8969</dc:identifier>
+    </bib:Journal>
+    <z:Attachment rdf:about="#item_3151">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3151/Kasperowski et al. - 2024 - The Eclipse Layout Kernel.pdf"/>
+        <dc:title>Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://drops.dagstuhl.de/storage/00lipics/lipics-vol320-gd2024/LIPIcs.GD.2024.56/LIPIcs.GD.2024.56.pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:54:55</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <z:Attachment rdf:about="#item_3152">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3152/LIPIcs.GD.2024.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.GD.2024.56</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:54:59</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <rdf:Description rdf:about="urn:isbn:978-3-540-31843-9">
+        <z:itemType>conferencePaper</z:itemType>
+        <dcterms:isPartOf>
+            <bib:Journal>
+                <dc:identifier>ISBN 978-3-540-31843-9</dc:identifier>
+                <dc:title>Graph Drawing</dc:title>
+                <dc:identifier>DOI 10.1007/978-3-540-31843-9_17</dc:identifier>
+            </bib:Journal>
+        </dcterms:isPartOf>
+        <dc:publisher>
+            <foaf:Organization>
+                <vcard:adr>
+                    <vcard:Address>
+                       <vcard:locality>Berlin, Heidelberg</vcard:locality>
+                    </vcard:Address>
+                </vcard:adr>
+                <foaf:name>Springer</foaf:name>
+            </foaf:Organization>
+        </dc:publisher>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Eiglsperger</foaf:surname>
+                        <foaf:givenName>Markus</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Siebenhaller</foaf:surname>
+                        <foaf:givenName>Martin</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kaufmann</foaf:surname>
+                        <foaf:givenName>Michael</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <bib:editors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Pach</foaf:surname>
+                        <foaf:givenName>János</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:editors>
+        <link:link rdf:resource="#item_3154"/>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Edge Crossing</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Empty Container</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Graph Draw</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Network Simplex</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Springer LNCS</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:title>An Efficient Implementation of Sugiyama’s Algorithm for Layered Graph Drawing</dc:title>
+        <dcterms:abstract>Sugiyama’s algorithmic framework for layered graph drawing is commonly used in practical software. The extensive use of dummy vertices to break long edges between non-adjacent layers often leads to unsatisfactorial performance. The worst-case running-time of Sugiyama’s approach is O(|V||E|log|E|) requiring O(|V||E|) memory, which makes it unusable for the visualization of large graphs. By a conceptually simple new technique we are able to keep the number of dummy vertices and edges linear in the size of the graph and hence reduce the worst-case time complexity of Sugiyama’s approach by an order of magnitude to O((|V| + |E|)log|E|) requiring O(|V|+|E|) space.</dcterms:abstract>
+        <dc:date>2005</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>Springer Link</z:libraryCatalog>
+        <bib:pages>155-166</bib:pages>
+    </rdf:Description>
+    <z:Attachment rdf:about="#item_3154">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3154/Eiglsperger et al. - 2005 - An Efficient Implementation of Sugiyama’s Algorithm for Layered Graph Drawing.pdf"/>
+        <dc:title>Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://link.springer.com/content/pdf/10.1007%2F978-3-540-31843-9_17.pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:55:47</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <rdf:Description rdf:about="urn:isbn:978-3-540-44590-6">
+        <z:itemType>conferencePaper</z:itemType>
+        <dcterms:isPartOf>
+            <bib:Journal>
+                <dc:identifier>ISBN 978-3-540-44590-6</dc:identifier>
+                <dc:title>Theory and Application of Diagrams</dc:title>
+                <dc:identifier>DOI 10.1007/3-540-44590-0_46</dc:identifier>
+            </bib:Journal>
+        </dcterms:isPartOf>
+        <dc:publisher>
+            <foaf:Organization>
+                <vcard:adr>
+                    <vcard:Address>
+                       <vcard:locality>Berlin, Heidelberg</vcard:locality>
+                    </vcard:Address>
+                </vcard:adr>
+                <foaf:name>Springer</foaf:name>
+            </foaf:Organization>
+        </dc:publisher>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Purchase</foaf:surname>
+                        <foaf:givenName>Helen C.</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Carrington</foaf:surname>
+                        <foaf:givenName>David</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Allder</foaf:surname>
+                        <foaf:givenName>Jo-Anne</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <bib:editors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Anderson</foaf:surname>
+                        <foaf:givenName>Michael</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Cheng</foaf:surname>
+                        <foaf:givenName>Peter</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Haarslev</foaf:surname>
+                        <foaf:givenName>Volker</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:editors>
+        <link:link rdf:resource="#item_3156"/>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Class Diagram</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Font Type</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Graph Layout</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Layout Algorithm</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Text Direction</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:title>Experimenting with Aesthetics-Based Graph Layout</dc:title>
+        <dcterms:abstract>Many automatic graph layout algorithms have been implemented to display relational data in a graphical (usually node-arc) manner. The success of these algorithms is typically measured by their computational efficiency and the extent to which they conform to aesthetic criteria (for example, minimising the number of crossings, maximising symmetry). Little research has been performed on the usability aspects of such algorithms: do they produce graph drawings that make the embodied information easy to use and understand? Is the computational effort expended on conforming to the assumed aesthetic criteria justifiable with espect to better usability? This paper reports on usability studies to investigate automatic graph layout algorithms with respect to human use.</dcterms:abstract>
+        <dc:date>2000</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>Springer Link</z:libraryCatalog>
+        <bib:pages>498-501</bib:pages>
+    </rdf:Description>
+    <z:Attachment rdf:about="#item_3156">
+        <z:itemType>attachment</z:itemType>
+        <z:path rdf:resource="files/3156/Purchase et al. - 2000 - Experimenting with Aesthetics-Based Graph Layout.pdf"/>
+        <dc:title>Full Text PDF</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://link.springer.com/content/pdf/10.1007%2F3-540-44590-0_46.pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2026-03-12 11:56:14</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+</rdf:RDF>

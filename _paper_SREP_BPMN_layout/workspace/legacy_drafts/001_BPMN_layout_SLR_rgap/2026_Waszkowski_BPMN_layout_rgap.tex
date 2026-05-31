@@ -1,0 +1,149 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\title{Dynamic Topological Layout and Orthogonal Routing Algorithm for BPMN Diagrams}
+\author{}
+\date{}
+
+\begin{document}
+	\maketitle
+	
+	\section{Introduction}
+	The formalization of business processes through the Business Process Model and Notation (BPMN) establishes a critical bridge between high-level organizational requirements and the technical specifications required for system implementation. As a standardized visual language, BPMN ensures that process logic remains transparent, auditable, and executable across a variety of complex domains, including digital twin simulations, IoT-aware models, and multi-agent AI systems \cite{ref_akinbowale, ref_tebourbi, ref_lopes}. However, while many modern modeling tools and automated generation engines can serialize process models into standard BPMN 2.0 XML formats, the visual representation---known as Diagram Interchange or BPMNDI---is often missing. This issue is particularly prevalent in the era of Generative AI, where text-to-BPMN systems and Large Language Models (LLMs) dynamically output abstract semantic logic without physical coordinates \cite{ref_licardo, ref_kourani_promoai, ref_nivon}. Consequently, the automatic generation of aesthetically pleasing, highly readable layouts from pure semantic graph data remains a persistent and highly complex challenge in software engineering \cite{ref_jointjs, ref_effinger_interactive}.
+	
+	The layout of a BPMN diagram is not merely a matter of mathematical aesthetics; it is a critical factor in cognitive ergonomics. Empirical evidence from cognitive psychology, eye-tracking experiments, and biometric studies demonstrates that poorly structured layouts significantly increase intrinsic cognitive load, leading to severe misinterpretations and human error during process analysis \cite{ref_de_souza, ref_lubke_eye, ref_schrepfer, ref_wlekly}. Despite this, standard directed graph layout algorithms are frequently applied to BPMN models with suboptimal results. General-purpose algorithms struggle to naturally accommodate the notation's strict requirements, which include orthogonal sequence flows, discrete attachment ports, and the complex parallel or iterative loop topologies inherent to business logic \cite{ref_kitzmann, ref_gschwind}. 
+	
+	Traditional graph drawing paradigms approach this problem with severe structural limitations. Hierarchical layouts, such as the widely used Sugiyama framework, bloat the spatial footprint of diagrams by inserting massive volumes of "dummy nodes" to handle the backward-flowing cyclic loops inherent in iterative business processes \cite{ref_sugiyama, ref_gansner, ref_brandes}. Conversely, grid-based algorithms artificially constrain elements to rigid cells, resulting in catastrophic "cell expansion" where parallel paths force the generation of vast, empty visual fields \cite{ref_kitzmann}. Furthermore, force-directed paradigms natively produce continuous, varying-angle splines, fundamentally violating the strict orthogonal right-angle vector paths demanded by BPMN appearance standards.
+	
+	The necessity for advanced, dynamic placement of diagram elements to reduce cognitive load was previously explored by the author in the context of the Aurea EDEN (Evolving Diagramming with Enriched Notations) project \cite{ref_waszkowski}. The Aurea EDEN framework introduced a novel, programmatic 3D visualization library that dynamically mapped quantitative Key Performance Indicators (KPIs) as geometric properties directly onto e-commerce customer journey models. By treating KPIs as geometry within a spatially integrated 3D funnel, the framework significantly reduced analysts' cognitive workload and improved task completion times compared to traditional, fragmented 2D dashboards \cite{ref_waszkowski}. The present study is a direct continuation of this research trajectory. While the Aurea EDEN project successfully established flexible, programmatic methods for the topological placement and spatial linking of abstract diagram elements in three-dimensional environments, the strict syntactic rules of 2D BPMN modeling require a highly specialized orthogonal routing engine. This paper extends the foundational concepts of dynamic topological positioning from the Aurea EDEN architecture to address the unique deterministic challenges of complex, cyclic business process graphs.
+	
+	\paragraph{Research Gap and Objectives} 
+	There is a fundamental gap between the domain-specific visual constraints of BPMN 2.0 and the mathematical execution of existing graph drawing algorithms. Current methodologies frequently attempt to simultaneously process absolute physical routing coordinates while placing continuous node streams, leading to chaotic overlapping behavior, spatial bloat, or exponential computational intractability. The literature currently lacks a highly deterministic algorithmic approach that explicitly decouples topological discovery from physical geometric compilation, thereby natively accommodating complex cyclic loops and orthogonal routing without relying on rigid global grids or space-wasting dummy nodes. To resolve these profound structural deficiencies, this paper proposes a novel, dynamic topological layout and orthogonal routing algorithm specifically designed for BPMN diagrams. The primary objective is to dynamically recalculate exact topologies using mathematical Depth-First Search (DFS) back-edge classification and a multi-lane span-overlap allocation grid. By abandoning static XML visual data and absolute Cartesian positioning during the initial phases, the proposed execution engine seamlessly transitions raw graph data into natively drawn geometric vector graphics, minimizing connector overlaps, area footprints, and orthogonal bends.
+	
+	\section{State of the Art and Related Work}
+	
+	\paragraph{Cognitive Ergonomics and Layout Aesthetics}
+	The automatic layout of BPMN diagrams exists at the intersection of mathematical graph drawing and cognitive ergonomics. The evaluation of a layout algorithm's success is deeply dependent on objective metrics that correlate with human understandability \cite{ref_purchase1997, ref_purchase2000}. From a cognitive perspective, diagram comprehension relies on minimizing extraneous cognitive load and maximizing pattern recognition capabilities \cite{ref_schrepfer}. Recent biometric studies utilizing electroencephalography (EEG) and eye-tracking have empirically validated that well-structured BPMN models significantly reduce mental workload, mitigate split-attention effects, and facilitate faster, more accurate decision-making \cite{ref_de_souza, ref_lubke_eye}. Scientific literature identifies several priority aesthetics for process models: minimizing edge crossings, minimizing edge bends, maintaining strict orthogonality (the "Manhattan" look), and adhering to a consistent chronological information flow \cite{ref_purchase1997, ref_corradini}. Furthermore, spatial organization plays a crucial role; layouts that require extensive horizontal scrolling impose a heavy comprehension penalty, prompting recommendations for complex multi-line or "snake" layouts when dealing with large-scale diagrams \cite{ref_lubke_eye}.
+	
+	\paragraph{Modeling Guidelines and Real-World Usage}
+	Beyond mathematical aesthetics, researchers have established pragmatic, evidence-based modeling guidelines to ensure semantic clarity. Frameworks such as the Seven Process Modeling Guidelines (7PMG) and other comprehensive heuristic collections strongly advise limiting model size, avoiding overlapping elements, maintaining symmetry, and ensuring explicit, linear sequence flows \cite{ref_mendling, ref_corradini}. Real-world repository mining of GitHub reveals that the theoretical preference for horizontal, left-to-right modeling aligns with practice, though a significant portion of user-generated models still fail to meet optimal readability standards due to inadequate tool support \cite{ref_lubke_github, ref_baalmann_algo, ref_baalmann_val}. This lack of consistent tool support underscores the difficulty of building robust, BPMN-aware modeling user interfaces that can autonomously manage containment hierarchies, complex gateway alignments, and correct spatial port associations \cite{ref_jointjs, ref_effinger_patterns}. 
+	
+	\paragraph{Limitations of Traditional Graph Drawing Paradigms}
+	To meet these aesthetic and domain-specific criteria, engineers have historically adapted general graph-drawing paradigms, though these expose severe structural limitations. The Sugiyama framework remains the most pervasive approach for visualizing directed graphs and forms the foundation of robust rendering engines like the Eclipse Layout Kernel (ELK) \cite{ref_sugiyama, ref_gansner, ref_kasperowski}. While robust for general Directed Acyclic Graphs (DAGs) and highly optimized for horizontal coordinate assignment \cite{ref_brandes}, the Sugiyama pipeline struggles profoundly with BPMN's reliance on backward-flowing cyclic loops (rework iterations). Reversing back-edges and routing them orthogonally requires the insertion of numerous "dummy nodes" through dense intermediate layers, drastically bloating the spatial area and increasing computational overhead \cite{ref_sugiyama, ref_gansner}. Alternatively, continuous orthogonal routing approaches derived from topology-shape-metrics (TSM) frame edge routing as a minimum-cost flow network \cite{ref_tamassia}. While excellent at minimizing bends, these models frequently become computationally intractable (NP-hard) when encountering nodes with high degrees, and they do not inherently prioritize chronological reading direction, often wrapping graph progressions in serpentine trails that destroy the temporal sequence visually required for business analysis.
+	
+	\paragraph{BPMN-Specific Algorithmic Adaptations}
+	To address the shortcomings of general algorithms, several BPMN-specific layout strategies have been developed. Grid-based approaches map topological entities to a strictly defined discrete lattice to guarantee orthogonal grid snapping \cite{ref_kitzmann}. However, these methods suffer catastrophically from "cell expansion"; if one sequence path requires expansion, rigid mathematical constraints force the entire topological column to expand, propagating redundant white space and destroying tight-fitting aesthetics \cite{ref_kitzmann}. Structural decomposition methods offer a highly efficient alternative by partitioning the process model into Single-Entry-Single-Exit (SESE) fragments \cite{ref_gschwind}. This bottom-up approach runs in linear time ($O(n)$) and excels at aligning matching split and join gateways, but it can be rigid when handling highly unstructured or non-planar graphs. Other advancements include sketch-driven interactive layouts that attempt to preserve a user's mental map during iterative editing \cite{ref_effinger_interactive, ref_effinger_study}, automated structural optimizations \cite{ref_contreras}, and complex 2.5D hierarchical visualization models designed to reduce visual occlusion in massively layered systems \cite{ref_hong}. Similarly, recent object-centric layout approaches extend the Sugiyama framework to visually group related object states to reduce visual confusion \cite{ref_pads}.
+	
+	\paragraph{The Generative AI Frontier and the Synthesized Research Gap}
+	The demand for high-quality, automated diagram generation has reached a critical inflection point with the advent of Generative AI and Large Language Models (LLMs) in process modeling \cite{ref_kourani_llm}. Tools such as the BPMN Assistant and ProMoAI demonstrate that LLMs can successfully generate and iteratively refine process models directly from natural language \cite{ref_licardo, ref_kourani_promoai, ref_nivon}. However, because generating syntactically and visually correct raw XML is highly error-prone for LLMs, these systems rely on lightweight intermediate representations (like JSON or POWL) that capture pure process logic without any geometric coordinate data \cite{ref_licardo, ref_kourani_promoai}. The literature reveals a distinct gap: as AI systems instantaneously generate complex, cyclic semantic structures, existing layout frameworks fail to render them without suffering from extreme spatial bloat (dummy nodes), redundant white space (rigid grids), or unreadable chronological flows. This necessitates the development of a structurally distinct layout engine that explicitly separates topological constraint discovery from final physical vector routing, ensuring tight, orthogonal, and highly legible business logic visualizations natively.
+	
+	\begin{thebibliography}{99}
+		
+		\bibitem{ref_waszkowski}
+		R. Waszkowski, ``Aurea EDEN: A 3D Visualization Approach for E-Commerce Customer Journey Analytics,'' \emph{Journal of Theoretical and Applied Electronic Commerce Research}, vol. 20, no. 4, p. 279, 2025. DOI: \href{https://doi.org/10.3390/jtaer20040279}{10.3390/jtaer20040279}
+		
+		\bibitem{ref_akinbowale}
+		O. E. Akinbowale, M. F. Zerihun, and P. Mashigo, ``Business process management framework systematic review of the trends, potentials and future,'' \emph{Cogent Business \& Management}, vol. 13, no. 1, 2026.
+		
+		\bibitem{ref_tebourbi}
+		H. Tebourbi et al., ``BPMN-Based Design of Multi-Agent Systems: Personalized Language Learning Workflow Automation with RAG-Enhanced Knowledge Access,'' \emph{Information}, vol. 16, no. 9, p. 809, 2025.
+		
+		\bibitem{ref_lopes}
+		C. S. Lopes and S. Guerreiro, ``Assessing business process models: a literature review on techniques for BPMN testing and formal verification,'' \emph{Business Process Management Journal}, vol. 29, no. 8, pp. 135--162, 2023.
+		
+		\bibitem{ref_licardo}
+		J. T. Licardo, N. Tankovi\'c, and D. Etinger, ``BPMN Assistant: An LLM-Based Approach to Business Process Modeling,'' \emph{Applied Sciences}, 16(5), 2213, 2026.
+		
+		\bibitem{ref_kourani_promoai}
+		H. Kourani et al., ``ProMoAI: Process Modeling with Generative AI,'' \emph{Proceedings of the Thirty-Third International Joint Conference on Artificial Intelligence}, 2024.
+		
+		\bibitem{ref_nivon}
+		Q. Nivon and G. Sala\"un, ``Automated Generation of BPMN Processes from Textual Requirements,'' \emph{Service-Oriented Computing}, Springer, pp. 185--201, 2024.
+		
+		\bibitem{ref_jointjs}
+		Z. Stara, ``Why building a BPMN modeler UI is harder than it looks,'' \emph{JointJS Blog}, 2026.
+		
+		\bibitem{ref_effinger_interactive}
+		P. Effinger, M. Siebenhaller, and M. Kaufmann, ``An Interactive Layout Tool for BPMN,'' \emph{2009 IEEE Conference on Commerce and Enterprise Computing}, pp. 399--406, 2009.
+		
+		\bibitem{ref_de_souza}
+		L. M. de Souza Albuquerque, D. S. da Silveira, and A. T. Bezerra, ``Verifying the understandability of BPMN diagrams: a biometric study on the cognitive impact of layout guidelines,'' \emph{Displays}, vol. 91, 103236, 2026.
+		
+		\bibitem{ref_lubke_eye}
+		D. L\"ubke, M. Ahrens, and K. Schneider, ``Influence of diagram layout and scrolling on understandability of BPMN processes: an eye tracking experiment with BPMN diagrams,'' \emph{Information Technology and Management}, vol. 22, pp. 99--131, 2021.
+		
+		\bibitem{ref_schrepfer}
+		M. Schrepfer, J. Wolf, J. Mendling, and H. A. Reijers, ``The Impact of Secondary Notation on Process Model Understanding,'' \emph{The Practice of Enterprise Modeling (PoEM 2009)}, LNBIP 39, pp. 161--175, 2009.
+		
+		\bibitem{ref_wlekly}
+		P. Wlekły, ``Aesthetics and Usability of Statistics Data Visualisation through Charts: An Eyetracking Study as a Tool for Chart Analysis,'' \emph{European Research Studies Journal}, vol. XXVII, pp. 848--868, 2024.
+		
+		\bibitem{ref_kitzmann}
+		I. Kitzmann, C. K\"onig, D. L\"ubke, and L. Singer, ``A Simple Algorithm for Automatic Layout of BPMN Processes,'' \emph{2009 IEEE Conference on Commerce and Enterprise Computing}, pp. 391--398, 2009.
+		
+		\bibitem{ref_gschwind}
+		T. Gschwind, J. Pinggera, S. Zugal, H. A. Reijers, and B. Weber, ``A Linear Time Layout Algorithm for Business Process Models,'' \emph{IBM Research / University of Innsbruck}, 2013.
+		
+		\bibitem{ref_sugiyama}
+		K. Sugiyama, S. Tagawa, and M. Toda, ``Methods for Visual Understanding of Hierarchical System Structures,'' \emph{IEEE Transactions on Systems, Man, and Cybernetics}, vol. 11, no. 2, pp. 109--125, 1981.
+		
+		\bibitem{ref_gansner}
+		E. R. Gansner, E. Koutsofios, S. C. North, and K.-P. Vo, ``A technique for drawing directed graphs,'' \emph{IEEE Transactions on Software Engineering}, 19(3):214--230, 1993.
+		
+		\bibitem{ref_brandes}
+		U. Brandes and B. K\"opf, ``Fast and simple horizontal coordinate assignment,'' \emph{Graph Drawing (GD 2001)}, LNCS 2265, pp. 31--44, 2002.
+		
+		\bibitem{ref_purchase1997}
+		H. C. Purchase, ``Which Aesthetic Has the Greatest Effect on Human Understanding?,'' \emph{Graph Drawing Symposium}, pp. 248--261, 1997.
+		
+		\bibitem{ref_purchase2000}
+		H. C. Purchase, D. Carrington, and J.-A. Allder, ``Experimenting with Aesthetics-Based Graph Layout,'' \emph{Diagrams 2000, LNAI 1889}, pp. 498--501, 2000.
+		
+		\bibitem{ref_corradini}
+		F. Corradini et al., ``A Guidelines framework for understandable BPMN models,'' \emph{Data \& Knowledge Engineering}, vol. 113, pp. 129--154, 2018.
+		
+		\bibitem{ref_mendling}
+		J. Mendling, H. A. Reijers, and W. M. P. van der Aalst, ``Seven process modeling guidelines (7PMG),'' \emph{Information and Software Technology}, 52(2):127--136, 2010.
+		
+		\bibitem{ref_lubke_github}
+		D. L\"ubke and D. Wutke, ``Analysis of Prevalent BPMN Layout Choices on GitHub,'' \emph{CEUR Workshop Proceedings}, vol. 2839, pp. 46--54, 2021.
+		
+		\bibitem{ref_baalmann_algo}
+		E. Baalmann and D. L\"ubke, ``Algorithmic Classification of Layouts of BPMN Diagrams,'' \emph{CEUR Workshop Proceedings}, vol. 3113, 2022.
+		
+		\bibitem{ref_baalmann_val}
+		E. Baalmann and D. L\"ubke, ``Validation of Algorithmic BPMN Layout Classification,'' \emph{CEUR Workshop Proceedings}, 2023.
+		
+		\bibitem{ref_effinger_patterns}
+		P. Effinger, ``Layout Patterns with BPMN Semantics,'' \emph{BPMN 2011}, LNBIP 95, pp. 130--135, 2011.
+		
+		\bibitem{ref_kasperowski}
+		M. Kasperowski, S. Domr\"os, and R. von Hanxleden, ``The Eclipse Layout Kernel,'' \emph{32nd International Symposium on Graph Drawing (GD 2024)}, 2024.
+		
+		\bibitem{ref_tamassia}
+		R. Tamassia, ``On embedding a graph in the grid with the minimum number of bends,'' \emph{SIAM Journal on Computing}, 16(3):421--444, 1987.
+		
+		\bibitem{ref_effinger_study}
+		P. Effinger, N. Jogsch, and S. Seiz, ``On a Study of Layout Aesthetics for Business Process Models Using BPMN,'' \emph{BPMN 2010}, LNBIP 67, pp. 31--45, 2010.
+		
+		\bibitem{ref_contreras}
+		A. Contreras, Y. Falcone, G. Sala\"un, and A. Zuo, ``WEASY: A Tool for Modelling Optimised BPMN Processes,'' \emph{Univ. Grenoble Alpes}, 2024.
+		
+		\bibitem{ref_hong}
+		S.-H. Hong, N. S. Nikolov, and A. Tarassov, ``A 2.5D Hierarchical Drawing of Directed Graphs,'' \emph{Journal of Graph Algorithms and Applications}, 11(2):371--396, 2007.
+		
+		\bibitem{ref_pads}
+		PADS Blog, ``Visualizing Object-Centric Petri Nets,'' \emph{RWTH Aachen}, 2024.
+		
+		\bibitem{ref_kourani_llm}
+		H. Kourani et al., ``Process Modeling With Large Language Models,'' \emph{Springer}, 2024.
+		
+	\end{thebibliography}
+	
+\end{document}
+How can I export this LaTeX code into a PDF?
+Could we expand on the DFS back-edge classification mentioned?
+How can I integrate a 'Conclusion' section into this paper?

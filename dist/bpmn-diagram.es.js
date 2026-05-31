@@ -62028,20 +62028,6 @@ class MapControls extends OrbitControls {
     this.touches = { ONE: TOUCH.PAN, TWO: TOUCH.DOLLY_ROTATE };
   }
 }
-class Shape2 {
-  constructor(geometry, material) {
-    this.geometry = geometry;
-    this.material = material;
-    this.width = this.getSize().x;
-    this.height = this.getSize().y;
-  }
-  getSize() {
-    var size2 = new Vector3();
-    this.geometry.computeBoundingBox();
-    this.geometry.boundingBox.getSize(size2);
-    return size2;
-  }
-}
 class DiagramEditMaterial extends MeshLambertMaterial {
   constructor(color) {
     super({
@@ -62051,11 +62037,6 @@ class DiagramEditMaterial extends MeshLambertMaterial {
       emissive: new Color(color),
       emissiveIntensity: 0.1
     });
-  }
-}
-class BoxShape extends Shape2 {
-  constructor(width = 40, height = 40, depth = 40, color = 255) {
-    super(new BoxGeometry(width, height, depth), new DiagramEditMaterial(color));
   }
 }
 const DiagramDimensions = {
@@ -62143,6 +62124,81 @@ const Colors = {
   ELEMENT_STROKE: Themes.LIGHT.ELEMENT_STROKE,
   ELEMENT_TEXT: Themes.LIGHT.ELEMENT_TEXT
 };
+class Shape2 {
+  constructor(width, height, lineWidth = 1) {
+    if (width instanceof BufferGeometry) {
+      this.geometry = width;
+      this.material = height;
+      this.width = this.getSize().x;
+      this.height = this.getSize().y;
+      this.outerShape = null;
+      return;
+    }
+    this.width = width;
+    this.height = height;
+    this.lineWidth = lineWidth;
+    this.color = Colors.ELEMENT_STROKE;
+    this.extrusionSettings = ExtrusionParameters$1;
+    this.material = new DiagramEditMaterial(this.color);
+    this.geometry = null;
+    this.outerShape = null;
+    this.rebuildGeometry();
+  }
+  /**
+   * Rebuilds the 3D geometry from 2D paths provided by the subclass.
+   */
+  rebuildGeometry() {
+    if (this.geometry) {
+      this.geometry.dispose();
+    }
+    const shapes = this.get2DPaths();
+    if (shapes && shapes.length > 0) {
+      this.outerShape = shapes[0].clone();
+      this.outerShape.holes = [];
+    } else {
+      this.outerShape = null;
+    }
+    this.geometry = new ExtrudeGeometry(shapes, this.extrusionSettings);
+  }
+  /**
+   * Base implementation of dimension updates.
+   */
+  updateDimensions(newWidth, newHeight, newLineWidth) {
+    this.width = newWidth || this.width;
+    this.height = newHeight || this.height;
+    if (newLineWidth !== void 0) {
+      this.lineWidth = newLineWidth;
+    }
+    this.rebuildGeometry();
+  }
+  /**
+   * Base implementation of material/uniform color updates.
+   */
+  updateColor(newColor) {
+    this.color = newColor;
+    if (this.material && this.material.color && typeof this.material.color.set === "function") {
+      this.material.color.set(newColor);
+    } else if (this.material && this.material.uniforms && this.material.uniforms.color) {
+      this.material.uniforms.color.value.set(newColor);
+    }
+  }
+  getSize() {
+    var size2 = new Vector3();
+    if (this.geometry) {
+      this.geometry.computeBoundingBox();
+      this.geometry.boundingBox.getSize(size2);
+    }
+    return size2;
+  }
+  getOuterShape() {
+    return this.outerShape;
+  }
+}
+class BoxShape extends Shape2 {
+  constructor(width = 40, height = 40, depth = 40, color = 255) {
+    super(new BoxGeometry(width, height, depth), new DiagramEditMaterial(color));
+  }
+}
 class FontLoader extends Loader {
   constructor(manager) {
     super(manager);
@@ -64959,63 +65015,65 @@ const DiamondDimensions = {
   LINE_WIDTH: 1
 };
 class CircleShape extends Shape2 {
-  constructor(width, height, lineWidth = CircleDimensions.LINE_WIDTH_NORMAL) {
-    let eventRadius = CircleDimensions.RADIUS;
-    if (width && height) {
-      eventRadius = Math.min(width, height) / 2;
+  constructor(width = CircleDimensions.RADIUS * 2, height = CircleDimensions.RADIUS * 2, lineWidth = CircleDimensions.LINE_WIDTH_NORMAL) {
+    let targetWidth = width;
+    let targetHeight = height;
+    if (!width || !height) {
+      targetWidth = CircleDimensions.RADIUS * 2;
+      targetHeight = CircleDimensions.RADIUS * 2;
     }
-    const color = Colors.ELEMENT_STROKE;
-    const extrusionParameters = ExtrusionParameters$1;
-    function circle(ctx, radius) {
+    super(targetWidth, targetHeight, lineWidth);
+    this.name = "CircleShape";
+  }
+  get2DPaths() {
+    const radius = Math.min(this.width, this.height) / 2;
+    const drawCircle = (r2) => {
+      const path = new Shape$1();
       const centerX = 0;
       const centerY = 0;
-      var controlPointDistance = radius * 0.552284749831;
-      ctx.moveTo(centerX, centerY - radius);
-      ctx.bezierCurveTo(
+      const controlPointDistance = r2 * 0.552284749831;
+      path.moveTo(centerX, centerY - r2);
+      path.bezierCurveTo(
         centerX + controlPointDistance,
-        centerY - radius,
-        centerX + radius,
+        centerY - r2,
+        centerX + r2,
         centerY - controlPointDistance,
-        centerX + radius,
+        centerX + r2,
         centerY
       );
-      ctx.bezierCurveTo(
-        centerX + radius,
+      path.bezierCurveTo(
+        centerX + r2,
         centerY + controlPointDistance,
         centerX + controlPointDistance,
-        centerY + radius,
+        centerY + r2,
         centerX,
-        centerY + radius
+        centerY + r2
       );
-      ctx.bezierCurveTo(
+      path.bezierCurveTo(
         centerX - controlPointDistance,
-        centerY + radius,
-        centerX - radius,
+        centerY + r2,
+        centerX - r2,
         centerY + controlPointDistance,
-        centerX - radius,
+        centerX - r2,
         centerY
       );
-      ctx.bezierCurveTo(
-        centerX - radius,
+      path.bezierCurveTo(
+        centerX - r2,
         centerY - controlPointDistance,
         centerX - controlPointDistance,
-        centerY - radius,
+        centerY - r2,
         centerX,
-        centerY - radius
+        centerY - r2
       );
+      return path;
+    };
+    const outerRing = drawCircle(radius);
+    if (this.lineWidth > 0 && radius > this.lineWidth) {
+      const holePath = new Path();
+      holePath.copy(drawCircle(radius - this.lineWidth));
+      outerRing.holes.push(holePath);
     }
-    var eventShape = new Shape$1();
-    circle(eventShape, eventRadius);
-    const outerShape = eventShape.clone();
-    var eventHole = new Path();
-    circle(eventHole, eventRadius - lineWidth);
-    eventShape.holes.push(eventHole);
-    var eventGeometry = new ExtrudeGeometry(eventShape, extrusionParameters);
-    super(eventGeometry, new DiagramEditMaterial(color));
-    this.outerShape = outerShape;
-  }
-  getOuterShape() {
-    return this.outerShape;
+    return [outerRing];
   }
 }
 class Connector extends Mesh {
@@ -68806,45 +68864,51 @@ class Diagram {
 }
 class RoundedRectangleShape extends Shape2 {
   constructor(horizontalSize = RectangleDimensions.HORIZONTAL_SIZE, verticalSize = RectangleDimensions.VERTICAL_SIZE, cornerRadius = RectangleDimensions.CORNER_RADIUS, lineWidth = RectangleDimensions.LINE_WIDTH) {
-    const outerRadius = cornerRadius;
-    const innerRadius = cornerRadius - lineWidth;
-    const color = Colors.ELEMENT_STROKE;
-    const extrusionParameters = ExtrusionParameters$1;
-    function roundedRect(ctx, width, height, radius) {
+    super(horizontalSize, verticalSize, lineWidth);
+    this.cornerRadius = cornerRadius;
+    this.name = "RoundedRectangleShape";
+  }
+  get2DPaths() {
+    const width = this.width;
+    const height = this.height;
+    const outerRadius = this.cornerRadius;
+    const innerRadius = this.cornerRadius - this.lineWidth;
+    const roundedRect = (w2, h2, radius) => {
+      const ctx = new Shape$1();
       const centerX = 0;
       const centerY = 0;
-      var x2 = centerX - width / 2;
-      var y2 = centerY - height / 2;
+      const x2 = centerX - w2 / 2;
+      const y2 = centerY - h2 / 2;
       ctx.moveTo(x2 + radius, y2);
-      ctx.lineTo(x2 + width - radius, y2);
-      ctx.quadraticCurveTo(x2 + width, y2, x2 + width, y2 + radius);
-      ctx.lineTo(x2 + width, y2 + height - radius);
-      ctx.quadraticCurveTo(x2 + width, y2 + height, x2 + width - radius, y2 + height);
-      ctx.lineTo(x2 + radius, y2 + height);
-      ctx.quadraticCurveTo(x2, y2 + height, x2, y2 + height - radius);
+      ctx.lineTo(x2 + w2 - radius, y2);
+      ctx.quadraticCurveTo(x2 + w2, y2, x2 + w2, y2 + radius);
+      ctx.lineTo(x2 + w2, y2 + h2 - radius);
+      ctx.quadraticCurveTo(x2 + w2, y2 + h2, x2 + w2 - radius, y2 + h2);
+      ctx.lineTo(x2 + radius, y2 + h2);
+      ctx.quadraticCurveTo(x2, y2 + h2, x2, y2 + h2 - radius);
       ctx.lineTo(x2, y2 + radius);
       ctx.quadraticCurveTo(x2, y2, x2 + radius, y2);
+      return ctx;
+    };
+    const activityShape = roundedRect(width, height, outerRadius);
+    if (this.lineWidth > 0 && width > this.lineWidth * 2 && height > this.lineWidth * 2) {
+      const activityHole = new Path();
+      activityHole.copy(roundedRect(width - 2 * this.lineWidth, height - 2 * this.lineWidth, innerRadius));
+      activityShape.holes.push(activityHole);
     }
-    var activityShape = new Shape$1();
-    roundedRect(activityShape, horizontalSize, verticalSize, outerRadius);
-    const outerShape = activityShape.clone();
-    var activityHole = new Path();
-    roundedRect(activityHole, horizontalSize - 2 * lineWidth, verticalSize - 2 * lineWidth, innerRadius);
-    activityShape.holes.push(activityHole);
-    var activityGeometry = new ExtrudeGeometry(activityShape, extrusionParameters);
-    super(activityGeometry, new DiagramEditMaterial(color));
-    this.outerShape = outerShape;
-  }
-  getOuterShape() {
-    return this.outerShape;
+    return [activityShape];
   }
 }
 class DiamondShape extends Shape2 {
-  constructor(width = DiamondDimensions.DIAGONAL, height = DiamondDimensions.DIAGONAL) {
-    const lineWidth = DiamondDimensions.LINE_WIDTH;
-    const color = Colors.ELEMENT_STROKE;
-    const extrusionParameters = ExtrusionParameters$1;
-    function diamond(ctx, verticalSize, horizontalSize) {
+  constructor(width = DiamondDimensions.DIAGONAL, height = DiamondDimensions.DIAGONAL, lineWidth = DiamondDimensions.LINE_WIDTH) {
+    super(width, height, lineWidth);
+    this.name = "DiamondShape";
+  }
+  get2DPaths() {
+    const width = this.width;
+    const height = this.height;
+    const diamond = (verticalSize, horizontalSize) => {
+      const ctx = new Shape$1();
       const centerX = 0;
       const centerY = 0;
       ctx.moveTo(centerX - verticalSize / 2, centerY);
@@ -68852,21 +68916,18 @@ class DiamondShape extends Shape2 {
       ctx.lineTo(centerX + horizontalSize / 2, centerY);
       ctx.lineTo(centerX, centerY + verticalSize / 2);
       ctx.lineTo(centerX - horizontalSize / 2, centerY);
+      ctx.closePath();
+      return ctx;
+    };
+    const gatewayShape = diamond(width, height);
+    const widthOffset = this.lineWidth * Math.sqrt(2) * 2;
+    const heightOffset = this.lineWidth * Math.sqrt(2) * 2;
+    if (this.lineWidth > 0 && width > widthOffset && height > heightOffset) {
+      const gatewayHole = new Path();
+      gatewayHole.copy(diamond(Math.max(0, width - widthOffset), Math.max(0, height - heightOffset)));
+      gatewayShape.holes.push(gatewayHole);
     }
-    var gatewayShape = new Shape$1();
-    diamond(gatewayShape, width, height);
-    const outerShape = gatewayShape.clone();
-    var gatewayHole = new Path();
-    const widthOffset = lineWidth * Math.sqrt(2) * 2;
-    const heightOffset = lineWidth * Math.sqrt(2) * 2;
-    diamond(gatewayHole, Math.max(0, width - widthOffset), Math.max(0, height - heightOffset));
-    gatewayShape.holes.push(gatewayHole);
-    var gatewayGeometry = new ExtrudeGeometry(gatewayShape, extrusionParameters);
-    super(gatewayGeometry, new DiagramEditMaterial(color));
-    this.outerShape = outerShape;
-  }
-  getOuterShape() {
-    return this.outerShape;
+    return [gatewayShape];
   }
 }
 class SwimlaneShape extends Shape2 {
@@ -68876,8 +68937,6 @@ class SwimlaneShape extends Shape2 {
    * @param {number} height - The height of the swimlane.
    */
   constructor(width, height) {
-    const color = Colors.ELEMENT_STROKE;
-    const halfBorder = 1;
     const extrudeSettings = {
       steps: 1,
       depth: 0.4,
@@ -68887,50 +68946,19 @@ class SwimlaneShape extends Shape2 {
       bevelOffset: 0,
       bevelSegments: 2
     };
-    const halfWidth = width / 2;
-    const halfHeight = height / 2;
-    const rectShape = new Shape$1();
-    rectShape.moveTo(-halfWidth - halfBorder, -halfHeight - halfBorder);
-    rectShape.lineTo(halfWidth + halfBorder, -halfHeight - halfBorder);
-    rectShape.lineTo(halfWidth + halfBorder, halfHeight + halfBorder);
-    rectShape.lineTo(-halfWidth - halfBorder, halfHeight + halfBorder);
-    rectShape.closePath();
-    const holePath = new Path();
-    holePath.moveTo(-halfWidth + halfBorder, -halfHeight + halfBorder);
-    holePath.lineTo(halfWidth - halfBorder, -halfHeight + halfBorder);
-    holePath.lineTo(halfWidth - halfBorder, halfHeight - halfBorder);
-    holePath.lineTo(-halfWidth + halfBorder, halfHeight - halfBorder);
-    holePath.closePath();
-    rectShape.holes.push(holePath);
-    const geometry = new ExtrudeGeometry(rectShape, extrudeSettings);
-    super(geometry, new DiagramEditMaterial(color));
+    super(width, height, 1);
+    this.extrusionSettings = extrudeSettings;
+    this.rebuildGeometry();
     const planeGeo = new PlaneGeometry(width, height);
     const invisibleMaterial = new MeshBasicMaterial({ visible: false });
     this.boundsMesh = new Mesh(planeGeo, invisibleMaterial);
     this.attachment = this.boundsMesh;
-    this.outerShape = rectShape;
-    this.shapeWidth = width;
-    this.shapeHeight = height;
     this.name = "SwimlaneShape";
   }
-  getOuterShape() {
-    return this.outerShape;
-  }
-  updateDimensions(newWidth, newHeight) {
-    const width = newWidth || this.shapeWidth;
-    const height = newHeight || this.shapeHeight;
+  get2DPaths() {
     const halfBorder = 1;
-    const extrudeSettings = {
-      steps: 1,
-      depth: 0.4,
-      bevelEnabled: true,
-      bevelThickness: 0.1,
-      bevelSize: 0.1,
-      bevelOffset: 0,
-      bevelSegments: 2
-    };
-    const halfWidth = width / 2;
-    const halfHeight = height / 2;
+    const halfWidth = this.width / 2;
+    const halfHeight = this.height / 2;
     const rectShape = new Shape$1();
     rectShape.moveTo(-halfWidth - halfBorder, -halfHeight - halfBorder);
     rectShape.lineTo(halfWidth + halfBorder, -halfHeight - halfBorder);
@@ -68944,59 +68972,37 @@ class SwimlaneShape extends Shape2 {
     holePath.lineTo(-halfWidth + halfBorder, halfHeight - halfBorder);
     holePath.closePath();
     rectShape.holes.push(holePath);
-    if (this.geometry) {
-      this.geometry.dispose();
-    }
-    this.geometry = new ExtrudeGeometry(rectShape, extrudeSettings);
+    return [rectShape];
+  }
+  updateDimensions(newWidth, newHeight) {
+    super.updateDimensions(newWidth, newHeight);
     if (this.boundsMesh) {
       this.boundsMesh.geometry.dispose();
-      this.boundsMesh.geometry = new PlaneGeometry(width, height);
-    }
-    this.outerShape = rectShape;
-    this.shapeWidth = width;
-    this.shapeHeight = height;
-  }
-  updateColor(newColor) {
-    if (this.material && this.material.color && typeof this.material.color.set === "function") {
-      this.material.color.set(newColor);
+      this.boundsMesh.geometry = new PlaneGeometry(this.width, this.height);
     }
   }
 }
 class TextAnnotationShape extends Shape2 {
-  /**
-   * Creates an instance of TextAnnotationShape.
-   * @param {number} [width=RectangleDimensions.HORIZONTAL_SIZE] - The width of the annotation.
-   * @param {number} [height=RectangleDimensions.VERTICAL_SIZE] - The height of the annotation.
-   * @param {number} [lineWidth=2] - The thickness of the bracket stroke.
-   */
   constructor(width = 100, height = 50, lineWidth = 1) {
-    const color = Colors.ELEMENT_STROKE;
-    const extrusionSettings = ExtrusionParameters$1;
-    const halfWidth = width / 2;
-    const halfHeight = height / 2;
+    super(width, height, lineWidth);
+    this.name = "TextAnnotationShape";
+  }
+  get2DPaths() {
+    const halfWidth = this.width / 2;
+    const halfHeight = this.height / 2;
     const bracketLength = 10;
     const bracketPath = new Shape$1();
     bracketPath.moveTo(-halfWidth + bracketLength, halfHeight);
     bracketPath.lineTo(-halfWidth, halfHeight);
     bracketPath.lineTo(-halfWidth, -halfHeight);
     bracketPath.lineTo(-halfWidth + bracketLength, -halfHeight);
-    bracketPath.lineTo(-halfWidth + bracketLength, -halfHeight + lineWidth);
-    bracketPath.lineTo(-halfWidth + lineWidth, -halfHeight + lineWidth);
-    bracketPath.lineTo(-halfWidth + lineWidth, halfHeight - lineWidth);
-    bracketPath.lineTo(-halfWidth + bracketLength, halfHeight - lineWidth);
+    bracketPath.lineTo(-halfWidth + bracketLength, -halfHeight + this.lineWidth);
+    bracketPath.lineTo(-halfWidth + this.lineWidth, -halfHeight + this.lineWidth);
+    bracketPath.lineTo(-halfWidth + this.lineWidth, halfHeight - this.lineWidth);
+    bracketPath.lineTo(-halfWidth + bracketLength, halfHeight - this.lineWidth);
     bracketPath.closePath();
-    const geometry = new ExtrudeGeometry(bracketPath, extrusionSettings);
-    const material = new DiagramEditMaterial(color);
-    super(geometry, material);
-    this.outerShape = bracketPath;
-    this.shapeWidth = width;
-    this.shapeHeight = height;
-    this.shapeLineWidth = lineWidth;
-    this.shapeDepth = extrusionSettings.depth || ExtrusionParameters$1.depth;
-    this.name = "TextAnnotationShape";
+    return [bracketPath];
   }
-  // No updateDimensions implementation strictly required for MVP unless requested, 
-  // but following pattern would be good. 
 }
 class StraightArrowConnectorShape extends Shape2 {
   constructor(connectorPoints) {

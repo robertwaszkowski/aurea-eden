@@ -34,20 +34,57 @@ const DIAGRAM_FILES = Object.keys(bpmnModules)
 // ─────────────────────────────────────────────────────────────────────────────
 // Helper: create a labelled card wrapper
 // ─────────────────────────────────────────────────────────────────────────────
-function createCard(parentContainer, title, subtitle, barId, flexGrow = 1) {
+function createCard(parentContainer, title, subtitle, barId, isPreview = false) {
     const card = document.createElement('div');
-    card.style.cssText = `
+    
+    const previewStyle = `
+        position: absolute;
+        top: 86px;
+        right: 12px;
+        width: 380px;
+        height: 250px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         display: flex;
         flex-direction: column;
-        flex: ${flexGrow} 1 0;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    `;
+    
+    const flexStyle = `
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 0;
         min-height: 0;
         border-bottom: 1px solid #ddd;
         position: relative;
     `;
 
+    card.style.cssText = isPreview === true ? previewStyle : flexStyle;
+    
+    if (isPreview === true) {
+        card.className = 'preview-window';
+    }
+
     const bar = document.createElement('div');
     if (barId) bar.id = barId;
-    bar.style.cssText = `
+    
+    // UIX optimization: relative position, nowrap flex for preview headers to prevent wrapping
+    bar.style.cssText = isPreview === true ? `
+        padding: 6px 36px 6px 16px;
+        background: #f5f5f5;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+        position: relative;
+        overflow: hidden;
+    ` : `
         padding: 6px 16px;
         background: #f5f5f5;
         border-bottom: 1px solid #e0e0e0;
@@ -60,13 +97,28 @@ function createCard(parentContainer, title, subtitle, barId, flexGrow = 1) {
 
     const h = document.createElement('span');
     h.textContent = title;
-    h.style.cssText = 'font-size: 13px; font-weight: 600; color: #333; font-family: sans-serif; white-space: nowrap;';
+    h.style.cssText = 'font-size: 13px; font-weight: 600; color: #333; font-family: sans-serif; white-space: nowrap; flex-shrink: 0;';
     bar.appendChild(h);
 
     if (subtitle) {
         const s = document.createElement('span');
         s.textContent = subtitle;
-        s.style.cssText = 'font-size: 11px; color: #888; font-family: monospace; white-space: nowrap;';
+        // Clip subtitle in preview window to prevent any layout wrapping or overlapping
+        s.style.cssText = isPreview === true ? `
+            font-size: 11px;
+            color: #888;
+            font-family: monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 140px;
+            flex-shrink: 1;
+        ` : `
+            font-size: 11px;
+            color: #888;
+            font-family: monospace;
+            white-space: nowrap;
+        `;
         bar.appendChild(s);
     }
 
@@ -77,6 +129,195 @@ function createCard(parentContainer, title, subtitle, barId, flexGrow = 1) {
     card.appendChild(canvas);
 
     parentContainer.appendChild(card);
+
+    if (isPreview === true) {
+        let isMaximized = false;
+        let isMinimized = false;
+        
+        const minBtn = document.createElement('button');
+        const maxBtn = document.createElement('button');
+        
+        // Pinned strictly to the top-right corner of the header bar to prevent wrapping
+        const maxBtnStyle = `
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 14px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.15s, color 0.15s;
+            z-index: 10;
+        `;
+        
+        const minBtnStyle = `
+            position: absolute;
+            right: 34px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 14px;
+            cursor: pointer;
+            line-height: 1;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background 0.15s, color 0.15s;
+            z-index: 10;
+        `;
+
+        maxBtn.style.cssText = maxBtnStyle;
+        minBtn.style.cssText = minBtnStyle;
+        
+        const updateIcon = () => {
+            if (isMaximized) {
+                maxBtn.innerHTML = `
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="2" width="10" height="10" rx="1.5"/>
+                        <path d="M2 14V6c0-.828.672-1.5 1.5-1.5H6" />
+                    </svg>
+                `;
+                maxBtn.title = 'Restore preview';
+            } else {
+                maxBtn.innerHTML = `
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="12" height="12" rx="1.5"/>
+                    </svg>
+                `;
+                maxBtn.title = 'Maximize preview';
+            }
+        };
+
+        const updateMinIcon = () => {
+            if (isMinimized) {
+                minBtn.innerHTML = `
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="3" y1="8" x2="13" y2="8"/>
+                        <line x1="8" y1="3" x2="8" y2="13"/>
+                    </svg>
+                `;
+                minBtn.title = 'Expand preview';
+            } else {
+                minBtn.innerHTML = `
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="3" y1="8" x2="13" y2="8"/>
+                    </svg>
+                `;
+                minBtn.title = 'Minimize preview';
+            }
+        };
+
+        updateIcon();
+        updateMinIcon();
+        
+        maxBtn.onmouseover = () => {
+            maxBtn.style.background = 'rgba(0,0,0,0.05)';
+            maxBtn.style.color = '#1e293b';
+        };
+        maxBtn.onmouseout = () => {
+            maxBtn.style.background = 'none';
+            maxBtn.style.color = '#64748b';
+        };
+
+        minBtn.onmouseover = () => {
+            minBtn.style.background = 'rgba(0,0,0,0.05)';
+            minBtn.style.color = '#1e293b';
+        };
+        minBtn.onmouseout = () => {
+            minBtn.style.background = 'none';
+            minBtn.style.color = '#64748b';
+        };
+
+        maxBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (isMinimized) {
+                isMinimized = false;
+                updateMinIcon();
+            }
+            isMaximized = !isMaximized;
+            updateIcon();
+            if (isMaximized) {
+                card.style.cssText = `
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 2000;
+                    background: white;
+                    display: flex;
+                    flex-direction: column;
+                    overflow: hidden;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                `;
+                // Remove truncation in maximized mode since we have plenty of width
+                if (subtitle) {
+                    const subtitleSpan = bar.querySelector('span:nth-of-type(2)');
+                    if (subtitleSpan) subtitleSpan.style.maxWidth = 'none';
+                }
+            } else {
+                card.style.cssText = previewStyle;
+                // Re-enable truncation in preview mode
+                if (subtitle) {
+                    const subtitleSpan = bar.querySelector('span:nth-of-type(2)');
+                    if (subtitleSpan) subtitleSpan.style.maxWidth = '140px';
+                }
+            }
+            window.dispatchEvent(new Event('resize'));
+        };
+
+        minBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (isMaximized) {
+                isMaximized = false;
+                updateIcon();
+                if (subtitle) {
+                    const subtitleSpan = bar.querySelector('span:nth-of-type(2)');
+                    if (subtitleSpan) subtitleSpan.style.maxWidth = '140px';
+                }
+            }
+            isMinimized = !isMinimized;
+            updateMinIcon();
+            if (isMinimized) {
+                card.style.cssText = `
+                    position: absolute;
+                    top: 86px;
+                    right: 12px;
+                    width: 380px;
+                    height: 32px;
+                    z-index: 1000;
+                    background: rgba(255, 255, 255, 0.95);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(0, 0, 0, 0.15);
+                    border-radius: 8px;
+                    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+                    display: flex;
+                    flex-direction: column;
+                    overflow: hidden;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                `;
+            } else {
+                card.style.cssText = previewStyle;
+            }
+            window.dispatchEvent(new Event('resize'));
+        };
+
+        bar.appendChild(minBtn);
+        bar.appendChild(maxBtn);
+    }
+
     return canvas;
 }
 
@@ -674,21 +915,14 @@ export default function initDemo(container, options = {}) {
         flex: 1 1 0;
         min-height: 0;
         overflow: hidden;
+        position: relative;
     `;
     container.appendChild(diagramArea);
 
-    const topCanvas = createCard(diagramArea, 'Native XML Import', 'BpmnDiagram.buildDiagram(xmlDoc)', 'top-card-bar', 1);
-    const bottomCanvas = createCard(diagramArea, 'Auto-generated Fluent API', 'BpmnToFluentConverter.convert(xml)', 'bottom-card-bar', 2);
+    const topCanvas = createCard(diagramArea, 'Native XML Import', 'BpmnDiagram.buildDiagram(xmlDoc)', 'top-card-bar', true);
+    const bottomCanvas = createCard(diagramArea, 'Auto-generated Fluent API', 'BpmnToFluentConverter.convert(xml)', 'bottom-card-bar', false);
 
-    // Inject BPMN Source selector into top card bar
-    const topBarEl = document.getElementById('top-card-bar');
-    if (topBarEl) {
-        const srcLabel = document.createElement('span');
-        srcLabel.textContent = 'Source:';
-        srcLabel.style.cssText = 'font-size: 11px; color: #94a3b8; font-family: sans-serif; white-space: nowrap; margin-left: auto; flex-shrink: 0;';
-        topBarEl.appendChild(srcLabel);
-        topBarEl.appendChild(select);
-    }
+
 
     // ── Auto Layout button ───────────────────────────────────────────────────
     const autoLayoutBtn = document.createElement('button');
@@ -780,9 +1014,20 @@ export default function initDemo(container, options = {}) {
         triggerRender();
     });
 
-    // Inject pipeline + Export BPMN + Auto Layout + Branch toggle into bottom card bar
+    // Inject BPMN Source selector, divider, pipeline + Export BPMN + Auto Layout + Branch toggle into bottom card bar
     const bottomBarEl = document.getElementById('bottom-card-bar');
     if (bottomBarEl) {
+        const srcLabel = document.createElement('span');
+        srcLabel.textContent = 'Source:';
+        srcLabel.style.cssText = 'font-size: 11px; color: #888; font-family: sans-serif; white-space: nowrap; margin-left: auto; flex-shrink: 0;';
+        bottomBarEl.appendChild(srcLabel);
+        bottomBarEl.appendChild(select);
+
+        const sep = document.createElement('span');
+        sep.textContent = '|';
+        sep.style.cssText = 'color: #ccc; font-size: 13px; font-weight: 300; margin: 0 4px; flex-shrink: 0;';
+        bottomBarEl.appendChild(sep);
+
         bottomBarEl.appendChild(pipelineContainer);
         bottomBarEl.appendChild(branchToggleBtn);
         bottomBarEl.appendChild(exportBtn);
